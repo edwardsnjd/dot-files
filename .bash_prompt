@@ -1,0 +1,66 @@
+# To use this prompt, add the following to your bash config file.
+#
+#     source ~/.bash_prompt
+#
+# Your bash config file is ~/.bash_profile.
+
+# Colour attribute codes
+
+ATTR_NORMAL=0
+ATTR_BRIGHT=1
+# Dim Text: 2
+# Underlined Text: 4
+# Blinking Text: 5 (This does not work in most terminal emulators.)
+# Reversed Text: 7 (This inverts the foreground and background colors, so you’ll see black text on a white background if the current text is white text on a black background.)
+# Hidden Text: 8
+
+FG_BLACK=30
+FG_RED=31
+FG_GREEN=32
+FG_YELLOW=33
+FG_BLUE=34
+FG_VIOLET=35
+FG_CYAN=36
+FG_WHITE=37
+
+FG_NULL=00
+
+BG_BLACK=40
+BG_RED=41
+BG_GREEN=42
+BG_YELLOW=43
+BG_BLUE=44
+BG_VIOLET=45
+BG_CYAN=46
+BG_WHITE=47
+
+BG_NULL=00
+
+# ANSI escape sequences
+
+ESC="\033"
+NORMAL="\[$ESC[m\]"
+RESET="\[$ESC[${ATTR_NORMAL};${FG_NULL};${BG_NULL}m\]"
+
+GREEN="\[$ESC[${ATTR_NORMAL};${FG_GREEN}m\]"
+BLUE="\[$ESC[${ATTR_NORMAL};${FG_BLUE}m\]"
+VIOLET="\[$ESC[${ATTR_NORMAL};${FG_VIOLET}m\]"
+
+# Functions
+
+join_by() { local IFS="$1"; shift; echo "$*"; }
+
+git_info() {
+    BRANCH="$(git_current_branch)"
+    if [ -n "$BRANCH" ]; then
+        echo "(${BRANCH})"
+    fi
+}
+
+git_current_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+
+# Prompt
+
+export PS1="${VIOLET}\d \A ${BLUE}\u${NORMAL}@${BLUE}\h${NORMAL} \W ${GREEN}\$(git_info)\n${RESET}\\$ "
