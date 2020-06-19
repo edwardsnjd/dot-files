@@ -1,0 +1,30 @@
+# Git Colours
+# ===========
+#
+# Include this file in your .gitconfig thus:
+#
+#       [include]
+#           path=.gitconfig_colours
+#
+# Original colour scheme from: https://gist.github.com/trey/2722934
+
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow
+#    frag = magenta
+#    old = red
+#    new = green
+
+[color "status"]
+#    added = yellow
+#    changed = green
+#    untracked = cyan

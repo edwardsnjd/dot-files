@@ -1,0 +1,18 @@
+# This is Git's per-user configuration file.
+[core]
+	user = Nicholas Edwards
+	email = edwardsnjd@googlemail.com
+[include]
+    path = .gitconfig_aliases
+[include]
+    path = .gitconfig_colours
+[user]
+	name = Nicholas Edwards
+	email = edwardsnjd@googlemail.com
+[push]
+	default = simple
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
