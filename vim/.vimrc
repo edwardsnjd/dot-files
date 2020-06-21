@@ -45,7 +45,8 @@ set foldlevel=1         " Fold second level on opening
 let mapleader = ","	" Change default leader from '\'
 
 " Convenience mappings
-nnoremap <leader><space> :nohlsearch<cr> " Deselect highlighting
+" - Deselect highlighting
+nnoremap <leader><Space> :nohlsearch<CR>
 
 " General file editing enhancements
 syntax on
