@@ -47,6 +47,8 @@ let mapleader = ","	" Change default leader from '\'
 " Convenience mappings
 " - Deselect highlighting
 nnoremap <leader><Space> :nohlsearch<CR>
+" - Save some LH typing
+inoremap jk <Esc>
 
 " General file editing enhancements
 syntax on
