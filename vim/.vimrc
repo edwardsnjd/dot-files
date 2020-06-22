@@ -1,4 +1,4 @@
-" Custom Vim config
+
 "
 " Most of this is vanilla but it's cobbled together from lots of sources:
 " - VimConfig.com
@@ -56,4 +56,20 @@ filetype indent plugin on
 
 " Specific file types
 autocmd Filetype gitcommit set textwidth=80
+
+" Plugins (managed by `vim-plugin`)
+" See `README.md` for bootstrap
+
+call plug#begin('~/.vim/plugged')
+Plug 'https://github.com/tpope/vim-sensible'
+Plug 'https://github.com/tpope/vim-fugitive'
+Plug 'https://github.com/vim-airline/vim-airline'
+Plug 'https://github.com/airblade/vim-gitgutter'
+Plug 'https://github.com/sheerun/vim-polyglot'
+Plug 'https://github.com/mileszs/ack.vim'
+Plug 'https://github.com/nanotech/jellybeans.vim'
+call plug#end()
+
+" Colours
+colorscheme jellybeans
 
