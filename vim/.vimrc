@@ -51,7 +51,6 @@ nnoremap <leader><Space> :nohlsearch<CR>
 inoremap jk <Esc>
 
 " General file editing enhancements
-syntax on
 filetype indent plugin on
 
 " Specific file types
@@ -64,12 +63,25 @@ call plug#begin('~/.vim/plugged')
 Plug 'https://github.com/tpope/vim-sensible'
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'https://github.com/vim-airline/vim-airline'
+Plug 'https://github.com/vim-airline/vim-airline-themes'
 Plug 'https://github.com/airblade/vim-gitgutter'
 Plug 'https://github.com/sheerun/vim-polyglot'
 Plug 'https://github.com/mileszs/ack.vim'
 Plug 'https://github.com/nanotech/jellybeans.vim'
+Plug 'https://github.com/haishanh/night-owl.vim'
 call plug#end()
 
-" Colours
-colorscheme jellybeans
+" enable 24bit true color
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+" Correct italics
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+
+" enable the theme
+syntax enable
+colorscheme night-owl
+let g:airline_theme='night_owl'
 
