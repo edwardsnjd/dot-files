@@ -69,6 +69,8 @@ Plug 'https://github.com/sheerun/vim-polyglot'
 Plug 'https://github.com/mileszs/ack.vim'
 Plug 'https://github.com/nanotech/jellybeans.vim'
 Plug 'https://github.com/haishanh/night-owl.vim'
+Plug 'https://github.com/junegunn/fzf'
+Plug 'https://github.com/junegunn/fzf.vim'
 call plug#end()
 
 " enable 24bit true color
