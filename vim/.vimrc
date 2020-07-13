@@ -87,3 +87,7 @@ syntax enable
 colorscheme night-owl
 let g:airline_theme='night_owl'
 
+" Make netrw (file explorer) look sane
+let g:netrw_liststyle = 3 " Nested view
+let g:netrw_banner = 0    " No banner
+let g:netrw_winsize = 20  " 20% width
