@@ -10,3 +10,6 @@ alias elm='docker run -it --rm -v "$(pwd):/code" -w "/code" -e "HOME=/tmp" -u $U
 # Date times
 alias isodate='date -u +"%Y-%m-%dT%H:%MZ"'
 
+# iTerm2 tmux (control mode and reuse session)
+alias tm='tmux -CC new-session -As'
+
