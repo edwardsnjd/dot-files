@@ -13,3 +13,9 @@ alias isodate='date -u +"%Y-%m-%dT%H:%MZ"'
 # iTerm2 tmux (control mode and reuse session)
 alias tm='tmux -CC new-session -As'
 
+# Web search for given term
+function ws {
+  local -r search_terms="$@"
+  open "/Applications/Brave Browser.app/" "https://duckduckgo.com/?q=${search_terms}"
+}
+
