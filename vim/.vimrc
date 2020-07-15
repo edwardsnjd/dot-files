@@ -22,18 +22,13 @@ set cursorline		" Highlight current line
 set hlsearch		" Highlight all search results
 set smartcase		" Enable smart-case search
 set ignorecase		" Always case-insensitive
-set incsearch		" Searches for strings incrementally
 
-set autoindent		" Auto-indent new lines
 set shiftwidth=2	" Number of auto-indent spaces
 set smartindent		" Enable smart-indent
-set smarttab		" Enable smart-tabs
 set softtabstop=0	" Number of spaces per Tab
 
 " Advanced
-set ruler		" Show row and column ruler information
 set undolevels=1000	" Number of undo levels
-set backspace=indent,eol,start	" Backspace behaviour
 
 " Enable code folding
 set foldmethod=indent
@@ -82,7 +77,6 @@ let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
 
 " enable the theme
-syntax enable
 colorscheme night-owl
 let g:airline_theme='night_owl'
 
