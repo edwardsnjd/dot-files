@@ -10,7 +10,7 @@ set modelines=0     	" Disable modelines
 set encoding=utf-8	" Just make everything boring
 
 " General
-"set number		" Show line numbers
+set number		" Show line numbers
 set relativenumber	" Show relative line numbers
 set linebreak		" Break lines at word (requires Wrap lines)
 set showbreak=+++	" Wrap-broken line prefix
