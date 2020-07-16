@@ -35,11 +35,24 @@ set foldnestmax=10
 set foldlevel=1         " Fold second level on opening
 
 " Key bindings
-let mapleader = ","	" Change default leader from '\'
+let mapleader = " "     " Change default leader from '\'
 
-" Convenience mappings
+" Normal mode mappings:
+
 " - Deselect highlighting
-nnoremap <leader><Space> :nohlsearch<CR>
+nnoremap <leader>l :nohlsearch<CR>
+
+" - Fuzzy file search in project
+nnoremap <leader>p :Files<CR>
+
+" - Fuzzy text search in project
+nnoremap <leader>f :RG<CR>
+
+" - Fuzzy text search in project for word under cursor
+nnoremap <leader>g :RG <C-R><C-W><CR>
+
+" Insert mode mappings:
+
 " - Save some LH typing
 inoremap jk <Esc>
 
