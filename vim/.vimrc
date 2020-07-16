@@ -108,6 +108,8 @@ let &t_ZR="\e[23m"
 " enable the theme
 colorscheme night-owl
 let g:airline_theme='night_owl'
+" Tone down the night-owl todo colours
+hi Todo guifg=#a0a0a0 ctermfg=253 guibg=#011627 ctermbg=233 gui=NONE cterm=NONE
 
 " Make netrw (file explorer) look sane
 let g:netrw_liststyle = 3 " Nested view
