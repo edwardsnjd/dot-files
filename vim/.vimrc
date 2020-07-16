@@ -51,6 +51,9 @@ nnoremap <leader>f :RG<CR>
 " - Fuzzy text search in project for word under cursor
 nnoremap <leader>g :RG <C-R><C-W><CR>
 
+" - Open in Github
+nnoremap <leader>- :GetCurrentBranchLink<CR>
+
 " Insert mode mappings:
 
 " - Save some LH typing
@@ -94,6 +97,7 @@ Plug 'https://github.com/nanotech/jellybeans.vim'
 Plug 'https://github.com/haishanh/night-owl.vim'
 Plug 'https://github.com/junegunn/fzf'
 Plug 'https://github.com/junegunn/fzf.vim'
+Plug 'https://github.com/knsh14/vim-github-link'
 call plug#end()
 
 " enable 24bit true color
