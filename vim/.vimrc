@@ -42,6 +42,12 @@ let mapleader = " "     " Change default leader from '\'
 
 " Normal mode mappings:
 
+" - Save buffer
+nnoremap <leader>w :w<CR>
+
+" - Close buffer
+nnoremap <leader>d :bd<CR>
+
 " - Deselect highlighting
 nnoremap <leader>l :nohlsearch<CR>
 
