@@ -7,6 +7,9 @@ set nocompatible	" Turn of old vi compatibility mode
 set modelines=0     	" Disable modelines
 set encoding=utf-8	" Just make everything boring
 
+" Buffers
+set hidden		" Allow unsaved buffers off screen
+
 " General
 set number		" Show line numbers
 set relativenumber	" Show relative line numbers
