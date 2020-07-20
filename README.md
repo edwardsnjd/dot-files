@@ -13,7 +13,8 @@ Personal config files.
 Clone this repo then use stow to install symlinks to the bits you want.
 
 ```sh
-$ git clone https://github.com/edwardsnjd/dot-files.git ~/.dot-files
-$ cd ~/.dot-files
-$ stow bash git
+$ cd ~/projects
+$ git clone https://github.com/edwardsnjd/dot-files.git
+$ cd dot-files
+$ stow --target=/Users/foo bash git tmux vim
 ```
