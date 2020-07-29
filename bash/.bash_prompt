@@ -45,22 +45,46 @@ RESET="\[$ESC[${ATTR_NORMAL};${FG_NULL};${BG_NULL}m\]"
 GREEN="\[$ESC[${ATTR_NORMAL};${FG_GREEN}m\]"
 BLUE="\[$ESC[${ATTR_NORMAL};${FG_BLUE}m\]"
 VIOLET="\[$ESC[${ATTR_NORMAL};${FG_VIOLET}m\]"
+RED="\[$ESC[${ATTR_NORMAL};${FG_RED}m\]"
 
 # Functions
 
-join_by() { local IFS="$1"; shift; echo "$*"; }
-
-git_info() {
-    BRANCH="$(git_current_branch)"
-    if [ -n "$BRANCH" ]; then
-        echo "(${BRANCH})"
-    fi
+# Timing (from Gary Bernhart, https://github.com/garybernhardt/dotfiles)
+function minutes_since_last_commit {
+    now=$(date +%s)
+    last_commit=$(git log --pretty=format:'%at' -1)
+    seconds_since_last_commit=$((now-last_commit))
+    minutes_since_last_commit=$((seconds_since_last_commit/60))
+    echo $minutes_since_last_commit
 }
+
+git_since_last_commit() {
+    local MINUTES_SINCE_LAST_COMMIT=$(minutes_since_last_commit)
+
+    if [ "$MINUTES_SINCE_LAST_COMMIT" -gt 30 ]; then
+	local COLOR=${RED}
+    elif [ "$MINUTES_SINCE_LAST_COMMIT" -gt 10 ]; then
+	local COLOR=${YELLOW}
+    else
+	local COLOR=${GREEN}
+    fi
+
+    echo "${COLOR}$(minutes_since_last_commit)m"
+}
+
+join_by() { local IFS="$1"; shift; echo "$*"; }
 
 git_current_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
 }
 
+git_info() {
+    BRANCH="$(git_current_branch)"
+    if [ -n "$BRANCH" ]; then
+        echo "${GREEN}(${BRANCH}|$(git_since_last_commit)${GREEN})"
+    fi
+}
+
 # Prompt
 
-export PS1="${VIOLET}\d \A ${BLUE}\u${NORMAL}@${BLUE}\h${NORMAL} \W ${GREEN}\$(git_info)\n${RESET}\\$ "
+export PS1="${VIOLET}\d \A ${BLUE}\u${NORMAL}@${BLUE}\h${NORMAL} \W $(git_info)\n${RESET}\\$ "
