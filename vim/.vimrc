@@ -56,6 +56,10 @@ nnoremap <leader>d :bd<CR>
 " - Close buffer but keep window
 nnoremap <leader>D :bp \| bd#<CR>
 
+" - Cycle through buffers
+nnoremap <leader>j :bn<CR>
+nnoremap <leader>k :bp<CR>
+
 " - Deselect highlighting
 nnoremap <leader>l :nohlsearch<CR>
 
