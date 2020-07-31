@@ -11,6 +11,7 @@ set encoding=utf-8	" Just make everything boring
 set hidden		" Allow unsaved buffers off screen
 
 " General
+set showcmd		" Show commands as typing them
 set number		" Show line numbers
 set relativenumber	" Show relative line numbers
 set linebreak		" Break lines at word (requires Wrap lines)
@@ -33,14 +34,18 @@ set undolevels=1000	" Number of undo levels
 
 " Enable code folding
 set foldmethod=indent
-set nofoldenable	" Do not fold on opening
+set foldenable		" Fold on opening
 set foldnestmax=10
 set foldlevel=1         " Fold second level on opening
+set foldminlines=1	" Do not fold single line regions
 
 " Key bindings
 let mapleader = " "     " Change default leader from '\'
 
 " Normal mode mappings:
+
+" - Highlight word under cursor but don't jump
+nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
 " - Save buffer
 nnoremap <leader>w :w<CR>
@@ -48,17 +53,29 @@ nnoremap <leader>w :w<CR>
 " - Close buffer
 nnoremap <leader>d :bd<CR>
 
+" - Close buffer but keep window
+nnoremap <leader>D :bp \| bd#<CR>
+
 " - Deselect highlighting
 nnoremap <leader>l :nohlsearch<CR>
 
 " - Fuzzy file search in project
 nnoremap <leader>p :Files<CR>
 
+" - Fuzzy text search in buffer
+nnoremap <leader>/ :BLines<CR>
+
 " - Fuzzy text search in project
 nnoremap <leader>f :RG<CR>
 
 " - Fuzzy text search in project for word under cursor
 nnoremap <leader>F :RG <C-R><C-W><CR>
+
+" - Resize current window with arrow keys
+nnoremap <Right> :vertical resize +2<CR>
+nnoremap <Left> :vertical resize -2<CR>
+nnoremap <Up> :resize +2<CR>
+nnoremap <Down> :resize -2<CR>
 
 " - Open in Github
 nnoremap <leader>- :GetCurrentBranchLink<CR>
@@ -85,6 +102,11 @@ filetype indent plugin on
 
 " Specific file types
 autocmd Filetype gitcommit set textwidth=80
+
+" Prefer ripgrep over grep if available
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+endif
 
 " New commands
 
