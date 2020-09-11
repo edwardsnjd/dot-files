@@ -88,6 +88,9 @@ nnoremap <leader>- :GetCurrentBranchLink<CR>
 " - Preview markdown
 nnoremap <leader>m :PreviewMarkdown<CR><CR>
 
+" - Hide chrome (restart to undo)
+nnoremap <F5> :set ruler! laststatus=1 showcmd! relativenumber! number! showmode! hidden!<CR>
+
 " Insert mode mappings:
 
 " - Save some LH typing
