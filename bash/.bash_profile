@@ -1,5 +1,8 @@
 # --- Environment variables ---
 
+# Embrace vim
+export EDITOR=vim
+
 # Allow colour
 export CLICOLOR=1
 
