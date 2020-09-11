@@ -1,7 +1,3 @@
-" Most of this is vanilla but it's cobbled together from lots of sources:
-" - VimConfig.com
-" - https://stevelosh.com/blog/2010/09/coming-home-to-vim/#s11-important-vimrc-lines
-
 " High level
 set nocompatible	" Turn of old vi compatibility mode
 set modelines=0     	" Disable modelines
