@@ -73,6 +73,9 @@ nnoremap <leader>p :Files<CR>
 " - Fuzzy text search in buffer
 nnoremap <leader>/ :BLines<CR>
 
+" - Fuzzy text search in buffer (in order)
+nnoremap <leader>? :BSLines<CR>
+
 " - Fuzzy text search in project
 nnoremap <leader>f :RG<CR>
 
@@ -114,6 +117,9 @@ endif
 
 " Improve :Rg command to include hidden files
 command! -bang -nargs=* RG call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git/**' --glob '!**/node_modules/**' -- ".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
+
+" Alternate :BLines command with all lines in order
+command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-sort'] }, <bang>0)
 
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
