@@ -85,6 +85,9 @@ nnoremap <leader>F :RG <C-R><C-W><CR>
 " - Open in Github
 nnoremap <leader>- :GetCurrentBranchLink<CR>
 
+" - Preview markdown
+nnoremap <leader>m :PreviewMarkdown<CR><CR>
+
 " Insert mode mappings:
 
 " - Save some LH typing
@@ -120,6 +123,9 @@ command! -bang -nargs=* RG call fzf#vim#grep("rg --column --line-number --no-hea
 
 " Alternate :BLines command with all lines in order
 command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-sort'] }, <bang>0)
+
+" Preview markdown (OSX using pandoc)
+command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
 
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
