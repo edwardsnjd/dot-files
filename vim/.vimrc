@@ -43,6 +43,14 @@ let mapleader = " "     " Change default leader from '\'
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
+" - Resize current window with arrow keys
+nnoremap <Right> :vertical resize +2<CR>
+nnoremap <Left> :vertical resize -2<CR>
+nnoremap <Up> :resize +2<CR>
+nnoremap <Down> :resize -2<CR>
+
+" Normal mode leader mappings:
+
 " - Save buffer
 nnoremap <leader>w :w<CR>
 
@@ -70,12 +78,6 @@ nnoremap <leader>f :RG<CR>
 
 " - Fuzzy text search in project for word under cursor
 nnoremap <leader>F :RG <C-R><C-W><CR>
-
-" - Resize current window with arrow keys
-nnoremap <Right> :vertical resize +2<CR>
-nnoremap <Left> :vertical resize -2<CR>
-nnoremap <Up> :resize +2<CR>
-nnoremap <Down> :resize -2<CR>
 
 " - Open in Github
 nnoremap <leader>- :GetCurrentBranchLink<CR>
