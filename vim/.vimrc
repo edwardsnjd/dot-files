@@ -154,8 +154,21 @@ let &t_ZR="\e[23m"
 " enable the theme
 colorscheme night-owl
 let g:airline_theme='night_owl'
-" Tone down the night-owl todo colours
-hi Todo guifg=#a0a0a0 ctermfg=253 guibg=#011627 ctermbg=233 gui=NONE cterm=NONE
+
+" Tweak the night-owl colours:
+" hi Normal guifg=#d6deeb ctermfg=253 guibg=#011627 ctermbg=233 gui=NONE cterm=NONE
+" hi Comment guifg=#637777 ctermfg=243 gui=italic cterm=italic
+" hi IncSearch guifg=#eeeeee ctermfg=255 guibg=#ecc48d ctermbg=222 gui=NONE cterm=NONE
+" hi Search guifg=#011627 ctermfg=233 guibg=#ecc48d ctermbg=222 gui=NONE cterm=NONE
+" hi Todo guifg=#777777 ctermfg=243 guibg=#ecc48d ctermbg=222 gui=NONE cterm=NONE
+" hi SpecialKey guifg=#ecc48d ctermfg=222 gui=NONE cterm=NONE
+" - Tone down the search highlighting
+hi IncSearch  guibg=#a3cccc guifg=#607080
+hi Search     guibg=#404040 guifg=#d6deeb 
+" - Tone down the TODO highlight
+hi Todo       guibg=#011627 guifg=#93aaaa
+" - Tone down whitespace (and vim mappings)
+hi SpecialKey               guifg=#a8826b
 
 " Make netrw (file explorer) look sane
 let g:netrw_liststyle = 3 " Nested view
