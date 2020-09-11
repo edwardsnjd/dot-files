@@ -182,6 +182,6 @@ hi Todo       guibg=#011627 guifg=#93aaaa
 hi SpecialKey               guifg=#a8826b
 
 " Make netrw (file explorer) look sane
-let g:netrw_liststyle = 3 " Nested view
-let g:netrw_banner = 0    " No banner
-let g:netrw_winsize = 20  " 20% width
+let g:netrw_liststyle = 3     " Nested view
+let g:netrw_banner = 0        " No banner
+let g:netrw_winsize = 20      " 20% width
