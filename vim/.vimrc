@@ -134,6 +134,7 @@ command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc "%" > "$N
 " See `README.md` for bootstrap
 
 call plug#begin('~/.vim/plugged')
+Plug 'https://github.com/adelarsq/vim-matchit'
 Plug 'https://github.com/tpope/vim-sensible'
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'https://github.com/tpope/vim-vinegar'
