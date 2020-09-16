@@ -97,8 +97,8 @@ nnoremap <leader>- :GetCurrentBranchLink<CR>
 nnoremap <leader>m :PreviewMarkdown<CR><CR>
 
 " - Manually manage location list
-nmap <leader>rl <Plug>(GetLocation)
-nmap <leader>rc <Plug>(ClearLoci)
+nmap <leader>rl <Plug>(LociAdd)
+nmap <leader>rc <Plug>(LociClear)
 
 " - Hide chrome (restart to undo)
 nnoremap <F5> :set ruler! laststatus=1 showcmd! relativenumber! number! showmode! hidden!<CR>
@@ -151,8 +151,8 @@ command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc "%" > "$N
 
 " Manually remembering list of locations
 
-nnoremap <Plug>(GetLocation) :laddexpr GetLocation()<CR>
-nnoremap <Plug>(ClearLoci) :lexpr [] <bar> lclose<CR>
+nnoremap <Plug>(LociAdd) :laddexpr GetLocation()<CR>
+nnoremap <Plug>(LociClear) :lexpr [] <bar> lclose<CR>
 
 function! GetLocation()
   return [GetLocationInfo(), getline('.')]
