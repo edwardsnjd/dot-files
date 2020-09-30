@@ -149,7 +149,7 @@ command! -bang -nargs=* RG call fzf#vim#grep(
 command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-sort'] }, <bang>0)
 
 " Preview markdown (OSX using pandoc)
-command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
+command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc -s --mathjax "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
 
 " Manually remembering list of locations
 
