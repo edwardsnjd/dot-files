@@ -48,6 +48,12 @@
           "full_name": "balenaetcher"
         }
       },
+      "basictex": {
+        "version": "2020.0407",
+        "options": {
+          "full_name": "basictex"
+        }
+      },
       "bitbar": {
         "version": "1.9.2",
         "options": {
@@ -88,12 +94,6 @@
         "version": "3.2.4",
         "options": {
           "full_name": "wireshark"
-        }
-      },
-      "basictex": {
-        "version": "2020.0407",
-        "options": {
-          "full_name": "basictex"
         }
       }
     },
@@ -789,6 +789,48 @@
           }
         }
       },
+      "pango": {
+        "version": "1.46.2",
+        "bottle": {
+          "cellar": ":any",
+          "prefix": "/usr/local",
+          "files": {
+            "catalina": {
+              "url": "https://homebrew.bintray.com/bottles/pango-1.46.2.catalina.bottle.tar.gz",
+              "sha256": "a38a66e69c9beea396f882fb89445ea8e9a3d1a17a395eadcab1a63831d27bba"
+            },
+            "mojave": {
+              "url": "https://homebrew.bintray.com/bottles/pango-1.46.2.mojave.bottle.tar.gz",
+              "sha256": "daed7dc6be72a1155fd9b023b0e51cf1755ab25aef019084e0d2c42b135e82f3"
+            },
+            "high_sierra": {
+              "url": "https://homebrew.bintray.com/bottles/pango-1.46.2.high_sierra.bottle.tar.gz",
+              "sha256": "5bd420e30613604dfce63ba2588a5244715bf02c0863fbb6cb538bd9ac9fc54d"
+            }
+          }
+        }
+      },
+      "gnuplot": {
+        "version": "5.4.0_1",
+        "bottle": {
+          "cellar": "/usr/local/Cellar",
+          "prefix": "/usr/local",
+          "files": {
+            "catalina": {
+              "url": "https://homebrew.bintray.com/bottles/gnuplot-5.4.0_1.catalina.bottle.tar.gz",
+              "sha256": "07e87a593917fbb66d6eef8efe30ee04531bde21c5d4a45775bae98b5314b42d"
+            },
+            "mojave": {
+              "url": "https://homebrew.bintray.com/bottles/gnuplot-5.4.0_1.mojave.bottle.tar.gz",
+              "sha256": "221b581e96e34f346ef8de648e8e4ddadf66250ec1b1d5d9a894d12846c11f0a"
+            },
+            "high_sierra": {
+              "url": "https://homebrew.bintray.com/bottles/gnuplot-5.4.0_1.high_sierra.bottle.tar.gz",
+              "sha256": "43bd44cae7f514c857f548f671c6b600b31e077c2aa783d1b63d5295c467a2ad"
+            }
+          }
+        }
+      },
       "gource": {
         "version": "0.51",
         "bottle": {
@@ -834,27 +876,6 @@
       "gradle": {
         "version": "6.6.1",
         "bottle": false
-      },
-      "pango": {
-        "version": "1.46.2",
-        "bottle": {
-          "cellar": ":any",
-          "prefix": "/usr/local",
-          "files": {
-            "catalina": {
-              "url": "https://homebrew.bintray.com/bottles/pango-1.46.2.catalina.bottle.tar.gz",
-              "sha256": "a38a66e69c9beea396f882fb89445ea8e9a3d1a17a395eadcab1a63831d27bba"
-            },
-            "mojave": {
-              "url": "https://homebrew.bintray.com/bottles/pango-1.46.2.mojave.bottle.tar.gz",
-              "sha256": "daed7dc6be72a1155fd9b023b0e51cf1755ab25aef019084e0d2c42b135e82f3"
-            },
-            "high_sierra": {
-              "url": "https://homebrew.bintray.com/bottles/pango-1.46.2.high_sierra.bottle.tar.gz",
-              "sha256": "5bd420e30613604dfce63ba2588a5244715bf02c0863fbb6cb538bd9ac9fc54d"
-            }
-          }
-        }
       },
       "graphviz": {
         "version": "2.44.1",
