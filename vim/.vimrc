@@ -41,7 +41,7 @@ set foldmethod=indent
 set nofoldenable        " Do not fold on opening
 set foldnestmax=10
 set foldlevel=1         " Start folding at second level
-set foldminlines=1      " Do not fold single line regions
+set foldminlines=0      " Fold single line regions
 
 " Key bindings
 let mapleader = " "     " Change default leader from '\'
