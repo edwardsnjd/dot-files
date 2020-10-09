@@ -88,7 +88,7 @@ nnoremap <leader>? :BSLines<CR>
 nnoremap <leader>f :RG<CR>
 
 " - Fuzzy text search in project for word under cursor
-nnoremap <leader>F :RG <C-R><C-W><CR>
+nnoremap <leader>F :RG \b<C-R><C-W>\b<CR>
 
 " - Open in Github
 nnoremap <leader>- :GetCurrentBranchLink<CR>
