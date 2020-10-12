@@ -13,6 +13,12 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!**/.git/**' --glob '!**/node_modules/**' --glob '!tags'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+# Use color for man and less
+export MANPAGER='less -s -M +Gg'
+export LESS="--RAW-CONTROL-CHARS"
+# Use bold green for bold in less
+export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
+
 # --- Source other files ---
 
 function source_if_present {
