@@ -16,7 +16,7 @@
 [alias]
 	# Less typing
 	ch = checkout
-	co = commit
+	co = commit --verbose
 	df = diff
 	dfc = diff --cached
 	dfw = diff --word-diff-regex="[@a-zA-Z0-9_]+|[^[:space:]]" # identifier or non-space
