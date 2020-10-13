@@ -14,8 +14,7 @@ export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!**/.git/**' --glob '!**
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Use color for man and less
-export MANPAGER='less -s -M +Gg'
-export LESS="--RAW-CONTROL-CHARS"
+export LESS="--quit-if-one-screen --RAW-CONTROL-CHARS --no-init"
 # Use bold green for bold in less
 export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 
