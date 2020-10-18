@@ -16,6 +16,20 @@ alias tm='tmux -CC new-session -As'
 # Web search for given term
 function ws {
   local -r search_terms="$@"
-  open "/Applications/Brave Browser.app/" "https://duckduckgo.com/?q=${search_terms}"
+  local -r url="https://duckduckgo.com/?q=${search_terms}"
+  /Users/nick/bin/brave-cli "${url}"
 }
 
+# Watch in colour with configurable interval
+function wtch {
+  local -r interval="$1"
+  local -r args="${@:2}"
+
+  \watch --interval "$interval" --color ~/bin/faketty "$args"
+}
+
+# Default is 5 seconds (in colour)
+alias watch='wtch 5'
+
+# Github CLI aliases
+alias ghw='watch gh'

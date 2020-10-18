@@ -1,17 +1,23 @@
+# --- Bash aliases ---
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+# Alias definitions
+[ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
-###-tns-completion-start-###
-if [ -f /Users/nick/.tnsrc ]; then 
-    source /Users/nick/.tnsrc 
-fi
-###-tns-completion-end-###
+# Graphviz (alias but should be a script)
+[ -f ~/.bash_graphviz ] && source ~/.bash_graphviz
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# End NVM
+# Bash completion
+[ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
+
+# Prompt (env)
+[ -f ~/.bash_prompt ] && source ~/.bash_prompt
+
+# Appbot config (env)
+[ -f ~/.bash_appbot ] && source ~/.bash_appbot
 
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# RVM: Load *as a function*
+# [ -f "$HOME/.rvm/scripts/rvm" ] && source "$HOME/.rvm/scripts/rvm"
+
