@@ -225,6 +225,8 @@ let g:airline_theme='night_owl'
 " hi Search guifg=#011627 ctermfg=233 guibg=#ecc48d ctermbg=222 gui=NONE cterm=NONE
 " hi Todo guifg=#777777 ctermfg=243 guibg=#ecc48d ctermbg=222 gui=NONE cterm=NONE
 " hi SpecialKey guifg=#ecc48d ctermfg=222 gui=NONE cterm=NONE
+" hi diffAdded guifg=#addb67 ctermfg=149 gui=NONE cterm=NONE
+" hi diffRemoved guifg=#ff5874 ctermfg=204 gui=NONE cterm=NONE
 " - Tone down the search highlighting
 hi IncSearch  guibg=#a3cccc guifg=#607080
 hi Search     guibg=#404040 guifg=#d6deeb 
@@ -232,6 +234,10 @@ hi Search     guibg=#404040 guifg=#d6deeb
 hi Todo       guibg=#011627 guifg=#93aaaa
 " - Tone down whitespace (and vim mappings)
 hi SpecialKey               guifg=#a8826b
+" - Play with diffs
+hi diffAdded   guifg=#40dd40
+hi diffRemoved guifg=#dd5874
+
 
 " Make netrw (file explorer) look sane
 let g:netrw_liststyle = 3     " Nested view
