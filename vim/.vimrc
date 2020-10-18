@@ -110,6 +110,19 @@ nmap <silent> <F10> :echo
 \ 'trans<' . synIDattr(synID(line("."),col("."),0),"name") . '> ' .
 \ 'lo<'    . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . '>'<CR>
 
+" Show current syntax
+noremap <leader>ss :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
+" Fix syntax highlighting it goes wonky
+noremap <F12> <Esc>:syntax sync fromstart<CR>
+inoremap <F12> <C-o>:syntax sync fromstart<CR>
+
 " Insert mode mappings:
 
 " - Save some LH typing
