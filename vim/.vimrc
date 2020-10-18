@@ -238,6 +238,25 @@ hi SpecialKey               guifg=#a8826b
 hi diffAdded   guifg=#40dd40
 hi diffRemoved guifg=#dd5874
 
+" Trying to use Night Owl terminal colours
+let g:terminal_ansi_colors = [
+      \ g:terminal_color_0,
+      \ g:terminal_color_1,
+      \ g:terminal_color_2,
+      \ g:terminal_color_3,
+      \ g:terminal_color_4,
+      \ g:terminal_color_5,
+      \ g:terminal_color_6,
+      \ g:terminal_color_7,
+      \ g:terminal_color_8,
+      \ 'red',
+      \ g:terminal_color_10,
+      \ g:terminal_color_11,
+      \ g:terminal_color_12,
+      \ g:terminal_color_13,
+      \ g:terminal_color_14,
+      \ g:terminal_color_15
+      \]
 
 " Make netrw (file explorer) look sane
 let g:netrw_liststyle = 3     " Nested view
