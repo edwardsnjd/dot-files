@@ -127,6 +127,11 @@ inoremap <F12> <C-o>:syntax sync fromstart<CR>
 noremap <leader>ve :edit $MYVIMRC<CR>
 noremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
 
+" Github cli shortcuts
+noremap <leader>gp :! gh pr create<CR>
+noremap <leader>gs :! gh pr status<CR>
+noremap <leader>gc :! gh pr checks<CR>
+
 " Insert mode mappings:
 
 " - Save some LH typing
