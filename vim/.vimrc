@@ -123,6 +123,10 @@ endfunc
 noremap <F12> <Esc>:syntax sync fromstart<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
+" .vimrc shortcuts
+noremap <leader>ve :edit $MYVIMRC<CR>
+noremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
+
 " Insert mode mappings:
 
 " - Save some LH typing
