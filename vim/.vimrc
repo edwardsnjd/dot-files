@@ -219,7 +219,7 @@ command! -nargs=1 Redir silent call Redir(<f-args>)
 " See `README.md` for bootstrap
 
 call plug#begin('~/.vim/plugged')
-Plug 'https://github.com/adelarsq/vim-matchit'
+Plug 'https://github.com/chrisbra/matchit'
 Plug 'https://github.com/tpope/vim-sensible'
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'https://github.com/tpope/vim-vinegar'
