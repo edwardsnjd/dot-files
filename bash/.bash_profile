@@ -10,7 +10,7 @@ export CLICOLOR=1
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # fzf configuration
-export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!**/.git/**' --glob '!**/node_modules/**' --glob '!tags'"
+export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Set browser for CLI tools (custom binstub)

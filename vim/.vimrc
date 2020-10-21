@@ -189,14 +189,14 @@ autocmd Filetype gitcommit set textwidth=80
 
 " Prefer ripgrep over grep if available
 if executable('rg')
-  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --hidden\ --glob\ '!/.git/'
 endif
 
 " New commands
 
 " Improve :Rg command to include hidden files
 command! -bang -nargs=* RG call fzf#vim#grep(
-\ "rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git/**' --glob '!**/node_modules/**' --glob '!tags' -- ".shellescape(<q-args>),
+\ "rg --column --line-number --no-heading --color=always --smart-case --hidden --glob '!/.git/' -- ".shellescape(<q-args>),
 \ 1, fzf#vim#with_preview(), <bang>0)
 
 " Alternate :BLines command with all lines in order
