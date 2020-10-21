@@ -155,6 +155,20 @@ noremap <leader>gc :! gh pr checks<CR>
 " - Save some LH typing
 inoremap jk <Esc>
 
+" - Find and select next placeholder
+nnoremap <C-j> :keeppattern normal! /<++><C-v><CR><CR>vf><C-g>
+smap <C-j> <Esc><C-j>
+imap <C-j> <Esc><C-j>
+
+" - Latex for maths
+iabbrev LB <C-G>u$$<CR><++><CR>$$<++>
+iabbrev LI <C-G>u$<++>$<++>
+iabbrev LF <C-G>u\frac{<++>}{<++>}<++>
+iabbrev LS <C-G>u\sum_{<++>}^{<++>}<++>
+iabbrev LT <C-G>u\theta_{<++>}^{<++>}<++>
+iabbrev LX <C-G>ux_{<++>}^{<++>}<++>
+iabbrev LP <C-G>u\frac{\partial <++>}{\partial <++>}<++>
+
 " fzf mappings:
 
 " - Display mappings
