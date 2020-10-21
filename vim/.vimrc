@@ -43,6 +43,12 @@ set foldnestmax=10
 set foldlevel=1         " Start folding at second level
 set foldminlines=0      " Fold single line regions
 
+" Terminal menus
+source $VIMRUNTIME/menu.vim
+set wildmenu
+set wildcharm=<C-Z>
+map <F4> :emenu <C-Z>
+
 " Key bindings
 let mapleader = " "     " Change default leader from '\'
 
