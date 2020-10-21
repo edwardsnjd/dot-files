@@ -78,11 +78,17 @@ nnoremap <leader>D :bp \| bd#<CR>
 nnoremap <leader>j :bn<CR>
 nnoremap <leader>k :bp<CR>
 
+" - Run the default build command
+nnoremap <leader>b :Make<CR>
+
 " - Deselect highlighting
 nnoremap <leader>l :nohlsearch<CR>
 
 " - Fuzzy file search in project
 nnoremap <leader>p :Files<CR>
+
+" - Fuzzy file search open buffers
+nnoremap <leader>P :Buffers<CR>
 
 " - Fuzzy text search in buffer
 nnoremap <leader>/ :BLines<CR>
@@ -95,6 +101,12 @@ nnoremap <leader>f :RG<CR>
 
 " - Fuzzy text search in project for word under cursor
 nnoremap <leader>F :RG \b<C-R><C-W>\b<CR>
+
+" - Display spec outline
+nnoremap <leader>so :Redir global /\v\C<(describe\|context\|it) /<CR>
+
+" - Copy things about current buffer to clipboard
+nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
 
 " - Open in Github
 nnoremap <leader>- :GetCurrentBranchLink<CR>
@@ -191,6 +203,17 @@ endfunction
 function! GetLocationInfo()
   return expand('%') . ':' . line('.') . ':' . col('.') . ':' . input('Label (optional): ')
 endfunction
+
+" Redirect the output of a Vim or external command into a scratch buffer
+" https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
+function! Redir(cmd) abort
+    let output = execute(a:cmd)
+    tabnew
+    setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
+    call setline(1, split(output, "\n"))
+endfunction
+
+command! -nargs=1 Redir silent call Redir(<f-args>)
 
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
