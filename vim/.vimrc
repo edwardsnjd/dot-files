@@ -225,10 +225,10 @@ endfunction
 " Redirect the output of a Vim or external command into a scratch buffer
 " https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
 function! Redir(cmd) abort
-    let output = execute(a:cmd)
-    tabnew
-    setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
-    call setline(1, split(output, "\n"))
+  let output = execute(a:cmd)
+  tabnew
+  setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
+  call setline(1, split(output, "\n"))
 endfunction
 
 command! -nargs=1 Redir silent call Redir(<f-args>)
