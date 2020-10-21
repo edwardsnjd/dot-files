@@ -43,6 +43,10 @@ set foldnestmax=10
 set foldlevel=1         " Start folding at second level
 set foldminlines=0      " Fold single line regions
 
+" Splits in more natural location
+set splitbelow
+set splitright
+
 " Terminal menus
 source $VIMRUNTIME/menu.vim
 set wildmenu
