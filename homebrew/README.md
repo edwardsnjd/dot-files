@@ -11,3 +11,10 @@ Add a formula:
 $ cat 'brew "foo"' >> Brewfile
 $ brew bundle install
 ```
+
+Rebuild the dump file:
+```sh
+$ rm Brewfile*
+$ brew bundle dump
+$ brew bundle install
+```
