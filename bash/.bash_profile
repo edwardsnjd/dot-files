@@ -12,6 +12,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # fzf configuration
 export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up"
 
 # Set browser for CLI tools (custom binstub)
 export BROWSER="/Users/nick/bin/chrome-cli"
