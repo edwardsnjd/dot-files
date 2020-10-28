@@ -262,6 +262,11 @@ if (has("termguicolors"))
   set termguicolors
 endif
 
+" Expect terminal emulator to display things quickly
+if (has("termguicolors"))
+  set ttyfast
+endif
+
 " Correct italics
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
