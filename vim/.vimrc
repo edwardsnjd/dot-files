@@ -172,6 +172,7 @@ iabbrev LS <C-G>u\sum_{<++>}^{<++>}<++>
 iabbrev LT <C-G>u\theta_{<++>}^{<++>}<++>
 iabbrev LX <C-G>ux_{<++>}^{<++>}<++>
 iabbrev LP <C-G>u\frac{\partial <++>}{\partial <++>}<++>
+iabbrev LA <C-G>u\begin{array}{rl}<CR><++><CR>\end{array}<++>
 
 " fzf mappings:
 
