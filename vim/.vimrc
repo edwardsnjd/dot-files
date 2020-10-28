@@ -73,10 +73,10 @@ nnoremap <Down> :resize -2<CR>
 nnoremap <leader>w :w<CR>
 
 " - Close buffer
-nnoremap <leader>d :bd<CR>
+nnoremap <leader>D :bd<CR>
 
 " - Close buffer but keep window
-nnoremap <leader>D :bp \| bd#<CR>
+nnoremap <leader>d :bp \| bd#<CR>
 
 " - Cycle through buffers
 nnoremap <leader>j :bn<CR>
