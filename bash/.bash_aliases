@@ -33,3 +33,28 @@ alias watch='wtch 5'
 
 # Github CLI aliases
 alias ghw='watch gh'
+
+# FZF browse of git diff
+function gd {
+  preview="git diff --color=always $@ -- {-1}"
+  git diff --name-only "$@" | fzf -m --ansi --preview "$preview"
+}
+
+# FZF browse of git checkout
+function gc {
+  preview="git lg -50 {-1}"
+  git branch --list --format="%(refname:short)" | fzf --preview "$preview" | xargs git checkout
+}
+
+# FZF browse of git log
+function glg {
+  pretty="format:%C(yellow)%h %C(green)%ad%C(reset) %s %C(green)(%cr) %C(cyan)<%an>%C(red)%d%C(reset)"
+  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color"
+  git log --color --pretty="$pretty" --date=short | fzf --ansi --no-sort --preview "$preview"
+}
+
+# Interactive FZF browse of git log
+function gl {
+  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -+F"
+  git lg -n5000 | fzf --ansi --no-sort --bind "enter:execute($preview)"
+}
