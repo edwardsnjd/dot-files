@@ -32,12 +32,6 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Hom
 # Specify command lines that should not appear in `history`
 export HISTIGNORE=history:clear
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -f "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -f "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-# End NVM
-
 # Unused?
 # export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
