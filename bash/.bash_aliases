@@ -48,13 +48,14 @@ function gc {
 
 # FZF browse of git log
 function glg {
-  pretty="format:%C(yellow)%h %C(green)%ad%C(reset) %s %C(green)(%cr) %C(cyan)<%an>%C(red)%d%C(reset)"
-  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color"
-  git log --color --pretty="$pretty" --date=short | fzf --ansi --no-sort --preview "$preview"
+  pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -c -+F -+X"
+  #git lg -n5000 | fzf --ansi --layout=reverse-list --no-sort --preview "$preview"
+  git log --graph --color --pretty="$pretty" --date=short | fzf --ansi --layout=reverse-list --no-sort --preview "$preview"
 }
 
 # Interactive FZF browse of git log
 function gl {
-  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -+F"
-  git lg -n5000 | fzf --ansi --no-sort --bind "enter:execute($preview)"
+  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -c -+F -+X"
+  git lg -n5000 | fzf --ansi --layout=reverse-list --no-sort --bind "enter:execute($preview)"
 }
