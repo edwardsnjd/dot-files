@@ -142,17 +142,17 @@ function! <SID>SynStack()
 endfunc
 
 " Fix syntax highlighting it goes wonky
-noremap <F12> <Esc>:syntax sync fromstart<CR>
+nnoremap <F12> <Esc>:syntax sync fromstart<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
 " .vimrc shortcuts
-noremap <leader>ve :edit $MYVIMRC<CR>
-noremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
+nnoremap <leader>ve :edit $MYVIMRC<CR>
+nnoremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
 
 " Github cli shortcuts
-noremap <leader>gp :! gh pr create<CR>
-noremap <leader>gs :! gh pr status<CR>
-noremap <leader>gc :! gh pr checks<CR>
+nnoremap <leader>gp :! gh pr create<CR>
+nnoremap <leader>gs :! gh pr status<CR>
+nnoremap <leader>gc :! gh pr checks<CR>
 
 " Insert mode mappings:
 
