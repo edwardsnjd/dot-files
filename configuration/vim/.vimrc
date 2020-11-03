@@ -190,7 +190,9 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 filetype indent plugin on
 
 " Specific file types
-autocmd Filetype gitcommit set textwidth=80
+autocmd Filetype gitcommit setlocal textwidth=80
+autocmd Filetype ruby setlocal colorcolumn=91
+autocmd Filetype javascript setlocal colorcolumn=91
 
 " Prefer ripgrep over grep if available
 if executable('rg')
@@ -285,6 +287,7 @@ let g:airline_theme='night_owl'
 " hi SpecialKey guifg=#ecc48d ctermfg=222 gui=NONE cterm=NONE
 " hi diffAdded guifg=#addb67 ctermfg=149 gui=NONE cterm=NONE
 " hi diffRemoved guifg=#ff5874 ctermfg=204 gui=NONE cterm=NONE
+" hi ColorColumn guibg=#222222 ctermbg=235 gui=NONE cterm=NONE
 " - Tone down the search highlighting
 hi IncSearch  guibg=#a3cccc guifg=#607080
 hi Search     guibg=#404040 guifg=#d6deeb 
@@ -295,6 +298,8 @@ hi SpecialKey               guifg=#a8826b
 " - Play with diffs
 hi diffAdded   guifg=#40dd40
 hi diffRemoved guifg=#dd5874
+" - Subtle column marker
+hi ColorColumn guibg=#011728
 
 " Trying to use Night Owl terminal colours
 let g:terminal_ansi_colors = [
