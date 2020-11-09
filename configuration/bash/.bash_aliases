@@ -40,28 +40,35 @@ alias v='vim $(f)'
 # Pick file
 alias f='fzf --preview "bat --color=always {}"'
 
-# FZF browse of git diff
+# FZF browse of files for git diff
 function gd {
-  preview="git diff --color=always $@ -- {-1}"
-  git diff --name-only "$@" | fzf -m --ansi --preview "$preview"
+  preview="git diff --color=always $@ -- {}"
+  git diff --name-only "$@" \
+    | fzf -m --preview "$preview"
 }
 
-# FZF browse of git checkout
+# FZF browse of branches for git checkout
 function gc {
-  preview="git lg -50 {-1}"
-  git branch --list --format="%(refname:short)" | fzf --preview "$preview" | xargs git checkout
+  format="%(color:yellow)%(refname:short)%(color:reset) %(color:red)%(HEAD)%(color:reset) %(upstream:trackshort) %(upstream:short) %(upstream:track)"
+  preview="git lg -100 {1}"
+  git branch --list --color --format="$format" \
+    | fzf --no-sort --layout=reverse-list --ansi --cycle --preview="$preview" \
+    | cut -d" " -f1 \
+    | xargs git checkout
 }
 
 # FZF browse of git log
 function glg {
   pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
   preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -c -+F -+X"
-  #git lg -n5000 | fzf --ansi --layout=reverse-list --no-sort --preview "$preview"
-  git log --graph --color --pretty="$pretty" --date=short | fzf --ansi --layout=reverse-list --no-sort --preview "$preview"
+  git log --graph --color --pretty="$pretty" --date=short --decorate "$@" \
+    | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" \
+    | grep -Eo '[a-f0-9]{7,}'
 }
 
 # Interactive FZF browse of git log
 function gl {
   preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -c -+F -+X"
-  git lg -n5000 | fzf --ansi --layout=reverse-list --no-sort --bind "enter:execute($preview)"
+  git lg -n5000 "$@" \
+    | fzf --ansi --layout=reverse-list --no-sort --bind="enter:execute($preview)"
 }
