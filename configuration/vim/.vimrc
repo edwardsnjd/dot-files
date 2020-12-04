@@ -114,7 +114,13 @@ nnoremap <leader>? :BSLines<CR>
 nnoremap <leader>f :RG<CR>
 
 " - Fuzzy text search in project for word under cursor
-nnoremap <leader>F :RG \b<C-R><C-W>\b<CR>
+" NOTE: <C-R><C-W> will not type text that's already there, which will match the
+" "b" from the leading "\b"!
+nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
+
+" - Fuzzy text search in project for selected text
+" NOTE: Uses x register
+vnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 
 " - Display spec outline
 nnoremap <leader>so :Redir global /\v\C<(describe\|context\|it) /<CR>
