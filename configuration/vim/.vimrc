@@ -220,6 +220,12 @@ autocmd Filetype gitcommit setlocal textwidth=80
 autocmd Filetype ruby setlocal colorcolumn=91
 autocmd Filetype javascript setlocal colorcolumn=91
 
+" Markdown
+autocmd Filetype markdown noremap j gj
+autocmd Filetype markdown noremap k gk
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
 " Prefer ripgrep over grep if available
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --hidden\ --glob\ '!/.git/'
@@ -311,6 +317,8 @@ Plug 'https://github.com/haishanh/night-owl.vim'
 Plug 'https://github.com/junegunn/fzf'
 Plug 'https://github.com/junegunn/fzf.vim'
 Plug 'https://github.com/knsh14/vim-github-link'
+Plug 'https://github.com/junegunn/goyo.vim'
+Plug 'https://github.com/junegunn/limelight.vim'
 call plug#end()
 
 " enable 24bit true color
