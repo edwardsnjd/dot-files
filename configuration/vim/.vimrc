@@ -58,8 +58,18 @@ let mapleader = " "     " Change default leader from '\'
 
 " Normal mode mappings:
 
+" - Make copy consistent with other actions
+nnoremap Y y$
+
+" - Convenient fold toggling
+nnoremap <tab> za
+
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
+
+" - Highlight selected text but don't jump
+" NOTE: Uses x register
+vnoremap <silent> * "xy:<C-U>let @/ = @x <bar> set hls <cr>
 
 " - Resize current window with arrow keys
 nnoremap <Right> :vertical resize +2<CR>
@@ -71,6 +81,9 @@ nnoremap <Down> :resize -2<CR>
 
 " - Save buffer
 nnoremap <leader>w :w<CR>
+
+" - Close window
+nnoremap <leader>x :close<CR>
 
 " - Close buffer
 nnoremap <leader>D :bd<CR>
