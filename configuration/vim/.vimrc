@@ -128,6 +128,13 @@ nnoremap <leader>so :Redir global /\v\C<(describe\\|context\\|it) /<CR>
 " - Display file git history
 nnoremap <leader>sg :Redir !git log --oneline -n 1000 -- %<CR>
 
+" - Search devdocs for word under cursor
+nnoremap <leader>sd :SearchDevDocs <C-R>=expand('<cword>')<CR><CR>
+
+" - Search devdocs for selected text
+" NOTE: Uses x register
+vnoremap <leader>sd "xy:<C-U>SearchDevDocs <C-R>=getreg('x')<CR><CR>
+
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
 
@@ -230,6 +237,8 @@ command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-so
 
 " Preview markdown (OSX using pandoc)
 command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc -s --mathjax "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
+
+command! -nargs=* SearchDevDocs silent exec "!open https://devdocs.io/\\#q=".shellescape(<q-args>) | redraw!
 
 " Manually remembering list of locations
 
