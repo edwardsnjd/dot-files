@@ -125,6 +125,9 @@ vnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 " - Display spec outline
 nnoremap <leader>so :Redir global /\v\C<(describe\\|context\\|it) /<CR>
 
+" - Display file git history
+nnoremap <leader>sg :Redir !git log --oneline -n 1000 -- %<CR>
+
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
 
