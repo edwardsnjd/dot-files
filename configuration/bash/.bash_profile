@@ -28,6 +28,9 @@ export HISTIGNORE=history:clear
 # Include private bin if it exists
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
+# Include any local machine things
+[ -f ~/.bash_local ] && source ~/.bash_local
+
 # --- Source other files ---
 
 # Include rest of things used for all interactive shell
