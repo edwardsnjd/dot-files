@@ -98,9 +98,6 @@ nnoremap <leader>k :bp<CR>
 " - Run the default build command
 nnoremap <leader>b :Make<CR>
 
-" - Deselect highlighting
-nnoremap <leader>l :nohlsearch<CR>
-
 " - Fuzzy file search in project
 nnoremap <leader>p :Files<CR>
 
