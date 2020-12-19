@@ -34,6 +34,12 @@ alias watch='wtch 5'
 # Github CLI aliases
 alias ghw='watch gh'
 
+# Pick file to edit
+alias v='vim $(f)'
+
+# Pick file
+alias f='fzf --preview "bat --color=always {}"'
+
 # FZF browse of git diff
 function gd {
   preview="git diff --color=always $@ -- {-1}"
