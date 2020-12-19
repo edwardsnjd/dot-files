@@ -3,14 +3,8 @@
 # Alias definitions
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
-# Graphviz (alias but should be a script)
-[ -f ~/.bash_graphviz ] && source ~/.bash_graphviz
-
 # Prompt (env)
 [ -f ~/.bash_prompt ] && source ~/.bash_prompt
-
-# Appbot config (env)
-[ -f ~/.bash_appbot ] && source ~/.bash_appbot
 
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -22,12 +16,6 @@ export NVM_DIR="$HOME/.nvm"
 # End NVM
 # Note: NVM will not be ready until after it's been called once with `nvm ...`
 
-# RVM: Load *as a function*
-# [ -f "$HOME/.rvm/scripts/rvm" ] && source "$HOME/.rvm/scripts/rvm"
-
 # Allow OS overrides
 [ -f ~/.bashrc.osx ] && source ~/.bashrc.osx
 [ -f ~/.bashrc.ubuntu ] && source ~/.bashrc.ubuntu
-
-# Tone down "other writeable" panic color
-export LS_COLORS="${LS_COLORS}:ow=07;36"
