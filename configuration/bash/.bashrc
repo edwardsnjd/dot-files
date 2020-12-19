@@ -28,3 +28,6 @@ export NVM_DIR="$HOME/.nvm"
 # Allow OS overrides
 [ -f ~/.bashrc.osx ] && source ~/.bashrc.osx
 [ -f ~/.bashrc.ubuntu ] && source ~/.bashrc.ubuntu
+
+# Tone down "other writeable" panic color
+export LS_COLORS="${LS_COLORS}:ow=07;36"
