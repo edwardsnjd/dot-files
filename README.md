@@ -10,11 +10,4 @@ Personal config files.
 
 ## Usage
 
-Clone this repo then use stow to install symlinks to the bits you want.
-
-```sh
-$ cd ~/projects
-$ git clone https://github.com/edwardsnjd/dot-files.git
-$ cd dot-files
-$ stow --target=/Users/foo bash git tmux vim
-```
+See `README.md` files scattered around this repo.
