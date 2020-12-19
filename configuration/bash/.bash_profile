@@ -35,6 +35,12 @@ export HISTIGNORE=history:clear
 # Unused?
 # export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
+# set PATH so it includes user's private bin if it exists
+[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+
+# set PATH so it includes user's private bin if it exists
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
+
 # --- Source other files ---
 
 # Include rest of things used for all interactive shell
