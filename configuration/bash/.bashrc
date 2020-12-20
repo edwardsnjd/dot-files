@@ -19,3 +19,9 @@ export NVM_DIR="$HOME/.nvm"
 # Allow OS overrides
 [ -f ~/.bashrc.osx ] && source ~/.bashrc.osx
 [ -f ~/.bashrc.ubuntu ] && source ~/.bashrc.ubuntu
+
+# RVM: Load *as a function*
+# [ -f "$HOME/.rvm/scripts/rvm" ] && source "$HOME/.rvm/scripts/rvm"
+
+# Allow broot convenient launch and extra features
+[ -f ~/.config/broot/launcher/bash/br ] && source ~/.config/broot/launcher/bash/br
