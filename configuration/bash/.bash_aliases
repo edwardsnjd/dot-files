@@ -72,3 +72,11 @@ function gl {
   git lg -n5000 "$@" \
     | fzf --ansi --layout=reverse-list --no-sort --bind="enter:execute($preview)"
 }
+
+# Foo
+function foo {
+  tmux capture-pane -p -S - -E - \
+    | tr " " "\n" \
+    | sort -u \
+    | fzf
+}
