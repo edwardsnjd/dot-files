@@ -7,9 +7,9 @@ export EDITOR=vim
 export CLICOLOR=1
 
 # fzf configuration
-export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/'"
+export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/' --color=always"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up"
+export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up --ansi"
 
 # Use color for man and less
 export LESS="--quit-if-one-screen --RAW-CONTROL-CHARS --no-init"
