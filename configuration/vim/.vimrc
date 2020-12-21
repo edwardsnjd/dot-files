@@ -128,6 +128,9 @@ nnoremap <leader>so :Redir global /\v\C<(describe\\|context\\|it) /<CR>
 " - Display file git history
 nnoremap <leader>sg :Redir !git log --oneline -n 1000 -- %<CR>
 
+" - Display file git blame
+nnoremap <leader>sb :!git blame -- %<CR>
+
 " - Search devdocs for word under cursor
 nnoremap <leader>sd :SearchDevDocs <C-R>=expand('<cword>')<CR><CR>
 
