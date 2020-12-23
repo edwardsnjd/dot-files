@@ -63,4 +63,4 @@ git_current_branch() {
 
 # Prompt
 
-export PS1="${VIOLET}\d \A ${BLUE}\u${NORMAL}@${BLUE}\h${NORMAL} \W ${GREEN}\$(git_info)\n${RESET}\\$ "
+export PS1="${VIOLET}\d \A ${BLUE}\u${NORMAL}@${BLUE}\h${NORMAL} \W ${GREEN}\$(git_info)\012${RESET}\\$ "
