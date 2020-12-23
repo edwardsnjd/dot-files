@@ -8,12 +8,14 @@ function speed_up_keys() {
   defaults write -g KeyRepeat -int 2
 }
 
-function main() {
-  echo "Args: $@"
-  case $1 in
-     "--speed-up-keys") speed_up_keys;;
-     *) echo "TODO: Usage";;
-  esac
-}
+speed_up_keys
 
-main "$@"
+stow --target="${HOME}" \
+  alacritty \
+  bash \
+  bash.osx \
+  bat \
+  git \
+  git.osx \
+  tmux \
+  vim
