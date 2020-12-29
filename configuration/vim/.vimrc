@@ -101,11 +101,11 @@ nnoremap <leader>p :Files<CR>
 " - Fuzzy file search open buffers
 nnoremap <leader>P :Buffers<CR>
 
-" - Fuzzy text search in buffer
-nnoremap <leader>/ :BLines<CR>
-
 " - Fuzzy text search in buffer (in order)
-nnoremap <leader>? :BSLines<CR>
+nnoremap <leader>/ :BSLines<CR>
+
+" - Fuzzy tag search in buffer
+nnoremap <leader>? :BTags<CR>
 
 " - Fuzzy text search in project
 nnoremap <leader>f :RG<CR>
