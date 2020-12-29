@@ -61,9 +61,6 @@ let mapleader = " "     " Change default leader from '\'
 " - Make copy consistent with other actions
 nnoremap Y y$
 
-" - Convenient fold toggling
-nnoremap <tab> za
-
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
