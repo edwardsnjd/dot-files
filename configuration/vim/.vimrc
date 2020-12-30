@@ -333,6 +333,7 @@ Plug 'https://github.com/junegunn/fzf.vim'
 Plug 'https://github.com/knsh14/vim-github-link'
 Plug 'https://github.com/junegunn/goyo.vim'
 Plug 'https://github.com/junegunn/limelight.vim'
+Plug 'https://github.com/wincent/terminus'
 call plug#end()
 
 " enable 24bit true color
