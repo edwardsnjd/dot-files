@@ -11,7 +11,6 @@ set showcmd             " Show commands as typing them
 set number              " Show line numbers
 set relativenumber      " Show relative line numbers
 set linebreak           " Break lines at word (requires Wrap lines)
-set showbreak=+++       " Wrap-broken line prefix
 set textwidth=0         " Do not change buffer text when wrapping
 set showmatch           " Highlight matching brace
 set visualbell          " Use visual bell (no beeping)
