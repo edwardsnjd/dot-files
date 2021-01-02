@@ -405,3 +405,6 @@ let g:terminal_ansi_colors = [
 let g:netrw_liststyle = 3     " Nested view
 let g:netrw_banner = 0        " No banner
 let g:netrw_winsize = 20      " 20% width
+" BUG: Netrw seems to trash registers if it contains an apostrophe!
+" See: https://github.com/tpope/vim-vinegar/issues/91
+" See: https://github.com/neovim/neovim/issues/11405
