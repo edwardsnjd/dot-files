@@ -39,7 +39,7 @@ set undolevels=1000     " Number of undo levels
 set foldmethod=indent
 set nofoldenable        " Do not fold on opening
 set foldnestmax=10
-set foldlevel=1         " Start folding at second level
+set foldlevel=0         " Start folding at this level
 set foldminlines=0      " Fold single line regions
 
 " Splits in more natural location
@@ -59,6 +59,10 @@ let mapleader = " "     " Change default leader from '\'
 
 " - Make copy consistent with other actions
 nnoremap Y y$
+
+" - More convenient way to increase/decrease folding
+nnoremap zh zm
+nnoremap zl zr
 
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
