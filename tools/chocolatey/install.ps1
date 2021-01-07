@@ -12,4 +12,3 @@ choco install googlechrome -y
 choco install dropbox -y
 choco install keepassxc -y
 choco install firacode -y
-choco install authy-desktop -y
