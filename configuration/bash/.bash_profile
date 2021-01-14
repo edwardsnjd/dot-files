@@ -7,7 +7,7 @@ export EDITOR=vim
 export CLICOLOR=1
 
 # fzf configuration
-export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/' --color=always"
+export FZF_DEFAULT_COMMAND='fd --type file --hidden --color=always --exclude ".git/"'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up --ansi"
 
