@@ -157,8 +157,17 @@ nnoremap <leader>ts :.!toilet -d ~/figlet-fonts -f standard -w 300<CR>
 nnoremap <leader>tf :.!toilet -f future -w 300<CR>
 nnoremap <leader>tb :.!toilet -f term -F border -w 300<CR>
 
-" - Hide chrome (restart to undo)
-nnoremap <F5> :set ruler! laststatus=1 showcmd! relativenumber! number! showmode! hidden!<CR>
+" - Show presentation
+noremap <silent> <F5> :silent call <SID>Present()<CR>
+function! <SID>Present()
+  set noruler noshowcmd norelativenumber nonumber noshowmode nohidden nocursorline
+  set listchars= laststatus=0 shortmess=F
+  GitGutterDisable
+  nnoremap <silent> <Right> :bn<CR>
+  nnoremap <silent> <Left> :bp<CR>
+  nnoremap <Up> <nop>
+  nnoremap <Down> <nop>
+endfunc
 
 " - Show highlight groups at the cursor
 " See: https://vim.fandom.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
