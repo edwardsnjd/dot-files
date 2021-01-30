@@ -18,4 +18,5 @@ stow --target="${HOME}" \
   git \
   git.osx \
   tmux \
-  vim
+  vim \
+  toilet
