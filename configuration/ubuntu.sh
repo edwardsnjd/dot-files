@@ -6,4 +6,5 @@ stow --target=$HOME \
   bat \
   git \
   tmux \
-  vim
+  vim \
+  toilet
