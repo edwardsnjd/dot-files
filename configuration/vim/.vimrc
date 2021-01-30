@@ -151,6 +151,12 @@ nnoremap <leader>m :PreviewMarkdown<CR><CR>
 nmap <leader>rl <Plug>(LociAdd)
 nmap <leader>rc <Plug>(LociClear)
 
+" - Writing presentations
+nnoremap <leader>th :.!toilet -d ~/figlet-fonts -f big -w 300<CR>
+nnoremap <leader>ts :.!toilet -d ~/figlet-fonts -f standard -w 300<CR>
+nnoremap <leader>tf :.!toilet -f future -w 300<CR>
+nnoremap <leader>tb :.!toilet -f term -F border -w 300<CR>
+
 " - Hide chrome (restart to undo)
 nnoremap <F5> :set ruler! laststatus=1 showcmd! relativenumber! number! showmode! hidden!<CR>
 
