@@ -42,6 +42,9 @@ set foldnestmax=10
 set foldlevel=0         " Start folding at this level
 set foldminlines=0      " Fold single line regions
 
+" Show more context
+set scrolloff=6
+
 " Splits in more natural location
 set splitbelow
 set splitright
