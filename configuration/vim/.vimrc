@@ -44,6 +44,7 @@ set foldminlines=0      " Fold single line regions
 
 " Show more context
 set scrolloff=6
+set mouse=a
 
 " Splits in more natural location
 set splitbelow
