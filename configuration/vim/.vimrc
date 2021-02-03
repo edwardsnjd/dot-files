@@ -241,6 +241,7 @@ filetype indent plugin on
 autocmd Filetype gitcommit setlocal textwidth=80
 autocmd Filetype ruby setlocal colorcolumn=91
 autocmd Filetype javascript setlocal colorcolumn=91
+autocmd Filetype python setlocal colorcolumn=119
 
 " Markdown
 autocmd Filetype markdown noremap j gj
