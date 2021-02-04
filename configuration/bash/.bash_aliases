@@ -41,10 +41,21 @@ function dedup {
 }
 
 # Pick file to edit
-alias v='vim $(f)'
+function v {
+  vim $(f "$@")
+}
+
+# Pick file to view
+function b {
+  bat $(f "$@")
+}
 
 # Pick file
-alias f='fzf --preview "bat --color=always {}"'
+function f {
+  local -r query="$1"
+
+  fzf --preview 'bat --color=always {}' --query "${query}"
+}
 
 # FZF browse of files for git diff
 function gd {
