@@ -57,6 +57,9 @@ function f {
   fzf --preview 'bat --color=always {}' --query "${query}"
 }
 
+# Default tree view
+alias tree='tree --dirsfirst'
+
 # FZF browse of files for git diff
 function gd {
   preview="git diff --color=always $@ -- {}"
