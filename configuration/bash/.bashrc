@@ -3,6 +3,9 @@
 # Alias definitions
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
+# Bash keybindings
+[ -f ~/.bash_keys ] && source ~/.bash_keys
+
 # Prompt (env)
 [ -f ~/.bash_prompt ] && source ~/.bash_prompt
 

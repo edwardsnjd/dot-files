@@ -34,6 +34,12 @@ alias watch='wtch 5'
 # Github CLI aliases
 alias ghw='watch gh'
 
+# Print unique lines in the order they appear
+# See: https://stackoverflow.com/a/60688574
+function dedup {
+  awk '!count[$0]++'
+}
+
 # Pick file to edit
 alias v='vim $(f)'
 
@@ -71,12 +77,4 @@ function gl {
   preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -c -+F -+X"
   git lg -n5000 "$@" \
     | fzf --ansi --layout=reverse-list --no-sort --bind="enter:execute($preview)"
-}
-
-# Foo
-function foo {
-  tmux capture-pane -p -S - -E - \
-    | tr " " "\n" \
-    | sort -u \
-    | fzf
 }

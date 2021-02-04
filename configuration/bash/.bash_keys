@@ -1,0 +1,21 @@
+# Interactive FZF browser of all previous words in this tmux pane
+function tmux-word {
+  tmux capture-pane -p -S - -E - \
+    | tr " " "\n" \
+    | tac \
+    | dedup \
+    | tac \
+    | fzf --tac --height=20
+}
+
+# Function to insert tmux-word output in current readline
+function tmux-word-widget {
+  local selected="$(tmux-word)"
+  READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
+  READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+}
+
+# CTRL-x; - Paste the selected word into the command line
+bind -m emacs-standard -x '"\C-x;": tmux-word-widget'
+bind -m vi-command -x '"\C-x;": tmux-word-widget'
+bind -m vi-insert -x '"\C-x;": tmux-word-widget'
