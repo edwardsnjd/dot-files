@@ -1,6 +1,7 @@
 # Handy command aliases to make terminal more pleasant
 
 # some more ls aliases
+alias l='ls -AlF --group-directories-first'
 alias ll='ls -AlF'
 alias la='ls -A'
 
@@ -57,8 +58,8 @@ function f {
   fzf --preview 'bat --color=always {}' --query "${query}"
 }
 
-# Default tree view
-alias tree='tree --dirsfirst'
+# Simple tree view
+alias t='tree -a -I .git -L 2 --dirsfirst'
 
 # FZF browse of files for git diff
 function gd {
