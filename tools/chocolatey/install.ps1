@@ -13,3 +13,4 @@ choco install dropbox -y
 choco install keepassxc -y
 choco install firacode -y
 choco install vcxsrv -y
+choco install screentogif -y
