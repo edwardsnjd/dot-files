@@ -1,0 +1,63 @@
+# --- Data ---
+
+auto-reload yes
+reload-time 60 # mins
+reload-threads 4
+download-retries 2
+download-timeout 10 # secs
+prepopulate-query-feeds yes
+
+# --- Keybindings ---
+
+bind-key h quit articlelist
+bind-key h quit article
+bind-key h quit feedlist
+bind-key h quit tagselection
+
+bind-key j next articlelist
+bind-key j down article
+bind-key j down feedlist
+bind-key j down tagselection
+
+bind-key k prev articlelist
+bind-key k up article
+bind-key k up feedlist
+bind-key k up tagselection
+
+bind-key l open articlelist
+bind-key l open feedlist
+bind-key l open tagselection
+
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+
+bind-key G end
+bind-key g home
+
+bind-key d pagedown
+bind-key u pageup
+
+# --- Display ---
+
+#show-read-feeds no
+#feed-sort-order unreadarticlecount-asc
+
+# text-width 80
+
+goto-next-feed no
+
+# --- Colours ---
+
+# SOLARIZED DARK
+# See: https://github.com/newsboat/newsboat/blob/master/contrib/colorschemes/solarized-dark
+color background         default   default
+color listnormal         default   default
+color listfocus          default   default reverse
+color listnormal_unread  blue      default bold
+color listfocus_unread   blue      default reverse bold
+color info               magenta   default
+color article            default   default
+
+highlight article "^(Title):.*$" blue default
+highlight article "https?://[^ ]+" red default
+highlight article "\\[image\\ [0-9]+\\]" green default

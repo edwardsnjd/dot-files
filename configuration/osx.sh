@@ -19,4 +19,5 @@ stow --target="${HOME}" \
   git.osx \
   tmux \
   vim \
-  toilet
+  toilet \
+  newsboat
