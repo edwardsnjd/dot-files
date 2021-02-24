@@ -93,3 +93,23 @@ function gl {
   git lg -n5000 "$@" \
     | fzf --ansi --layout=reverse-list --no-sort --bind="enter:execute($preview)"
 }
+
+# Git info
+
+function git_commits {
+  git log --date=short --pretty="format:%h	%ad	%an"
+}
+
+function git_stats {
+  while read -r sha
+  do
+    git show --pretty=oneline --numstat $sha \
+      | sed '1d' \
+      | grep -v '^$' \
+      | datamash count 1 sum 1 sum 2
+  done
+}
+
+function git_repo_stats {
+  paste <(git_commits) <(git_commits | cut -f1 | git_stats)
+}
