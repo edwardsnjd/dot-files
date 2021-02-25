@@ -69,11 +69,11 @@ nnoremap zh zm
 nnoremap zl zr
 
 " - Highlight word under cursor but don't jump
-nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
+nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
 " - Highlight selected text but don't jump
 " NOTE: Uses x register
-vnoremap <silent> * "xy:<C-U>let @/ = @x <bar> set hls <cr>
+vnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
 
 " - Resize current window with arrow keys
 nnoremap <Right> :vertical resize +2<CR>
