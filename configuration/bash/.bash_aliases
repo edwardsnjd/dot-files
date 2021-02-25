@@ -97,7 +97,7 @@ function gl {
 # Git info
 
 function git_commits {
-  git log --date=short --pretty="format:%h	%ad	%an"
+  git log --date=short --pretty="tformat:%h	%ad	%an"
 }
 
 function git_stats {
@@ -106,7 +106,9 @@ function git_stats {
     git show --pretty=oneline --numstat $sha \
       | sed '1d' \
       | grep -v '^$' \
-      | datamash count 1 sum 1 sum 2
+      | sed 's/\-/0/g' \
+      | datamash count 1 sum 1 sum 2 \
+      | awk -v OFS='\t' '{print} END { if (NR == 0) print 0, 0, 0 }'
   done
 }
 
