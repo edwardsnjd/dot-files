@@ -65,6 +65,14 @@
                 "hidden": false,
                 "name": "Ubuntu-20.04",
                 "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{144d331a-e21b-4c96-89ad-b6625ab689ae}",
+                "hidden": false,
+                "name" : "Git Bash",
+                "commandline": "%PROGRAMFILES%/Git/usr/bin/bash.exe -i -l",
+                "icon": "%PROGRAMFILES%/Git/mingw64/share/git/git-for-windows.ico",
+                "startingDirectory" : "%USERPROFILE%"
             }
         ]
     },
