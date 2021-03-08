@@ -7,4 +7,5 @@ stow --target=$HOME \
   git \
   tmux \
   vim \
-  toilet
+  toilet \
+  visidata

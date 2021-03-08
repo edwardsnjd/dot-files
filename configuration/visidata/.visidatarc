@@ -1,0 +1,32 @@
+@Sheet.api
+def show_heatmap(sheet):
+    colours = ['235','240','245','250','254']
+
+    # NOTE: This naively finds ALL numeric values in the sheet
+    values = []
+    numeric_cols = [c for c in sheet.nonKeyVisibleCols if vd.isNumeric(c)]
+    for r in sheet.iterrows():
+        values += [c.getTypedValue(r) for c in numeric_cols]
+
+    numeric_values = [v for v in values if isinstance(v, (int, float))]
+
+    max_value = max(numeric_values)
+    min_value = min(numeric_values)
+
+    bucket_width = (max_value - min_value) / (len(colours) - 1)
+    bucket_bounds = [(min_value + bucket_width * i) for i in range(len(colours))]
+
+    def pick_color(s,c,r,v):
+        if v is None or not c in numeric_cols:
+            return None
+
+        value = c.getTypedValue(r)
+
+        for index, bound in enumerate(bucket_bounds):
+            if value <= bound:
+                return colours[index]
+
+    c = CellColorizer(3, None, pick_color)
+    sheet.addColorizer(c)
+
+TableSheet.addCommand(None, 'show-heatmap', 'show_heatmap()', 'colour numeric columns as a heatmap')

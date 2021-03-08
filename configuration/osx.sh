@@ -20,4 +20,5 @@ stow --target="${HOME}" \
   tmux \
   vim \
   toilet \
-  newsboat
+  newsboat \
+  visidata
