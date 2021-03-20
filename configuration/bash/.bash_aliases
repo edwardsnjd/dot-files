@@ -97,7 +97,7 @@ function gl {
 # Git info
 
 function git_commits {
-  git log --date=short --pretty="tformat:%h	%ad	%an"
+  git log --date=short --pretty="tformat:%h	%ad	%an" "$@"
 }
 
 function git_stats {
@@ -113,5 +113,5 @@ function git_stats {
 }
 
 function git_repo_stats {
-  paste <(git_commits) <(git_commits | cut -f1 | git_stats)
+  paste <(git_commits "$@") <(git_commits "$@" | cut -f1 | git_stats)
 }
