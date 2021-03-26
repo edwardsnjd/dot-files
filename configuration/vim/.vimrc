@@ -166,6 +166,7 @@ noremap <silent> <F5> :silent call <SID>Present()<CR>
 function! <SID>Present()
   set noruler noshowcmd norelativenumber nonumber noshowmode nohidden nocursorline
   set listchars= laststatus=0 shortmess=F
+  set scrolloff=0
   GitGutterDisable
   nnoremap <silent> <Right> :bn<CR>
   nnoremap <silent> <Left> :bp<CR>
