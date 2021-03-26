@@ -25,5 +25,12 @@ if ! [ -x "$(command -v rg)" ]; then
   rm -f ripgrep*.deb
 fi
 
+# WORKAROUND: Install visidata from local binary (to get later version)
+if ! [ -x "$(command -v vd)" ]; then
+  curl -LO https://github.com/saulpw/deb-vd/raw/master/pool/main/v/visidata/visidata_2.2.1-1_all.deb
+  sudo dpkg -i visidata_2.2.1-1_all.deb
+  rm -f visidata_2.2.1-1_all.deb
+fi
+
 # WORKAROUND: Install fzf from local submodule source (to get later version)
 ./fzf/install --all
