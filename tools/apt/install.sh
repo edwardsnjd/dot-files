@@ -32,5 +32,14 @@ if ! [ -x "$(command -v vd)" ]; then
   rm -f visidata_2.2.1-1_all.deb
 fi
 
+# WORKAROUND: Install vim from local submodule source (to get later version)
+if ! [ -x "$(command -v vim)" ]; then
+  pushd vim
+  make distclean  # if you build Vim before
+  make
+  sudo make install
+  popd
+fi
+
 # WORKAROUND: Install fzf from local submodule source (to get later version)
 ./fzf/install --all
