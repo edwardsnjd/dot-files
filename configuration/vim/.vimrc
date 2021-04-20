@@ -276,8 +276,8 @@ command! -nargs=* SearchDevDocs silent exec "!open https://devdocs.io/\\#q=".she
 
 " Manually remembering list of locations
 
-nnoremap <Plug>(LociAdd) :laddexpr GetLocation()<CR>
-nnoremap <Plug>(LociClear) :lexpr [] <bar> lclose<CR>
+nnoremap <Plug>(LociAdd) :caddexpr GetLocation()<CR>
+nnoremap <Plug>(LociClear) :cexpr [] <bar> cclose<CR>
 
 function! GetLocation()
   return [GetLocationInfo(), getline('.')]
