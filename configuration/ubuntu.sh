@@ -8,4 +8,5 @@ stow --target=$HOME \
   tmux \
   vim \
   toilet \
-  visidata
+  visidata \
+  lf
