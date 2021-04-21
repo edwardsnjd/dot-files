@@ -40,6 +40,15 @@ if ! [ -x "$(command -v lf)" ]; then
   rm lf-linux-arm64.tar.gz
 fi
 
+# WORKAROUND: Install Android Studio from binary (because snap doesn't work in WSL)
+if ! [ -x "$(command -v studio.sh)" ]; then
+  curl -LO https://redirector.gvt1.com/edgedl/android/studio/ide-zips/4.1.3.0/android-studio-ide-201.7199119-linux.tar.gz
+  tar -xzf android-studio-ide-201.7199119-linux.tar.gz
+  rm android-studio-ide-201.7199119-linux.tar.gz
+  sudo mv android-studio /usr/share
+  ln --symbolic /usr/share/android-studio/bin/studio.sh ~/.local/bin/studio.sh
+fi
+
 # WORKAROUND: Install vim from local submodule source (to get later version)
 if ! [ -x "$(command -v vim)" ]; then
   pushd vim
