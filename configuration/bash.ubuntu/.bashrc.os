@@ -116,3 +116,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Include WSL config (should be a different bashrc but for now include here)
+source .bashrc.wsl

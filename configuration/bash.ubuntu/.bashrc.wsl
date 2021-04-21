@@ -1,0 +1,6 @@
+# Forward X11 to host if running inside WSL
+if [[ "$(< /proc/sys/kernel/osrelease)" == *microsoft* ]]; then
+  # WSL inserts a line at the end of resolve.conf pointing to the host
+  export WSL_HOST=$(tail -1 /etc/resolv.conf | cut -d' ' -f2)
+  export DISPLAY=$WSL_HOST:0
+fi
