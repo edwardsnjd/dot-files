@@ -118,4 +118,4 @@ if ! shopt -oq posix; then
 fi
 
 # Include WSL config (should be a different bashrc but for now include here)
-source .bashrc.wsl
+source ~/.bashrc.wsl
