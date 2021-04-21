@@ -32,6 +32,14 @@ if ! [ -x "$(command -v vd)" ]; then
   rm -f visidata_2.2.1-1_all.deb
 fi
 
+# WORKAROUND: Install lf from local binary (to avoid building from go source)
+if ! [ -x "$(command -v lf)" ]; then
+  curl -LO https://github.com/gokcehan/lf/releases/download/r22/lf-linux-arm64.tar.gz
+  tar -xzf lf-linux-arm64.tar.gz
+  mv lf ~/.local/bin/lf
+  rm lf-linux-arm64.tar.gz
+fi
+
 # WORKAROUND: Install vim from local submodule source (to get later version)
 if ! [ -x "$(command -v vim)" ]; then
   pushd vim
