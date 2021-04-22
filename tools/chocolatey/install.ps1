@@ -1,4 +1,4 @@
-choco install git -y
+choco install git.install --params "/GitAndUnixToolsOnPath" -y
 choco install microsoft-windows-terminal -y
 choco install vscode -y
 choco install wsl2 -y
