@@ -86,7 +86,7 @@ function glg {
   pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
   preview="echo {} | grep -Eo '[a-f0-9]{7,}' | xargs git show --color | less -c -+F -+X"
   git log --graph --color --pretty="$pretty" --date=short --decorate "$@" \
-    | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" \
+    | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind 'ctrl-/:toggle-preview' \
     | grep -Eo '[a-f0-9]{7,}'
 }
 
