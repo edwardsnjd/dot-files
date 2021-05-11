@@ -16,3 +16,4 @@ choco install vcxsrv -y
 choco install screentogif -y
 choco install zoom -y
 choco install androidstudio -y
+choco install fd -y
