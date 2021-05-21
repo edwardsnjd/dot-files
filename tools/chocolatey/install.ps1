@@ -17,3 +17,5 @@ choco install screentogif -y
 choco install zoom -y
 choco install androidstudio -y
 choco install fd -y
+choco install gh -y
+choco install tree -y
