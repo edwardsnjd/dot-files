@@ -29,7 +29,7 @@ function wtch {
   local -r interval="$1"
   local -r args="${@:2}"
 
-  \watch --interval "$interval" --color ~/bin/faketty "$args"
+  \watch --interval "$interval" --color faketty "$args"
 }
 
 # Default is 5 seconds (in colour)
