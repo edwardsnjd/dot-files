@@ -14,6 +14,9 @@ alias asciicast2gif="docker run --rm -v $PWD:/data asciinema/asciicast2gif"
 # Date times
 alias isodate='date -u +"%Y-%m-%dT%H:%MZ"'
 
+# Date times
+alias isotime='date -u +"%Y-%m-%dT%H:%M:%SZ"'
+
 # iTerm2 tmux (control mode and reuse session)
 alias tm='tmux -CC new-session -As'
 
