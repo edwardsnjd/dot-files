@@ -20,3 +20,4 @@ choco install fd -y
 choco install gh -y
 choco install tree -y
 choco install scrcpy -y
+choco install openvpn-connect -y
