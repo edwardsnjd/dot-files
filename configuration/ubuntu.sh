@@ -9,4 +9,5 @@ stow --target=$HOME \
   vim \
   toilet \
   visidata \
-  lf
+  lf \
+  nb
