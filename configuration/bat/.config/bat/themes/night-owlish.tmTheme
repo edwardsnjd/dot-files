@@ -1034,7 +1034,8 @@
 			<key>name</key>
 			<string>Markdown Headings</string>
 			<key>scope</key>
-			<string>markup.heading.markdown</string>
+			<!-- Extend scopes -->
+			<string>markup.heading.markdown, markup.heading, punctuation.definition.heading, entity.name.section</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -1045,7 +1046,8 @@
 			<key>name</key>
 			<string>Markdown Italics</string>
 			<key>scope</key>
-			<string>markup.italic.markdown</string>
+			<!-- Extend scopes -->
+			<string>markup.italic, markup.italic.markdown, punctuation.definition.italic</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -1082,7 +1084,8 @@
 			<key>name</key>
 			<string>Markdown Raw Code &#43; others</string>
 			<key>scope</key>
-			<string>markup.inline.raw.markdown</string>
+			<!-- Extend scopes -->
+			<string>markup.raw.inline, markup.inline.raw.markdown</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>

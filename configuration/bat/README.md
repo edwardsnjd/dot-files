@@ -10,6 +10,8 @@ cd !$
 curl https://raw.githubusercontent.com/batpigandme/night-owlish/master/tmTheme/night-owlish.tmTheme > night-owlish.tmTheme
 ```
 
+Manually update some scopes as per other bat themes.  See git history `git log -S "Extend scopes"` for where to make the changes.
+
 Then after making this available via stow, update the binary cache:
 
 ```sh
