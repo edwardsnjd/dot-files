@@ -70,3 +70,11 @@ fi
 
 # WORKAROUND: Install fzf from local submodule source (to get later version)
 ./fzf/install --all
+
+# Install nb script and dependencies via download
+if ! [ -x "$(command -v nb)" ]; then
+  sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb
+  sudo chmod +x /usr/local/bin/nb
+  sudo nb completions install
+  # Not installing nb env because that downgrades bat
+fi
