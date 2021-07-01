@@ -9,7 +9,9 @@ alias la='ls -A'
 alias elm='docker run -it --rm -v "$(pwd):/code" -w "/code" -e "HOME=/tmp" -u $UID:$GID -p 8000:8000 codesimple/elm:0.19'
 
 # Convert asciinema casts
-alias asciicast2gif="docker run --rm -v $PWD:/data asciinema/asciicast2gif"
+function asciicast2gif {
+  docker run --rm -v $PWD:/data asciinema/asciicast2gif "$@"
+}
 
 # Date times
 alias isodate='date -u +"%Y-%m-%dT%H:%MZ"'
