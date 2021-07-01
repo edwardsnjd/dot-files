@@ -140,3 +140,22 @@ function git_stats {
 function git_repo_stats {
   paste <(git_commits "$@") <(git_commits "$@" | cut -f1 | git_stats)
 }
+
+# nb shorcuts
+
+# Edit journal entry for today
+function nbj {
+  today=$(isodate)
+  path=journal/${today}.md
+
+  nb ls "${path}" \
+    && nb edit "${path}" \
+    || nb add "${path}" --title "${today}" --tags "journal"
+}
+
+# Add note on topic
+function nbt {
+  topic="$1"
+
+  nb add --folder "${topic}"
+}
