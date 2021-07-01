@@ -44,10 +44,10 @@ fi
 
 # WORKAROUND: Install lf from local binary (to avoid building from go source)
 if ! [ -x "$(command -v lf)" ]; then
-  curl -LO https://github.com/gokcehan/lf/releases/download/r22/lf-linux-arm64.tar.gz
-  tar -xzf lf-linux-arm64.tar.gz
+  curl -LO https://github.com/gokcehan/lf/releases/download/r24/lf-linux-amd64.tar.gz
+  tar -xzf lf-linux-amd64.tar.gz
   mv lf ~/.local/bin/lf
-  rm lf-linux-arm64.tar.gz
+  rm lf-linux-amd64.tar.gz
 fi
 
 # WORKAROUND: Install Android Studio from binary (because snap doesn't work in WSL)
