@@ -153,16 +153,23 @@ function git_repo_stats {
 
 # Edit journal entry for today
 function nbj {
-  today=$(isodate)
-  path=journal/${today}.md
+  notebook=journal
+  today=$(date +"%Y-%m-%d")
+  path=${today}.md
 
-  nb ls "${path}" \
-    && nb edit "${path}" \
-    || nb add "${path}" --title "${today}" --tags "journal"
+  # Ensure the notebook exists
+  nb notebooks "${notebook}" \
+    || nb notebooks add "${notebook}"
+
+  # Add or edit the note
+  nb ls "${notebook}:${path}" \
+    && nb edit "${notebook}:${path}" \
+    || nb add "${notebook}:${path}" --title "${today}" --tags "journal"
 }
 
 # Add note on topic
 function nbt {
+
   topic="$1"
 
   nb add --folder "${topic}"
