@@ -72,6 +72,14 @@ function f {
 # Simple tree view
 alias t='tree -a -I .git -L 2 --dirsfirst'
 
+# FZF browse of time zone and print current time
+function tz {
+  fd . /usr/share/zoneinfo \
+    | sed 's/.*zoneinfo\///' \
+    | fzf \
+    | xargs -I{} bash -c "echo {}; TZ={} date"
+}
+
 # FZF browse of files for git diff
 function gd {
   preview="git diff --color=always $@ -- {}"
