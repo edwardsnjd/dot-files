@@ -14,6 +14,9 @@ function asciicast2gif {
 }
 
 # Date
+alias localdate='date +"%Y-%m-%d"'
+
+# Date
 alias isodate='date -u +"%Y-%m-%d"'
 
 # Date times
