@@ -224,8 +224,8 @@ iabbrev LP <C-G>u\frac{\partial <++>}{\partial <++>}<++>
 iabbrev LA <C-G>u\begin{array}{rl}<CR><++><CR>\end{array}<++>
 
 " - tmux sending
-nnoremap <leader>xl :silent .write ! tmux-send .left<CR>
-nnoremap <leader>xr :silent .write ! tmux-send .right<CR>
+nnoremap <leader>el :silent .write ! tmux-send .left<CR>
+nnoremap <leader>er :silent .write ! tmux-send .right<CR>
 
 " fzf mappings:
 
