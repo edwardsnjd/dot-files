@@ -83,6 +83,11 @@ function tz {
     | xargs -I{} bash -c "echo {}; TZ={} date"
 }
 
+# Find current public IP address
+function publicip {
+  curl ifconfig.me
+}
+
 # FZF browse of files for git diff
 function gd {
   preview="git diff --color=always $@ -- {}"
