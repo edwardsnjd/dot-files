@@ -10,6 +10,9 @@
 [ -f ~/.bash_prompt ] && source ~/.bash_prompt
 
 # fzf autocompletion
+[ -f ~/.bash_gpg ] && source ~/.bash_gpg
+
+# fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # NVM
