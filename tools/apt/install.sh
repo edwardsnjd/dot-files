@@ -78,3 +78,11 @@ if ! [ -x "$(command -v nb)" ]; then
   sudo nb completions install
   # Not installing nb env because that downgrades bat
 fi
+
+# Install ngrok from binary (because snap doesn't work in WSL)
+if ! [ -x "$(command -v ngrok)" ]; then
+  curl -L https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip --output ngrok.zip
+  unzip ngrok.zip
+  mv ngrok ~/.local/bin/ngrok
+  rm ngrok.zip
+fi
