@@ -86,3 +86,9 @@ if ! [ -x "$(command -v ngrok)" ]; then
   mv ngrok ~/.local/bin/ngrok
   rm ngrok.zip
 fi
+
+# Install go-jira from binary (to avoid building from go source)
+if ! [ -x "$(command -v jira)" ]; then
+  curl -L https://github.com/go-jira/jira/releases/download/v1.0.27/jira-linux-amd64 --output jira
+  mv jira ~/.local/bin/jira
+fi
