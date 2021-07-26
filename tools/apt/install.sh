@@ -16,9 +16,9 @@ cat packages.txt | xargs sudo apt install -y
 # WORKAROUND: Install bat from local binary (to get later version)
 #  See: https://github.com/sharkdp/bat/blob/master/README.md#installation
 if ! [ -x "$(command -v bat)" ]; then
-  curl -LO https://github.com/sharkdp/bat/releases/download/v0.18.1/bat_0.18.1_amd64.deb
-  sudo dpkg -i bat_0.18.1_amd64.deb
-  rm -f bat_0.18.1_amd64.deb
+  curl -L https://github.com/sharkdp/bat/releases/download/v0.18.2/bat_0.18.2_amd64.deb -o bat.deb
+  sudo dpkg -i bat.deb
+  rm -f bat.deb
 fi
 
 # FIXUP: Alias fdfind to fd
