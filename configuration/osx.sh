@@ -21,4 +21,5 @@ stow --target="${HOME}" \
   vim \
   toilet \
   newsboat \
-  visidata
+  visidata \
+  vis
