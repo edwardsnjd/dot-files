@@ -151,6 +151,9 @@ nnoremap <leader>- :GetCurrentBranchLink<CR>
 " - Preview markdown
 nnoremap <leader>m :PreviewMarkdown<CR><CR>
 
+" - Visual mode quick duplicate
+vnoremap D y'>pgv
+
 " - Manually manage location list
 nmap <leader>rl <Plug>(LociAdd)
 nmap <leader>rc <Plug>(LociClear)
