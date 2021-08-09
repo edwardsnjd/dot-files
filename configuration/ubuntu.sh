@@ -10,4 +10,5 @@ stow --target=$HOME \
   toilet \
   visidata \
   lf \
-  nb
+  nb \
+  vis
