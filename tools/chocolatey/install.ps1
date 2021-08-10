@@ -23,3 +23,4 @@ choco install scrcpy -y
 choco install openvpn-connect -y
 choco install openvpn -y
 choco install vlc -y
+choco install alacritty -y
