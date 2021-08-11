@@ -14,5 +14,9 @@ cp -r bat/.config/bat "$HOME"
 mkdir -p "$HOME/AppData/Roaming/bat/themes"
 cp -r bat/.config/bat/themes/. "$HOME/AppData/Roaming/bat/themes"
 
+# Copy alacritty config to AppData
+mkdir -p "$HOME/AppData/Roaming/alacritty/"
+cp -r alacritty/.config/alacritty/. "$HOME/AppData/Roaming/alacritty/"
+
 echo "TODO: Manually copy WindowsTerminal config file"
 # TODO: Copy vscode config to target
