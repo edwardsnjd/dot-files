@@ -24,3 +24,5 @@ choco install openvpn-connect -y
 choco install openvpn -y
 choco install vlc -y
 choco install alacritty -y
+choco install virtualbox -y
+choco install picotorrent -y
