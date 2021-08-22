@@ -250,7 +250,7 @@ autocmd Filetype gitcommit setlocal textwidth=80
 autocmd Filetype ruby setlocal colorcolumn=91
 autocmd Filetype javascript setlocal colorcolumn=91
 autocmd Filetype typescript setlocal colorcolumn=91
-autocmd Filetype python setlocal colorcolumn=80
+autocmd Filetype python setlocal colorcolumn=120
 
 " Markdown
 autocmd Filetype markdown noremap j gj
