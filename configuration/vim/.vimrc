@@ -242,6 +242,9 @@ omap <leader><tab> <plug>(fzf-maps-o)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 " imap <c-x><c-l> <plug>(fzf-complete-line)
 
+" - Enlarge default fzf popup
+let g:fzf_layout = { 'window': { 'width': 0.97, 'height': 0.9 } }
+
 " General file editing enhancements
 filetype indent plugin on
 
