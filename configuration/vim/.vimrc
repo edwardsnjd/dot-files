@@ -142,6 +142,12 @@ nnoremap <leader>sd :SearchDevDocs <C-R>=expand('<cword>')<CR><CR>
 " NOTE: Uses x register
 vnoremap <leader>sd "xy:<C-U>SearchDevDocs <C-R>=getreg('x')<CR><CR>
 
+" - Search dictionary for word under cursor
+nnoremap <leader>sw :SearchDictionary <C-R>=expand('<cword>')<CR><CR>
+
+" - Search thesaurus for word under cursor
+nnoremap <leader>st :SearchThesaurus <C-R>=expand('<cword>')<CR><CR>
+
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
 
@@ -280,6 +286,9 @@ command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-so
 command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc -s --mathjax "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
 
 command! -nargs=* SearchDevDocs silent exec "!open https://devdocs.io/\\#q=".shellescape(<q-args>) | redraw!
+
+command! -nargs=* SearchDictionary exec "! define ".shellescape(<q-args>)
+command! -nargs=* SearchThesaurus exec "! thesaurus ".shellescape(<q-args>)
 
 " Manually remembering list of locations
 
