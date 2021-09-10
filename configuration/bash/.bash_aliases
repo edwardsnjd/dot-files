@@ -90,9 +90,10 @@ function publicip {
 
 # FZF browse of files for git diff
 function gd {
+  details="bat {} --pager='less -c -+F -+X'"
   preview="git diff --color=always $@ -- {}"
   git diff --name-only "$@" \
-    | fzf -m --preview "$preview"
+    | fzf -m --preview "$preview" --bind="enter:execute($details)"
 }
 
 # FZF browse of branches for git checkout
