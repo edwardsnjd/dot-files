@@ -85,7 +85,7 @@ function tz {
 
 # Find current public IP address
 function publicip {
-  curl ifconfig.me
+  curl ifconfig.me && printf "\n"
 }
 
 # FZF browse of files for git diff
