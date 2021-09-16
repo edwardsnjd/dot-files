@@ -108,6 +108,9 @@ nnoremap <leader>p :Files<CR>
 " - Fuzzy file search open buffers
 nnoremap <leader>P :Buffers<CR>
 
+" - Fuzzy file search recent
+nnoremap <leader>H :HISTORY<CR>
+
 " - Fuzzy text search in buffer (in order)
 nnoremap <leader>/ :BSLines<CR>
 
@@ -281,6 +284,9 @@ command! -bang -nargs=* RG call fzf#vim#grep(
 
 " Alternate :BLines command with all lines in order
 command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-sort'] }, <bang>0)
+
+" Alternate :History command with all lines in order
+command! -bang -nargs=* HISTORY call fzf#vim#history({ 'options': ['--no-sort'] }, <bang>0)
 
 " Preview markdown (OSX using pandoc)
 command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc -s --mathjax "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
