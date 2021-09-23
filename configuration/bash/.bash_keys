@@ -4,7 +4,7 @@ function tmux-word {
     | tr " " "\n" \
     | tac \
     | dedup \
-    | fzf --height=20
+    | fzf --no-sort --height=20
 }
 
 # Function to insert tmux-word output in current readline
