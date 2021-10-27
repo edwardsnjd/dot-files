@@ -44,7 +44,7 @@ fi
 
 # WORKAROUND: Install lf from local binary (to avoid building from go source)
 if ! [ -x "$(command -v lf)" ]; then
-  curl -LO https://github.com/gokcehan/lf/releases/download/r24/lf-linux-amd64.tar.gz
+  curl -LO https://github.com/gokcehan/lf/releases/download/r26/lf-linux-amd64.tar.gz
   tar -xzf lf-linux-amd64.tar.gz
   mv lf ~/.local/bin/lf
   rm lf-linux-amd64.tar.gz
