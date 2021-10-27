@@ -37,7 +37,7 @@ fi
 
 # WORKAROUND: Install visidata from local binary (to get later version)
 if ! [ -x "$(command -v vd)" ]; then
-  curl -LO https://github.com/saulpw/deb-vd/raw/master/pool/main/v/visidata/visidata_2.4-1_all.deb
+  curl -LO https://github.com/saulpw/deb-vd/raw/master/pool/main/v/visidata/visidata_2.6.1-1_all.deb
   sudo dpkg -i visidata_*_all.deb
   rm -f visidata_*_all.deb
 fi
