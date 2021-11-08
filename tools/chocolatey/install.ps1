@@ -26,3 +26,4 @@ choco install vlc -y
 choco install alacritty -y
 choco install virtualbox -y
 choco install picotorrent -y
+choco install python3 -y
