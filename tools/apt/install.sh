@@ -63,7 +63,7 @@ fi
 if ! [ -x "$(command -v vim)" ]; then
   pushd vim
   make distclean  # if you build Vim before
-  make
+  make --jobs=8   # Speed up build
   sudo make install
   popd
 fi
