@@ -4,6 +4,9 @@
 alias l='ls -AlF --group-directories-first'
 alias ll='ls -AlF'
 alias la='ls -A'
+alias ..='cd ..'            # Go up one directory
+alias ...='cd ../..'        # Go up two directories
+alias ....='cd ../../..'    # And for good measure
 
 # Dockerised tools
 alias elm='docker run -it --rm -v "$(pwd):/code" -w "/code" -e "HOME=/tmp" -u $UID:$GID -p 8000:8000 codesimple/elm:0.19'
