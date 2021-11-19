@@ -385,7 +385,7 @@ Plug 'https://github.com/knsh14/vim-github-link'
 Plug 'https://github.com/junegunn/goyo.vim'
 Plug 'https://github.com/junegunn/limelight.vim'
 Plug 'https://github.com/wincent/terminus'
-Plug 'psf/black', { 'branch': 'stable' }
+Plug 'https://github.com/psf/black'
 call plug#end()
 
 " enable 24bit true color
