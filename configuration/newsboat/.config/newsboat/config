@@ -61,3 +61,11 @@ color article            default   default
 highlight article "^(Title):.*$" blue default
 highlight article "https?://[^ ]+" red default
 highlight article "\\[image\\ [0-9]+\\]" green default
+
+# --- Bookmarking ---
+
+# Integrate with `nb` via a custom script to map newsboat arguments
+# to the correct nb flags
+bookmark-autopilot no     # ask for fields
+bookmark-cmd newsboat2nb  # call correct script
+bookmark-interactive no   # no interaction with script

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Newsboat calls this script to interactively add a bookmark
+# newsboat2nb <url> <title> <desc> <feedname>
+
+# Remember current notebook to restore afterwards
+current_notebook=$(nb notebooks current)
+# Hardcoded bookmarks notebook name
+bookmark_notebook=bookmarks
+
+# Add to bookmarks notebook
+nb use "${bookmark_notebook}"
+nb add bookmark "$1" --title "$2" --comment "${3:-n/a}" --tags from_newsboat
+nb use "${current_notebook}"
