@@ -11,4 +11,5 @@ stow --target=$HOME \
   visidata \
   lf \
   nb \
-  vis
+  vis \
+  w3m

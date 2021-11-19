@@ -22,4 +22,5 @@ stow --target="${HOME}" \
   toilet \
   newsboat \
   visidata \
-  vis
+  vis \
+  w3m
