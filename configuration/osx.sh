@@ -23,4 +23,5 @@ stow --target="${HOME}" \
   newsboat \
   visidata \
   vis \
-  w3m
+  w3m \
+  local-bin

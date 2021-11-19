@@ -12,4 +12,5 @@ stow --target=$HOME \
   lf \
   nb \
   vis \
-  w3m
+  w3m \
+  local-bin

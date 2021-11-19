@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# NB. Requires VIMGOLF_KEY environment variable
+docker run --rm -it -e "key=${VIMGOLF_KEY}" kramos/vimgolf "$@"
