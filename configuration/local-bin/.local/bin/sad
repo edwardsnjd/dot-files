@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+toilet -f pagga --filter=metal:border "  $1  " \
+ | sed -E 's/^(.*)$/ 😢 \1 😢 /'

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+function usage {
+  cat <<-"EOF"
+		Usage:
+		  wraprun CMD [SUCCESS [FAILURE]]
+		
+		Description:
+		  Run CMD with a success/failure message.
+	EOF
+}
+
+function main {
+  # Validate args
+  if [ $# -lt 1 ]; then usage; exit 1; fi
+
+  # Extract args
+  cmd="$1"
+  success_msg="${2:-Success}"
+  failure_msg="${3:-Failure}"
+
+  /usr/bin/time -f "--- Time elapsed: %E ---" $cmd \
+    && happy "$success_msg" \
+    || sad "$failure_msg"
+}
+
+main "$@"
