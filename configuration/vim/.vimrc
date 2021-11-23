@@ -75,6 +75,20 @@ nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 " NOTE: Uses x register
 vnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
 
+" - Refactor: Inline
+" NOTE: Uses i and j registers, and i and j marks.
+" Implementation deletes the target to @i and copies the variable name to @j
+" then sets up a change to replace the variable with the target before deleting
+" the declaration line(s).  Much of this is to cater for multiline values.
+nmap <silent> <leader>ri viw<leader>ri
+vnoremap <silent> <leader>ri 
+  \:<C-U>'< mark i<CR>gv
+  \:<C-U>'>+1 mark j<CR>gv
+  \"idF=b"jyiw
+  \*Ncgni<Esc>
+  \:'i,'j-1 delete<CR>
+  \n:echo 'Press . to replace each '.@j.' usage with '.@i<CR>
+
 " - Resize current window with arrow keys
 nnoremap <Right> :vertical resize +2<CR>
 nnoremap <Left> :vertical resize -2<CR>
