@@ -252,7 +252,9 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 " imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " - Enlarge default fzf popup
-let g:fzf_layout = { 'window': { 'width': 0.97, 'height': 0.9 } }
+let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.9 } }
+" - Preview above the list
+let g:fzf_preview_window = ['up:40%:border-bottom', 'ctrl-/']
 
 " General file editing enhancements
 filetype indent plugin on
