@@ -7,6 +7,10 @@ alias la='ls -A'
 alias ..='cd ..'            # Go up one directory
 alias ...='cd ../..'        # Go up two directories
 alias ....='cd ../../..'    # And for good measure
+# Simple tree view
+alias t='tree -a -I .git -L 1 --dirsfirst'
+alias tt='tree -a -I .git -L 2 --dirsfirst'
+alias ttt='tree -a -I .git -L 3 --dirsfirst'
 
 # Dockerised tools
 alias elm='docker run -it --rm -v "$(pwd):/code" -w "/code" -e "HOME=/tmp" -u $UID:$GID -p 8000:8000 codesimple/elm:0.19'
@@ -74,9 +78,6 @@ function f {
 
   fzf --preview 'bat --color=always {}' --query "${query}"
 }
-
-# Simple tree view
-alias t='tree -a -I .git -L 2 --dirsfirst'
 
 # FZF browse of time zone and print current time
 function tz {
