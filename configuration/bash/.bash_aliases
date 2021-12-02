@@ -56,23 +56,6 @@ function dedup {
   awk '!count[$0]++'
 }
 
-# Pick file to edit
-function v {
-  vim $(f "$@")
-}
-
-# Pick file to view
-function b {
-  bat $(f "$@")
-}
-
-# Pick file
-function f {
-  local -r query="$1"
-
-  fzf --preview 'bat --color=always {}' --query "${query}"
-}
-
 # FZF browse of time zone and print current time
 function tz {
   fd . /usr/share/zoneinfo \
