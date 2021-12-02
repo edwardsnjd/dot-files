@@ -24,4 +24,5 @@ stow --target="${HOME}" \
   visidata \
   vis \
   w3m \
-  local-bin
+  local-bin \
+  iterm2
