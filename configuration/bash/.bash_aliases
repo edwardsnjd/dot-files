@@ -22,14 +22,8 @@ function asciicast2gif {
 
 # Date
 alias localdate='date +"%Y-%m-%d"'
-
-# Date
 alias isodate='date -u +"%Y-%m-%d"'
-
-# Date times
 alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
-
-# Date times
 alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
 # iTerm2 tmux (control mode and reuse session)
