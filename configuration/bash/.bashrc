@@ -30,3 +30,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Allow OS overrides
 [ -f ~/.bashrc.os ] && source ~/.bashrc.os
+
+# Cargo (added by rustup)
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

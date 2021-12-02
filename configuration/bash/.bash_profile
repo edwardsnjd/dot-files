@@ -40,3 +40,6 @@ export HISTIGNORE=history:clear
 
 # Tone down "other writeable" panic color
 export LS_COLORS="${LS_COLORS}:ow=07;36"
+
+# Cargo (added by rustup)
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
