@@ -185,6 +185,7 @@ nmap <leader>rc <Plug>(LociClear)
 nnoremap <leader>th :.!toilet -d ~/figlet-fonts -f big -W -w 300<CR>
 nnoremap <leader>ts :.!toilet -d ~/figlet-fonts -f standard -W -w 300<CR>
 nnoremap <leader>tf :.!toilet -f future -W -w 300<CR>
+nnoremap <leader>tp :.!toilet -f pagga -W -w 300<CR>
 nnoremap <leader>tb :.!toilet -f term -F border -w 300<CR>
 
 " - Show presentation
