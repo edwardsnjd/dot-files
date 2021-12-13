@@ -11,7 +11,10 @@ if ! [ -f "/usr/share/keyrings/githubcli-archive-keyring.gpg" ]; then
 fi
 
 # Install APT packages
-cat packages.txt | xargs sudo apt install -y
+for package in $(cat packages.txt)
+do
+  sudo apt install -y $package
+done
 
 # WORKAROUND: Install bat from local binary (to get later version)
 #  See: https://github.com/sharkdp/bat/blob/master/README.md#installation
