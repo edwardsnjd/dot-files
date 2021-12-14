@@ -362,21 +362,6 @@ endfunction
 
 command! -nargs=1 -complete=command -bar -range Redir silent call Redir(<q-args>, <range>, <line1>, <line2>)
 
-" Fix gx URL behaviour until fixed
-" See: https://github.com/vim/vim/issues/4738#issuecomment-714609892
-if has('macunix')
-  function! <SID>OpenURLUnderCursor()
-    let s:uri = matchstr(getline('.'), '[a-z]*:\/\/[^ >,;()]*')
-    let s:uri = shellescape(s:uri, 1)
-    if s:uri != ''
-      silent exec "!open '".s:uri."'"
-      :redraw!
-    endif
-  endfunction
-
-  nnoremap gx :call <SID>OpenURLUnderCursor()<CR>
-endif
-
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
 
