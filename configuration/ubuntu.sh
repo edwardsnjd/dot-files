@@ -13,4 +13,5 @@ stow --target=$HOME \
   nb \
   vis \
   w3m \
-  local-bin
+  local-bin \
+  snippets

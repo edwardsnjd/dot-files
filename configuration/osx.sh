@@ -25,4 +25,5 @@ stow --target="${HOME}" \
   vis \
   w3m \
   local-bin \
-  iterm2
+  iterm2 \
+  snippets
