@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Select a snippet and return its path.
+# Usage: snippet {query}
+
+query="$1"
+
+# Optionally configure snippet directory via `SNIPPET_DIR`
+# environment variable
+default_dir=~/.config/snippets
+snippet_dir=${SNIPPET_DIR:-$default_dir}
+
+# Pick a snippet
+preview="bat --color=always {3}"
+snippet=$(
+  find -L "${snippet_dir}" -type f \
+    | sort \
+    | sed -E 's|^.+/([^/]+)/([^/]+)$|\1\t\2\t&|' \
+    | fzf --no-sort --with-nth=1..2 --preview "$preview" --query "$query" \
+    | cut -f3 \
+)
+
+# If we picked on, print it to stdout
+[ -n "$snippet" ] && cat "$snippet"

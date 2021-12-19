@@ -230,6 +230,19 @@ nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
 
+" Snippets
+nnoremap <leader>is :call <SID>Snippet()<cr>
+function! <SID>Snippet() abort
+  let l:tempname = tempname()
+  execute 'silent ! snippet ' . &filetype . ' > ' . fnameescape(l:tempname)
+  try
+    execute 'read ' . l:tempname
+    redraw!
+  finally
+    call delete(l:tempname)
+  endtry
+endfunction
+
 " Insert mode mappings:
 
 " - Save some LH typing
