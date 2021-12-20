@@ -249,7 +249,7 @@ endfunction
 inoremap jk <Esc>
 
 " - Find and select next placeholder
-nnoremap <C-j> :keeppattern normal! /<++><C-v><CR><CR>vf><C-g>
+nnoremap <C-j> :keeppattern normal! /\v\<\+[^>]*\+\><C-v><CR><CR>vf><C-g>
 smap <C-j> <Esc><C-j>
 imap <C-j> <Esc><C-j>
 
