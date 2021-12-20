@@ -73,7 +73,7 @@ nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
 " - Highlight selected text but don't jump
 " NOTE: Uses x register
-vnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
+xnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
 
 " - Refactor: Inline
 " NOTE: Uses i and j registers, and i and j marks.
@@ -81,7 +81,7 @@ vnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
 " then sets up a change to replace the variable with the target before deleting
 " the declaration line(s).  Much of this is to cater for multiline values.
 nmap <silent> <leader>ri viw<leader>ri
-vnoremap <silent> <leader>ri 
+xnoremap <silent> <leader>ri
   \:<C-U>'< mark i<CR>gv
   \:<C-U>'>+1 mark j<CR>gv
   \"idF=b"jyiw
@@ -141,7 +141,7 @@ nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
 
 " - Fuzzy text search in project for selected text
 " NOTE: Uses x register
-vnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
+xnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 
 " - Display spec outline
 nnoremap <leader>so :Redir global /\v\C<(describe\\|context\\|it) /<CR>
@@ -157,7 +157,7 @@ nnoremap <leader>sd :SearchDevDocs <C-R>=expand('<cword>')<CR><CR>
 
 " - Search devdocs for selected text
 " NOTE: Uses x register
-vnoremap <leader>sd "xy:<C-U>SearchDevDocs <C-R>=getreg('x')<CR><CR>
+xnoremap <leader>sd "xy:<C-U>SearchDevDocs <C-R>=getreg('x')<CR><CR>
 
 " - Search dictionary for word under cursor
 nnoremap <leader>sw :SearchDictionary <C-R>=expand('<cword>')<CR><CR>
@@ -175,7 +175,7 @@ nnoremap <leader>- :GetCurrentBranchLink<CR>
 nnoremap <leader>m :PreviewMarkdown<CR><CR>
 
 " - Visual mode quick duplicate
-vnoremap D y'>pgv
+xnoremap D y'>pgv
 
 " - Manually manage location list
 nmap <leader>rl <Plug>(LociAdd)
