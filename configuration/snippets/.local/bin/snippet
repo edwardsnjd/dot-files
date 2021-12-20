@@ -16,7 +16,7 @@ snippet=$(
   find -L "${snippet_dir}" -type f \
     | sort \
     | sed -E 's|^.+/([^/]+)/([^/]+)$|\1\t\2\t&|' \
-    | fzf --no-sort --with-nth=1..2 --preview "$preview" --query "$query" \
+    | fzf --no-sort --tac --with-nth=1..2 --preview "$preview" --query "$query" \
     | cut -f3 \
 )
 
