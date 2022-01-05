@@ -6,6 +6,9 @@
 # Bash keybindings
 [ -f ~/.bash_keys ] && source ~/.bash_keys
 
+# Readline configuration
+[ -f ~/.bash_readline ] && source ~/.bash_readline
+
 # Prompt (env)
 [ -f ~/.bash_prompt ] && source ~/.bash_prompt
 
