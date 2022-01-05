@@ -164,3 +164,23 @@ function nbt {
 
   nb add --folder "${topic}"
 }
+
+# Slow down `cat` with a pause between each line
+function slowcat {
+  pause=${1:-2}
+  while read
+  do
+    sleep $pause
+    echo "$REPLY"
+  done
+}
+
+# Output a line of some file pausing for some user input before each line
+# Pass file to read on fd 3:  demandcat 3<input.txt
+function demandcat {
+  while read <&3
+  do
+    echo "$REPLY"
+    read
+  done
+}
