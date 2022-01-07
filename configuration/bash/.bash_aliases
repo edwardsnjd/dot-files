@@ -13,7 +13,17 @@ alias tt='tree -a -I .git -L 2 --dirsfirst'
 alias ttt='tree -a -I .git -L 3 --dirsfirst'
 
 # Dockerised tools
-alias elm='docker run -it --rm -v "$(pwd):/code" -w "/code" -e "HOME=/tmp" -u $UID:$GID -p 8000:8000 codesimple/elm:0.19'
+function elm {
+  docker run \
+    -it --rm \
+    -v "$(pwd):/code" \
+    -w "/code" \
+    -e "HOME=/tmp" \
+    -u $UID:$GID \
+    -p 8000:8000 \
+    codesimple/elm:0.19 \
+    "$@"
+}
 
 # Convert asciinema casts
 function asciicast2gif {
