@@ -2,20 +2,29 @@
 
 # Usage: tmux-attach
 #
-# Fuzzy select an available tmux session then attaches or
-# switches to selected session.
+# Fuzzy select an available tmux session then attach or
+# switch to selected session.
 
-selected_session=$(
+set -o nounset
+set -o errexit
+
+Main() {
+  local session=$(ChooseSession)
+
+  if [[ -z "${session}" ]]
+  then
+    echo "(No session selected)"
+  else
+    [[ -z "${TMUX:-}" ]] \
+      && tmux attach-session -t "${session}" \
+      || tmux switch-client -t "${session}"
+  fi
+}
+
+ChooseSession() {
  tmux ls -F "#{session_id}	#S" \
    | fzf --nth=2 \
    | cut -f2
-)
+ }
 
-if [ -z "${selected_session}" ]
-then
-  echo "(No session selected)"
-else
-  [ -z "${TMUX}" ] \
-    && tmux attach-session -t "${selected_session}" \
-    || tmux switch-client -t "${selected_session}"
-fi
+Main
