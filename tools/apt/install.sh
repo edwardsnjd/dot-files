@@ -55,12 +55,7 @@ fi
 
 # WORKAROUND: Install vim from local submodule source (to get later version)
 if ! [ -x "$(command -v vim)" ]; then
-  pushd vim
-  make distclean  # if you build Vim before
-  ./configure --enable-python3interp --with-python3-command=$(which python3)
-  make --jobs=8   # Speed up build
-  sudo make install
-  popd
+  ./install-vim.sh
 fi
 
 # WORKAROUND: Install fzf from local submodule source (to get later version)
