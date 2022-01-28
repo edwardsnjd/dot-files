@@ -65,10 +65,7 @@ fi
 
 # Install nb script and dependencies via download
 if ! [ -x "$(command -v nb)" ]; then
-  sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb
-  sudo chmod +x /usr/local/bin/nb
-  sudo nb completions install
-  # Not installing nb env because that downgrades bat
+  ./install-nb.sh
 fi
 
 # Install ngrok from binary (because snap doesn't work in WSL)

@@ -13,3 +13,6 @@ sudo apt upgrade
 # Upgrade fzf
 (cd fzf && git pull && git commit -m "chore: Bump fzf to latest version")
 ./install-fzf.sh
+
+# Upgrade nb
+./install-nb.sh
