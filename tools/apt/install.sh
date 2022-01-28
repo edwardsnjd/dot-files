@@ -59,7 +59,7 @@ if ! [ -x "$(command -v vim)" ]; then
 fi
 
 # WORKAROUND: Install fzf from local submodule source (to get later version)
-./fzf/install --all
+./install-fzf.sh
 
 # Install nb script and dependencies via download
 if ! [ -x "$(command -v nb)" ]; then
