@@ -127,28 +127,6 @@ function gtt {
     | bat --file-name="$1"
 }
 
-# Git info
-
-function git_commits {
-  git log --date=short --pretty="tformat:%h	%ad	%an" "$@"
-}
-
-function git_stats {
-  while read -r sha
-  do
-    git show --pretty=oneline --numstat $sha \
-      | sed '1d' \
-      | grep -v '^$' \
-      | sed 's/\-/0/g' \
-      | datamash count 1 sum 1 sum 2 \
-      | awk -v OFS='\t' '{print} END { if (NR == 0) print 0, 0, 0 }'
-  done
-}
-
-function git_repo_stats {
-  paste <(git_commits "$@") <(git_commits "$@" | cut -f1 | git_stats)
-}
-
 # nb shorcuts
 
 # Edit journal entry for today
