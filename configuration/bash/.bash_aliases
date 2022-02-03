@@ -2,8 +2,8 @@
 
 # some more ls aliases
 alias l='ls -AlF --group-directories-first'
-alias ll='ls -AlF'
-alias la='ls -A'
+alias ll='ls -AlF --group-directories-first'
+alias la='ls -A --group-directories-first'
 alias ..='cd ..'            # Go up one directory
 alias ...='cd ../..'        # Go up two directories
 alias ....='cd ../../..'    # And for good measure
