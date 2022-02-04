@@ -53,6 +53,11 @@ if ! [ -x "$(command -v lf)" ]; then
   rm lf-linux-amd64.tar.gz
 fi
 
+# WORKAROUND: Install feedgnuplot from local repo (to get later version)
+if ! [ -x "$(command -v feedgnuplot)" ]; then
+  ./install-feedgnuplot.sh
+fi
+
 # WORKAROUND: Install vim from local submodule source (to get later version)
 if ! [ -x "$(command -v vim)" ]; then
   ./install-vim.sh

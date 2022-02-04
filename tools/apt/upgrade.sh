@@ -16,3 +16,7 @@ sudo apt upgrade
 
 # Upgrade nb
 ./install-nb.sh
+
+# Upgrade feedgnuplot
+(cd feedgnuplot && git pull && git commit -m "chore: Bump feedgnuplot to latest version")
+./install-feedgnuplot.sh
