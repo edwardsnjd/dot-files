@@ -19,6 +19,7 @@ stow --target="${HOME}" \
   git.osx \
   tmux \
   vim \
+  lf \
   toilet \
   newsboat \
   visidata \
