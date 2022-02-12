@@ -8,6 +8,18 @@ export ANDROID_HOME=/usr/local/opt/android-sdk
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home
 
+# Make dircolors available
+alias dircolors='gdircolors'
+
+# Enable color support of ls (via LS_COLORS)
+test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+
+# Replace OSX ls with GNU coreutils ls (by aliasing over the top of it)
+alias ls='gls --color=auto'
+alias  l='gls --color=auto -AFl --group-directories-first'
+alias ll='gls --color=auto -AFl --group-directories-first'
+alias la='gls --color=auto -AF  --group-directories-first'
+
 # Bash completion
 [ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
 

@@ -1,16 +1,17 @@
 # Handy command aliases to make terminal more pleasant
 
 # some more ls aliases
-alias l='ls -AlF --group-directories-first'
-alias ll='ls -AlF --group-directories-first'
-alias la='ls -A --group-directories-first'
-alias ..='cd ..'            # Go up one directory
-alias ...='cd ../..'        # Go up two directories
+alias  l='ls --color=auto -AFl --group-directories-first'
+alias ll='ls --color=auto -AFl --group-directories-first'
+alias la='ls --color=auto -AF  --group-directories-first'
+# Simpler navigation up
+alias   ..='cd ..'          # Go up one directory
+alias  ...='cd ../..'       # Go up two directories
 alias ....='cd ../../..'    # And for good measure
 # Simple tree view
-alias t='tree -a -I .git -L 1 --dirsfirst'
-alias tt='tree -a -I .git -L 2 --dirsfirst'
-alias ttt='tree -a -I .git -L 3 --dirsfirst'
+alias   t='tree -aF -I .git -L 1 --dirsfirst'
+alias  tt='tree -aF -I .git -L 2 --dirsfirst'
+alias ttt='tree -aF -I .git -L 3 --dirsfirst'
 
 # Dockerised tools
 function elm {
