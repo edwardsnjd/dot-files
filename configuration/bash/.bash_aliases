@@ -80,6 +80,11 @@ function publicip {
   curl ifconfig.me && printf "\n"
 }
 
+# Find current weather forecast
+function wttr {
+  curl wttr.in?pF
+}
+
 # FZF browse of files for git diff
 function gd {
   details="bat {} --pager='less -c -+F -+X'"
