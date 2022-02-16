@@ -1,24 +1,12 @@
 {
+    "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    // Add custom actions and keybindings to this array.
-    // To unbind a key combination from your defaults.json, set the command to "unbound".
-    // To learn more about actions and keybindings, visit https://aka.ms/terminal-keybindings
     "actions": 
     [
-        // Copy and paste are bound to Ctrl+Shift+C and Ctrl+Shift+V in your defaults.json.
-        // These two lines additionally bind them to Ctrl+C and Ctrl+V.
-        // To learn more about selection, visit https://aka.ms/terminal-selection
-        // { "command": {"action": "copy", "singleLine": false }, "keys": "ctrl+c" },
-        // { "command": "paste", "keys": "ctrl+v" },
-        // Press Ctrl+Shift+F to open the search box
         {
             "command": "find",
             "keys": "ctrl+shift+f"
         },
-        // Press Alt+Shift+D to open a new pane.
-        // - "split": "auto" makes this pane open in the direction that provides the most surface area.
-        // - "splitMode": "duplicate" makes the new pane use the focused pane's profile.
-        // To learn more about panes, visit https://aka.ms/terminal-panes
         {
             "command": 
             {
@@ -39,22 +27,27 @@
     {
         "defaults": 
         {
-            "bellStyle": "visual",
+            "bellStyle": 
+            [
+                "window",
+                "taskbar"
+            ],
             "colorScheme": "Night Owl",
             "cursorShape": "filledBox",
-            "fontFace": "Fira Code",
-            "fontSize": 10
+            "font": 
+            {
+                "face": "Fira Code",
+                "size": 10
+            }
         },
         "list": 
         [
             {
-                "commandline": "powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
                 "name": "Windows PowerShell"
             },
             {
-                "commandline": "cmd.exe",
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
                 "name": "Command Prompt"
@@ -66,24 +59,54 @@
                 "source": "Windows.Terminal.Azure"
             },
             {
-                "acrylicOpacity": 0.67000000000000004,
+                "altGrAliasing": true,
                 "antialiasingMode": "grayscale",
+                "colorScheme": "Night Owl",
+                "cursorShape": "filledBox",
+                "experimental.retroTerminalEffect": false,
+                "font": 
+                {
+                    "face": "JetBrains Mono",
+                    "size": 11,
+                    "weight": "light"
+                },
                 "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
                 "hidden": false,
                 "name": "Ubuntu-20.04",
+                "opacity": 86,
+                "padding": "8",
+                "scrollbarState": "visible",
                 "source": "Windows.Terminal.Wsl",
                 "startingDirectory": "\\\\wsl$\\Ubuntu-20.04\\home\\nick",
+                "suppressApplicationTitle": true,
                 "useAcrylic": false
             },
             {
-                "acrylicOpacity": 0.16,
                 "commandline": "%PROGRAMFILES%/Git/usr/bin/bash.exe -i -l",
+                "font": 
+                {
+                    "face": "JetBrains Mono",
+                    "size": 10
+                },
                 "guid": "{144d331a-e21b-4c96-89ad-b6625ab689ae}",
                 "hidden": false,
                 "icon": "%PROGRAMFILES%/Git/mingw64/share/git/git-for-windows.ico",
                 "name": "Git Bash",
+                "opacity": 22,
                 "startingDirectory": "%USERPROFILE%",
                 "useAcrylic": false
+            },
+            {
+                "guid": "{699966fc-67e6-5618-b804-059312ebfde4}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 2019",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{3025a2f1-f1d8-50a9-a2b6-ed87495e6365}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2019",
+                "source": "Windows.Terminal.VisualStudio"
             }
         ]
     },
