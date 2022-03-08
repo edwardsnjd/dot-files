@@ -1851,7 +1851,7 @@
 			<key>Close Sessions On End</key>
 			<false/>
 			<key>Columns</key>
-			<integer>160</integer>
+			<integer>177</integer>
 			<key>Command</key>
 			<string></string>
 			<key>Cursor Boost</key>
@@ -3407,7 +3407,7 @@
 	<key>OpenBookmark</key>
 	<false/>
 	<key>OpenNoWindowsAtStartup</key>
-	<false/>
+	<true/>
 	<key>OpenTmuxWindowsIn</key>
 	<integer>1</integer>
 	<key>PMPrintingExpandedStateForPrint2</key>
@@ -3474,7 +3474,7 @@
 	<key>ShowPaneTitles</key>
 	<false/>
 	<key>SmartPlacement</key>
-	<true/>
+	<false/>
 	<key>Snippets</key>
 	<array/>
 	<key>SoundForEsc</key>
@@ -3518,6 +3518,8 @@
 	<false/>
 	<key>UseLionStyleFullscreen</key>
 	<true/>
+	<key>UseMetal</key>
+	<true/>
 	<key>UseTmuxStatusBar</key>
 	<true/>
 	<key>VisualIndicatorForEsc</key>
@@ -3536,7 +3538,9 @@
 	<false/>
 	<key>kCPKUseSystemColorPicker</key>
 	<false/>
-	<key>preferIntegratedGPU</key>
+	<key>metalMaximizeThroughput</key>
 	<false/>
+	<key>preferIntegratedGPU</key>
+	<true/>
 </dict>
 </plist>
