@@ -30,7 +30,7 @@ set softtabstop=0       " Number of spaces per Tab
 
 " Whitespace
 set list                " Display whitespace
-set listchars=tab:▸\ ,eol:¬,trail:.
+set listchars=tab:▸\ ,trail:␣
 
 " Advanced
 set undolevels=1000     " Number of undo levels
