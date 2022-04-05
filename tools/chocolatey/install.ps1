@@ -28,3 +28,4 @@ choco install virtualbox -y
 choco install picotorrent -y
 choco install python3 -y
 choco install unity-hub -y
+choco install dotnet-sdk -y
