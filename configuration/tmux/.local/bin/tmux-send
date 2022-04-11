@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Usage: echo "ls" | tmux-send .right
+# Usage: cat scratch.py | tmux-send .right
+#
+# Send text to tmux.
+
+set -o nounset
+set -o errexit
+
+Main() {
+  local pane="$1"
+
+  while read -r
+  do
+    tmux send-keys -t .right "$REPLY" "Enter"
+    sleep 0.1
+  done
+}
+
+Main "$@"
