@@ -30,3 +30,4 @@ choco install python3 -y
 choco install unity-hub -y
 choco install dotnet-sdk -y
 choco install nomachine -y
+choco install zerotier-one -y
