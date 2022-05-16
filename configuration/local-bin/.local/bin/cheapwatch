@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# See: https://stackoverflow.com/a/37473257
+
+while true; do
+  clear
+  printf "[%s] Output of %s:\n" "$(date)" "$*"
+  ${SHELL-/bin/sh} -c "$*"
+  sleep 5
+done

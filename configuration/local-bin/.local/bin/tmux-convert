@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Transform specially formatted input line to commands for tmux send-keys
+
+# Usage:
+#  echo "echo Hello" | tmux-convert | xargs tmux send-keys .2
+#  echo "echo <Alt-.>" | tmux-convert | xargs tmux send-keys .3
+
+# Examples:
+#  - foo            => 'foo'
+#  - foo bar        => 'foo bar'
+#  - foo.bar        => 'foo.bar'
+#  - foo "bar"      => 'foo "bar"'
+#  - <Ctrl-a>       => C-a
+#  - <Alt-a>        => M-a
+#  - <Ctrl-Alt-a>   => C-M-a
+#  - <Alt-Ctrl-a>   => M-C-a
+#  - echo <Alt-.>   => 'echo ', M-.
+
+sed -E "
+  s/<Alt-Ctrl-/<M-C-/ig;
+  s/<Ctrl-Alt-/<C-M-/ig;
+  s/<Alt-/<M-/ig;
+  s/<Ctrl-/<C-/ig;
+  s/.*/'&'/g;
+  s/<([^>]+)>/'\n\1\n'/g;
+"

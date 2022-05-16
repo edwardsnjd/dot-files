@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+function usage {
+  cat <<-"EOF"
+		Usage:
+		  wtc FREQ CMD [SUCCESS [FAILURE]]
+		
+		Description:
+		  Run CMD with a success/failure message, then wait FREQ and repeat.
+	EOF
+}
+
+function main {
+  # Validate args
+  if [ $# -lt 2 ]; then usage; exit 1; fi
+
+  # Extract args
+  freq="$1"
+  cmd="$2"
+  success_msg="${3:-Success}"
+  failure_msg="${4:-Failure}"
+
+  # Start loop
+  while true
+  do
+    clear
+    echo "--- Starting: $(date) ---"
+
+    wraprun $cmd "$success_msg" "$failure_msg"
+
+    echo "--- Finished: $(date) ---"
+    echo "--- (Sleeping for ${freq}s.  Ctrl-C to quit.) ---"
+    sleep "$freq"
+  done
+}
+
+main "$@"
