@@ -20,13 +20,19 @@ set ifs "\n"
 # Show all files
 set hidden
 
+# Sort directories first
+set dirfirst
+
 # Draw outlines around each pane
 set drawbox
 
 # Search
 set incsearch
 
-# leave some space at the top and the bottom of the screen
+# Filter
+set incfilter
+
+# Leave some space at the top and the bottom of the screen
 set scrolloff 10
 
 # Use custom preview script
