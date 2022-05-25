@@ -69,6 +69,9 @@ nnoremap Y y$
 nnoremap zh zm
 nnoremap zl zr
 
+" - More convenient way to toggle folding
+nnoremap <tab> za
+
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
