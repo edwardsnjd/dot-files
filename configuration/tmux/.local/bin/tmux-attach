@@ -22,9 +22,10 @@ Main() {
 }
 
 ChooseSession() {
- tmux ls -F "#{session_id}	#S" \
-   | fzf --nth=2 \
-   | cut -f2
+ tmux ls -F "#{session_id}	#{t/f/%d-%b-%Y:session_created}	#{session_name}" \
+   | sort -nk1 \
+   | fzf --delimiter=$'\t' --nth=1,3 --header=$'ID\tCreated\t\tName' \
+   | cut -f3
  }
 
 Main
