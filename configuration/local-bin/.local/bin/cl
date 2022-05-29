@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Usage: cl
+#
+# Clear the screen and print a simple colum ruler.
+#
+# Dependencies:
+# - bash: with [[ ... ]] and $(( ... ))
+# - tput: cols
+# - printf
+
+function Main()
+{
+  local cols=$(tput cols)
+
+  clear
+  Ruler $cols
+}
+
+# Print a crude ruler with a mark every N columns
+function Ruler()
+{
+  local cols="$1"
+  local gap=10
+
+  printf "         " 0
+
+  for i in $(seq $cols)
+  do
+    local col=$(( $i * $gap ))
+    if [[ $(($col + 9)) -ge $cols ]]
+    then
+      break
+    else
+      printf "|%-9d" $col
+    fi
+  done
+
+  printf "\n"
+}
+
+Main
