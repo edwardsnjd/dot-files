@@ -27,4 +27,5 @@ stow --target="${HOME}" \
   w3m \
   local-bin \
   iterm2 \
-  snippets
+  snippets \
+  ctags

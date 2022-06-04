@@ -14,4 +14,5 @@ stow --target=$HOME \
   vis \
   w3m \
   local-bin \
-  snippets
+  snippets \
+  ctags
