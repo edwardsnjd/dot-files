@@ -39,6 +39,8 @@ alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
 # iTerm2 tmux (control mode and reuse session)
 alias tm='tmux -CC new-session -As'
+# Alias for convenient tmux session picker
+alias ta='tmux-attach'
 
 # Web search for given term
 function ws {
