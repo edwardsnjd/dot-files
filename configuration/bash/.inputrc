@@ -1,0 +1,25 @@
+# ---- General improvements ----
+
+# Pretty completion listings
+set colored-completion-prefix On
+set colored-stats On
+
+# Display mode
+set show-mode-in-prompt On
+set emacs-mode-string ""
+set vi-cmd-mode-string "( ) "
+set vi-ins-mode-string "(I) "
+
+# Reduce time waiting for key sequence (see jk below)
+set keyseq-timeout 300
+
+# vi normal mode mappings
+set keymap vi-command
+"\C-l": clear-screen
+"\C-x\C-r": re-read-init-file
+
+# vi insert mode mappings
+set keymap vi-insert
+"\C-l": clear-screen
+"\C-x\C-r": re-read-init-file
+"jk": vi-movement-mode
