@@ -72,7 +72,7 @@ function tz {
   fd . /usr/share/zoneinfo \
     | sed 's/.*zoneinfo\///' \
     | fzf \
-    | xargs -I{} bash -c "echo {}; TZ={} date"
+    | xargs -I{} bash -c "printf \"{}: $(TZ={} date)\n\""
 }
 
 # Find current public IP address
