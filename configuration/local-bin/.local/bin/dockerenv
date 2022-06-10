@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+# Usage:
+#  dockerenv <command> [args...]
+#  dockerenv help <command>
+
+# Commands
+
+function main() {
+  local command="${1:-shell}"
+  shift
+
+  case "$command" in
+    up|start|run)
+      up "$@";;
+    list|ls)
+      list "$@";;
+    shell|exec)
+      shell "$@";;
+    down|stop|kill|rm)
+      dwn "$@";;
+    help)
+      hlp "$@";;
+    *)
+      unknown "$command";;
+  esac
+}
+
+function up() {
+  local image="${1:-${DOCKERENV_IMAGE}}"
+  shift
+  local name=$(basename $PWD)
+  docker run --interactive --tty --detach -v "$PWD":/work -w /work --name="$name" "$@" "$image"
+}
+
+function list() {
+  local name=$(basename $PWD)
+  docker container ls --filter="name=${name}" "$@"
+}
+
+function shell() {
+  local name=$(basename $PWD)
+  local command="${1:-bash}"
+  shift
+  docker exec --interactive --tty "${name}" "${command}"
+}
+
+function dwn() {
+  local name=$(basename $PWD)
+  docker rm --force "$@" "$name"
+}
+
+function hlp() {
+  local command="$1"
+
+  case $command in
+    up|start|run)
+      cat <<-END
+				Usage: dockerenv up|start|run (<image>) [docker run options]
+
+				    If supplied <image> is the docker image to run.
+				    If no <image> is supplied then the enviroment variable DOCKERENV_IMAGE is used.
+
+				    In order to supply any run options, the image is required.  To use the default:
+				        dockerenv up \$DOCKERENV_IMAGE [options]
+			END
+      ;;
+    list|ls)
+      cat <<-END
+				Usage: dockerenv list|ls [docker ls options]
+			END
+      ;;
+    shell|exec)
+      cat <<-END
+				Usage: dockerenv shell|exec [command]
+			END
+      ;;
+    down|stop|kill|rm)
+      cat <<-END
+				Usage: dockerenv down|stop|kill|rm [docker rm options]
+			END
+      ;;
+    *)
+      echo <<-END
+				??
+			END
+      ;;
+  esac
+}
+
+function unknown() {
+  echo "Sorry, unknown command: $1"
+  exit 1
+}
+
+# Entry point
+
+main "$@"
