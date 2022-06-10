@@ -29,29 +29,30 @@ function main() {
 function up() {
   local image="${1:-${DOCKERENV_IMAGE}}"
   shift
-  local name=$(containername)
+  local name="$(containername)"
+  [ -z "$image" ] && echo "Image required, see help" >/dev/stderr && exit 1
   docker run --interactive --tty --detach -v "$PWD":/work -w /work --name="$name" "$@" "$image"
 }
 
 function list() {
-  local name=$(containername)
+  local name="$(containername)"
   docker container ls --filter="name=${name}" "$@"
 }
 
 function shell() {
-  local name=$(containername)
+  local name="$(containername)"
   local command="${1:-bash}"
   shift
   docker exec --interactive --tty "${name}" "${command}"
 }
 
 function dwn() {
-  local name=$(containername)
-  docker rm --force "$@" "$name"
+  local name="$(containername)"
+  docker rm --force "$@" "${name}"
 }
 
 function containername() {
-  echo "dockerenv-$(basename $PWD)"
+  echo "dockerenv-$(basename ${PWD})"
 }
 
 function unknown() {
