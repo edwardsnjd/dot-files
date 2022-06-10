@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Create and access a docker environment for the current directory.
+#
 # Usage:
 #  dockerenv <command> [args...]
 #  dockerenv help
@@ -69,7 +71,7 @@ function binstub() {
 		! alias ${name} &> /dev/null
 		&& alias ${name}="${newalias}"
 		&& (echo "# Success! Added alias:" && alias ${name})
-		|| (echo "# Nope! Existing alias:" && alias ${name} && exit 1)
+		|| (echo "# Nope! Existing alias:" && alias ${name} && exit 1);
 	END
 }
 
@@ -77,7 +79,6 @@ function binstubs() {
   for name in "$@"
   do
     binstub "${name}"
-    echo ";"
   done
 }
 
@@ -106,7 +107,7 @@ function hlp() {
 		        dockerenv up \$DOCKERENV_IMAGE [options]
 		
 		    list|ls [options]
-		      List all devenv containers.
+		      List the devenv container for this directory.
 		
 		      If supplied, options are passed to docker ls.
 		
