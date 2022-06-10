@@ -19,6 +19,10 @@ function main() {
       shell "$@";;
     down|stop|kill|rm)
       dwn "$@";;
+    binstub)
+      binstub "$@";;
+    binstubs)
+      binstubs "$@";;
     help)
       hlp "$@";;
     *)
@@ -53,6 +57,28 @@ function dwn() {
 
 function containername() {
   echo "dockerenv-$(basename ${PWD})"
+}
+
+function binstub() {
+  local name="$1"
+  [ -z "$name" ] && echo "Name required, see help" >/dev/stderr && exit 1
+
+  local newalias="dockerenv exec $@"
+
+  cat <<-END
+		! alias ${name} &> /dev/null
+		&& alias ${name}="${newalias}"
+		&& (echo "# Success! Added alias:" && alias ${name})
+		|| (echo "# Nope! Existing alias:" && alias ${name} && exit 1)
+	END
+}
+
+function binstubs() {
+  for name in "$@"
+  do
+    binstub "${name}"
+    echo ";"
+  done
 }
 
 function unknown() {
@@ -94,7 +120,32 @@ function hlp() {
 		      Stop a devenv container.
 		
 		      If supplied, options are passed to docker rm.
-	END
+		
+		    binstub name [args...]
+		      Output the text of a bash script to setup an alias suitable for use
+		      as a bin stub in the current directory.  To create the alias, eval
+		      the raw text:
+		        $ eval \$(dockerenv binstub foo)  # create temporary alias
+		        $ foo somefile.foo                # use alias as if local
+		        $ unalias foo                     # remove the alias
+		
+		      name is the program to alias, and is also used as the name of the
+		      function.
+		
+		      If supplied args are additional arguments supplied to the named
+		      program via the alias.
+		
+		    binstubs [name...]
+		      Convenient way to create binstubs for a number of names.  To create
+		      the alias eval the raw text:
+		        $ eval \$(dockerenv binstubs irb ruby)  # create aliases
+		        $ ruby foo.rb                           # use aliases
+		        $ irb
+		        $ unalias irb ruby                      # remove them
+		
+		      Argument passing is not possible with this command.  If the named
+		      program needs arguments baked into the alias then use binstub.
+		END
 }
 
 # Entry point
