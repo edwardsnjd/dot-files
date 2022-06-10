@@ -29,68 +29,71 @@ function main() {
 function up() {
   local image="${1:-${DOCKERENV_IMAGE}}"
   shift
-  local name=$(basename $PWD)
+  local name=$(containername)
   docker run --interactive --tty --detach -v "$PWD":/work -w /work --name="$name" "$@" "$image"
 }
 
 function list() {
-  local name=$(basename $PWD)
+  local name=$(containername)
   docker container ls --filter="name=${name}" "$@"
 }
 
 function shell() {
-  local name=$(basename $PWD)
+  local name=$(containername)
   local command="${1:-bash}"
   shift
   docker exec --interactive --tty "${name}" "${command}"
 }
 
 function dwn() {
-  local name=$(basename $PWD)
+  local name=$(containername)
   docker rm --force "$@" "$name"
 }
 
-function hlp() {
-  local command="$1"
-
-  case $command in
-    up|start|run)
-      cat <<-END
-				Usage: dockerenv up|start|run (<image>) [docker run options]
-
-				    If supplied <image> is the docker image to run.
-				    If no <image> is supplied then the enviroment variable DOCKERENV_IMAGE is used.
-
-				    In order to supply any run options, the image is required.  To use the default:
-				        dockerenv up \$DOCKERENV_IMAGE [options]
-			END
-      ;;
-    list|ls)
-      cat <<-END
-				Usage: dockerenv list|ls [docker ls options]
-			END
-      ;;
-    shell|exec)
-      cat <<-END
-				Usage: dockerenv shell|exec [command]
-			END
-      ;;
-    down|stop|kill|rm)
-      cat <<-END
-				Usage: dockerenv down|stop|kill|rm [docker rm options]
-			END
-      ;;
-    *)
-      echo <<-END
-				??
-			END
-      ;;
-  esac
+function containername() {
+  echo "dockerenv-$(basename $PWD)"
 }
 
 function unknown() {
-  echo "Sorry, unknown command: $1"
+  echo "Sorry, unknown command: \"$1\""
   exit 1
+}
+
+function hlp() {
+  cat <<-END
+		NAME
+		    dockerenv - docker dev environments
+
+		SYNOPSIS
+		    dockerenv [command] [options]
+
+		COMMANDS
+		    up|start|run [image] [options]
+		      Start a devenv container in the background.
+		
+		      If supplied, image is the docker image to run.  If no image is
+		      supplied the environment variable DOCKERENV_IMAGE is used.
+		
+		      If supplied, options are passed to docker run.  In order to supply
+		      any run options, the image is required.  To use the default:
+		        dockerenv up \$DOCKERENV_IMAGE [options]
+		
+		    list|ls [options]
+		      List all devenv containers.
+		
+		      If supplied, options are passed to docker ls.
+		
+		    shell|exec [command]
+		      Run a command inside a devenv container.
+		
+		      If supplied [command] is the command to run in the container.  If
+		      not supplied, bash will be used instead.
+		
+		    down|stop|kill|rm [options]
+		      Stop a devenv container.
+		
+		      If supplied, options are passed to docker rm.
+	END
 }
 
 # Entry point
