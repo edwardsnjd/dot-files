@@ -43,7 +43,7 @@ function shell() {
   local name="$(containername)"
   local command="${1:-bash}"
   shift
-  docker exec --interactive --tty "${name}" "${command}"
+  docker exec --interactive --tty "${name}" "${command}" "$@"
 }
 
 function dwn() {
