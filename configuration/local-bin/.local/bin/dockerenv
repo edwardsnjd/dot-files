@@ -6,6 +6,11 @@
 #  dockerenv <command> [args...]
 #  dockerenv help
 
+# Constants
+
+# Where the host directory is mounted
+MOUNT_TARGET="/work"
+
 # Commands
 
 function main() {
@@ -41,8 +46,8 @@ function up() {
      --interactive \
      --tty \
      --detach \
-     --volume "$PWD":/work \
-     --workdir /work \
+     --volume "$PWD":"${MOUNT_TARGET}" \
+     --workdir "${MOUNT_TARGET}" \
      --name="$name" \
      "$@" \
      "$image"
