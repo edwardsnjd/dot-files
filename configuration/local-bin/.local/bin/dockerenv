@@ -11,6 +11,20 @@
 # Where the host directory is mounted
 MOUNT_TARGET="/work"
 
+# Used on containers to indicate they are managed by this script
+FLAG_LABEL="com.edwardsnjd.dockerenv"
+# Used on containers to store the mounted host directory
+MOUNT_LABEL="com.edwardsnjd.dockerenv.mount"
+# Used to list containers
+LIST_FORMAT="\
+table \
+{{ .ID }}\t\
+{{ .Image }}\t\
+{{ .Status }}\t\
+{{ .Label \"${MOUNT_LABEL}\" }}\t\
+{{ if eq (.Label \"${MOUNT_LABEL}\") \"${PWD}\" }}(*){{ end }}\
+"
+
 # Commands
 
 function main() {
@@ -46,7 +60,9 @@ function up() {
      --interactive \
      --tty \
      --detach \
-     --volume "$PWD":"${MOUNT_TARGET}" \
+     --volume "${PWD}":"${MOUNT_TARGET}" \
+     --label "${MOUNT_LABEL}=${PWD}" \
+     --label "${FLAG_LABEL}" \
      --workdir "${MOUNT_TARGET}" \
      --name="$name" \
      "$@" \
@@ -56,7 +72,8 @@ function up() {
 function list() {
   local name="$(containername)"
   docker container ls \
-     --filter="name=${name}" \
+     --filter="label=${FLAG_LABEL}" \
+     --format="${LIST_FORMAT}" \
      "$@"
 }
 
