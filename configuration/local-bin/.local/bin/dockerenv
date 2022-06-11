@@ -11,8 +11,6 @@
 # Where the host directory is mounted
 MOUNT_TARGET="/work"
 
-# Used when printing the name of this script
-EXE_NAME="dockerenv"
 # Used on containers to indicate they are managed by this script
 FLAG_LABEL="com.edwardsnjd.dockerenv"
 # Used on containers to store the mounted host directory
@@ -72,7 +70,7 @@ function list() {
 function shell() {
   local id="$(activeid)"
   [ -z "$id" ] && {
-    echo "Error: No $EXE_NAME container active" > /dev/stderr
+    echo "Error: No dockerenv container active" > /dev/stderr
     exit 1
   }
 
@@ -93,7 +91,7 @@ function shell() {
 function dwn() {
   local id="$(activeid)"
   [ -z "$id" ] && {
-    echo "Error: No $EXE_NAME container active" > /dev/stderr
+    echo "Error: No dockerenv container active" > /dev/stderr
     exit 1
   }
 
@@ -176,10 +174,10 @@ function unknown() {
 function hlp() {
   cat <<-END
 		NAME
-        $EXE_NAME - docker dev environments
+		    dockerenv - docker dev environments
 
 		SYNOPSIS
-        $EXE_NAME [command] [options]
+		    dockerenv [command] [options]
 
 		USAGE
 		    The assumption is that your project does not have a special Dockerfile
@@ -197,7 +195,7 @@ function hlp() {
 		    directory.
 
 		    If the current working directory is under the mount directories of
-        multiple $EXE_NAME containers then the closest one is used.
+		    multiple dockerenv containers then the closest one is used.
 
 		    Creating a custom Dockerfile is not at all a bad idea but if you have a
 		    large number of projects with identical development environment
@@ -214,35 +212,35 @@ function hlp() {
 		        $ cd /code/project1           # cd to root of project
 		        $ type ruby                   # confirm no ruby on host
 		        -bash: type: ruby: not found
-            $ $EXE_NAME up ruby:alpine     # start ruby container
+		        $ dockerenv up ruby:alpine     # start ruby container
 		        ...
-            $ $EXE_NAME exec ruby foo.rb   # run some ruby
+		        $ dockerenv exec ruby foo.rb   # run some ruby
 		        ...
-            $ $EXE_NAME exec irb           # drop into ruby REPL
+		        $ dockerenv exec irb           # drop into ruby REPL
 		        ...
-            $ $EXE_NAME down
+		        $ dockerenv down
 		        dockerenv-project1
 
 		    Example - Using binstub for easier access to container commands:
 		        $ cd /code/project1           # cd to root of project
-            $ $EXE_NAME up ruby:alpine     # start ruby container
+		        $ dockerenv up ruby:alpine     # start ruby container
 		        ...
-            $ $EXE_NAME binstubs ruby irb  # add aliases for ruby and irb
+		        $ dockerenv binstubs ruby irb  # add aliases for ruby and irb
 		        ...
 		        $ ruby foo.rb                 # run some ruby
 		        ...
 		        $ irb                         # drop into ruby REPL
 		        ...
 		        $ unalias ruby irb            # remove aliases
-            $ $EXE_NAME down
+		        $ dockerenv down
 		        dockerenv-project1
 
-        Example - Listing $EXE_NAME containers:
-            $ $EXE_NAME ls                 # list containers
+		    Example - Listing dockerenv containers:
+		        $ dockerenv ls                 # list containers
 		        CONTAINER ID   IMAGE         STATUS          mount
-            $ $EXE_NAME up ruby:alpine     # start ruby container
+		        $ dockerenv up ruby:alpine     # start ruby container
 		        ...
-            $ $EXE_NAME ls                 # list containers
+		        $ dockerenv ls                 # list containers
 		        CONTAINER ID   IMAGE         STATUS          mount
 		        c2d002896add   ruby:alpine   Up 10 seconds   /code/project1   (*)
 		        ddddddddeeee   ruby:alpine   Up 10 minutes   /code/project2
@@ -256,7 +254,7 @@ function hlp() {
 		
 		      If supplied, options are passed to docker run.  In order to supply
 		      any run options, the image is required.  To use the default:
-            $EXE_NAME up \$DOCKERENV_IMAGE [options]
+		      dockerenv up \$DOCKERENV_IMAGE [options]
 		
 		    list|ls [options]
 		      List all devenv containers, indicating if one is active for this
@@ -279,7 +277,7 @@ function hlp() {
 		      Output the text of a bash script to setup an alias suitable for use
 		      as a bin stub in the current directory.  To create the alias, eval
 		      the raw text:
-            $ eval \$($EXE_NAME binstub foo)  # create temporary alias
+		        $ eval \$(dockerenv binstub foo)  # create temporary alias
 		        $ foo somefile.foo                # use alias as if local
 		        $ unalias foo                     # remove the alias
 		
@@ -292,7 +290,7 @@ function hlp() {
 		    binstubs [name...]
 		      Convenient way to create binstubs for a number of names.  To create
 		      the alias eval the raw text:
-            $ eval \$($EXE_NAME binstubs irb ruby)  # create aliases
+		        $ eval \$(dockerenv binstubs irb ruby)  # create aliases
 		        $ ruby foo.rb                           # use aliases
 		        $ irb
 		        $ unalias irb ruby                      # remove them
