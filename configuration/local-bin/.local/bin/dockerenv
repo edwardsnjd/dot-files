@@ -136,6 +136,64 @@ function hlp() {
 		SYNOPSIS
 		    $exename [command] [options]
 
+		USAGE
+		    The assumption is that your project does not have a special Dockerfile
+		    but you have a particular docker image available containing some cli
+		    tools that you'd like access to.  This script has a few commands that
+		    can start, use, and destroy a companion container for a particular
+		    directory.
+
+		    The container and associated tools will work from that particular
+		    directory and its descendants.
+
+		    Creating a custom Dockerfile is not at all a bad idea but if you have a
+		    large number of projects with identical development environment
+		    requirements then it can be conveninent to make those available without
+		    maintaining identical Dockerfiles.
+
+		    This script just provides some sugar for the underlying docker commands
+		    you'd use.  The mechanism for identifying the associated container for
+		    the current working directory is the path of the directory that the
+		    associated container was started from.  That has obvious drawbacks but
+		    is often enough.
+
+		    Example - Local ruby project but no ruby installed:
+		        $ cd /code/project1           # cd to root of project
+		        $ type ruby                   # confirm no ruby on host
+		        -bash: type: ruby: not found
+		        $ $exename up ruby:alpine     # start ruby container
+		        ...
+		        $ $exename exec ruby foo.rb   # run some ruby
+		        ...
+		        $ $exename exec irb           # drop into ruby REPL
+		        ...
+		        $ $exename down
+		        dockerenv-project1
+
+		    Example - Using binstub for easier access to container commands:
+		        $ cd /code/project1           # cd to root of project
+		        $ $exename up ruby:alpine     # start ruby container
+		        ...
+		        $ $exename binstubs ruby irb  # add aliases for ruby and irb
+		        ...
+		        $ ruby foo.rb                 # run some ruby
+		        ...
+		        $ irb                         # drop into ruby REPL
+		        ...
+		        $ unalias ruby irb            # remove aliases
+		        $ $exename down
+		        dockerenv-project1
+
+		    Example - Listing $exename containers:
+		        $ $exename ls                 # list containers
+		        CONTAINER ID   IMAGE         STATUS          mount
+		        $ $exename up ruby:alpine     # start ruby container
+		        ...
+		        $ $exename ls                 # list containers
+		        CONTAINER ID   IMAGE         STATUS          mount
+		        c2d002896add   ruby:alpine   Up 10 seconds   /code/project1   (*)
+		        ddddddddeeee   ruby:alpine   Up 10 minutes   /code/project2
+
 		COMMANDS
 		    up|start|run [image] [options]
 		      Start a devenv container in the background.
@@ -148,7 +206,8 @@ function hlp() {
 		        $exename up \$DOCKERENV_IMAGE [options]
 		
 		    list|ls [options]
-		      List the devenv container for this directory.
+		      List all devenv containers, indicating if one is active for this
+		      directory.
 		
 		      If supplied, options are passed to docker ls.
 		
