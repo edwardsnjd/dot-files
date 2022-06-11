@@ -88,12 +88,13 @@ function unknown() {
 }
 
 function hlp() {
+  local exename="$(basename $0)"
   cat <<-END
 		NAME
-		    dockerenv - docker dev environments
+		    $exename - docker dev environments
 
 		SYNOPSIS
-		    dockerenv [command] [options]
+		    $exename [command] [options]
 
 		COMMANDS
 		    up|start|run [image] [options]
@@ -104,7 +105,7 @@ function hlp() {
 		
 		      If supplied, options are passed to docker run.  In order to supply
 		      any run options, the image is required.  To use the default:
-		        dockerenv up \$DOCKERENV_IMAGE [options]
+		        $exename up \$DOCKERENV_IMAGE [options]
 		
 		    list|ls [options]
 		      List the devenv container for this directory.
@@ -126,7 +127,7 @@ function hlp() {
 		      Output the text of a bash script to setup an alias suitable for use
 		      as a bin stub in the current directory.  To create the alias, eval
 		      the raw text:
-		        $ eval \$(dockerenv binstub foo)  # create temporary alias
+		        $ eval \$($exename binstub foo)  # create temporary alias
 		        $ foo somefile.foo                # use alias as if local
 		        $ unalias foo                     # remove the alias
 		
@@ -139,7 +140,7 @@ function hlp() {
 		    binstubs [name...]
 		      Convenient way to create binstubs for a number of names.  To create
 		      the alias eval the raw text:
-		        $ eval \$(dockerenv binstubs irb ruby)  # create aliases
+		        $ eval \$($exename binstubs irb ruby)  # create aliases
 		        $ ruby foo.rb                           # use aliases
 		        $ irb
 		        $ unalias irb ruby                      # remove them
