@@ -70,7 +70,6 @@ function up() {
 }
 
 function list() {
-  local name="$(containername)"
   docker container ls \
      --filter="label=${FLAG_LABEL}" \
      --format="${LIST_FORMAT}" \
