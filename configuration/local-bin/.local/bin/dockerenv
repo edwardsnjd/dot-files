@@ -41,8 +41,8 @@ function up() {
      --interactive \
      --tty \
      --detach \
-     -v "$PWD":/work \
-     -w /work \
+     --volume "$PWD":/work \
+     --workdir /work \
      --name="$name" \
      "$@" \
      "$image"
