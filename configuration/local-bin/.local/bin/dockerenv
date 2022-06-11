@@ -112,7 +112,7 @@ function containername() {
 # {length of rel path} {rel path} {ID}
 function activeinfo() {
   docker ps \
-    --filter='label=com.edwardsnjd.dockerenv' \
+    --filter="label=${FLAG_LABEL}" \
     --format="{{.Label \"${MOUNT_LABEL}\"}}\t{{.ID}}" \
   | awk -v pwd="$PWD" -v OFS=$'\t' \
     ' index(pwd, $1) == 1 {                 # if at or below mounted dir
