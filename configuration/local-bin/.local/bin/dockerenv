@@ -17,15 +17,6 @@ EXE_NAME="dockerenv"
 FLAG_LABEL="com.edwardsnjd.dockerenv"
 # Used on containers to store the mounted host directory
 MOUNT_LABEL="com.edwardsnjd.dockerenv.mount"
-# Used to list containers
-LIST_FORMAT="\
-table \
-{{ .ID }}\t\
-{{ .Image }}\t\
-{{ .Status }}\t\
-{{ .Label \"${MOUNT_LABEL}\" }}\t\
-{{ if eq (.Label \"${MOUNT_LABEL}\") \"${PWD}\" }}(*){{ end }}\
-"
 
 # Commands
 
@@ -74,32 +65,86 @@ function up() {
 function list() {
   docker container ls \
      --filter="label=${FLAG_LABEL}" \
-     --format="${LIST_FORMAT}" \
+     --format="$(listformat)" \
      "$@"
 }
 
 function shell() {
-  local name="$(containername)"
+  local id="$(activeid)"
+  [ -z "$id" ] && {
+    echo "Error: No $EXE_NAME container active" > /dev/stderr
+    exit 1
+  }
+
+  local reldir="$(activereldir)"
+
   local command="${1:-bash}"
   shift
+
   docker exec \
      --interactive \
      --tty \
-     "${name}" \
+     --workdir "${MOUNT_TARGET}/${reldir}" \
+     "${id}" \
      "${command}" \
      "$@"
 }
 
 function dwn() {
-  local name="$(containername)"
+  local id="$(activeid)"
+  [ -z "$id" ] && {
+    echo "Error: No $EXE_NAME container active" > /dev/stderr
+    exit 1
+  }
+
   docker rm \
      --force \
      "$@" \
-     "${name}"
+     "${id}"
 }
 
 function containername() {
-  echo "dockerenv-$(basename ${PWD})"
+  # Include some randomness to reduce name collision
+  printf "dockerenv-%s-%05d" $(basename ${PWD}) $RANDOM
+}
+
+# Return info about the active container
+# {length of rel path} {rel path} {ID}
+function activeinfo() {
+  docker ps \
+    --filter='label=com.edwardsnjd.dockerenv' \
+    --format="{{.Label \"${MOUNT_LABEL}\"}}\t{{.ID}}" \
+  | awk -v pwd="$PWD" -v OFS=$'\t' \
+    ' index(pwd, $1) == 1 {                 # if at or below mounted dir
+        $1 = "." substr(pwd, length($1)+1)  # find relative path
+        print length($1), $1, $2            # return length (shortest is best)
+      }
+    ' \
+  | sort -n -k1,1 \
+  | head -1
+}
+
+# Return the ID of the active container
+function activeid() {
+  activeinfo | cut -f3
+}
+
+# Return the relative directory in the active container
+function activereldir() {
+  activeinfo | cut -f2
+}
+
+# Build the Go template string to list containers
+function listformat() {
+  local id="$(activeid)"
+  echo "\
+table \
+{{ .ID }}\t\
+{{ .Image }}\t\
+{{ .Status }}\t\
+{{ .Label \"${MOUNT_LABEL}\" }}\t\
+{{ if eq .ID \"${id}\" }}(*){{ end }}\
+"
 }
 
 function binstub() {
