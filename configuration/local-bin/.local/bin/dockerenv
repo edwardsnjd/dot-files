@@ -37,24 +37,42 @@ function up() {
   shift
   local name="$(containername)"
   [ -z "$image" ] && echo "Image required, see help" >/dev/stderr && exit 1
-  docker run --interactive --tty --detach -v "$PWD":/work -w /work --name="$name" "$@" "$image"
+  docker run \
+     --interactive \
+     --tty \
+     --detach \
+     -v "$PWD":/work \
+     -w /work \
+     --name="$name" \
+     "$@" \
+     "$image"
 }
 
 function list() {
   local name="$(containername)"
-  docker container ls --filter="name=${name}" "$@"
+  docker container ls \
+     --filter="name=${name}" \
+     "$@"
 }
 
 function shell() {
   local name="$(containername)"
   local command="${1:-bash}"
   shift
-  docker exec --interactive --tty "${name}" "${command}" "$@"
+  docker exec \
+     --interactive \
+     --tty \
+     "${name}" \
+     "${command}" \
+     "$@"
 }
 
 function dwn() {
   local name="$(containername)"
-  docker rm --force "$@" "${name}"
+  docker rm \
+     --force \
+     "$@" \
+     "${name}"
 }
 
 function containername() {
