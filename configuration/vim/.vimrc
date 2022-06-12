@@ -254,6 +254,27 @@ function! <SID>Snippet() abort
   endtry
 endfunction
 
+" Insert person from git
+vnoremap <leader>ip :call <SID>ReplaceWithGitPerson()<CR>
+function! <SID>ReplaceWithGitPerson() abort
+  let l:selected = <SID>GitContributor()
+  execute "normal! gvc\<C-r>=l:selected\<cr>"
+  redraw!
+endfunction
+
+" Select person from git
+function! <SID>GitContributor() abort
+  let l:tempname = tempname()
+  try
+    execute 'silent ! gitcontributor > ' . fnameescape(l:tempname)
+    " Return any person selected (without new line)
+    let l:output = readfile(l:tempname, '', 1)
+    return len(l:output) > 0 ? l:output[0] : v:null
+  finally
+    call delete(l:tempname)
+  endtry
+endfunction
+
 " Insert mode mappings:
 
 " - Save some LH typing
