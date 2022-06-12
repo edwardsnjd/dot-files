@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Usage: gitcontributor
+#
+# Select the name and email of someone who has contributed to the current git
+# repository.
+
+{
+  git log --pretty=tformat:"%aN <%aE>"
+  git log --pretty=tformat:"%cN <%cE>"
+} \
+ | sort \
+ | uniq \
+ | fzf
