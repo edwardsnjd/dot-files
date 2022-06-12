@@ -85,13 +85,19 @@ xnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
 " then sets up a change to replace the variable with the target before deleting
 " the declaration line(s).  Much of this is to cater for multiline values.
 nmap <silent> <leader>ri viw<leader>ri
-xnoremap <silent> <leader>ri
-  \:<C-U>'< mark i<CR>gv
-  \:<C-U>'>+1 mark j<CR>gv
-  \"idF=b"jyiw
-  \*Ncgni<Esc>
+xnoremap <silent> <leader>ri 
+  \:<C-U>'< mark i<CR>
+  \:<C-U>'>+1 mark j<CR>
+  \gv
+  \"id
+  \F=BviW
+  \"jy
+  \gv
+  \:<C-U>let @/ = '\V'.escape(@j, '\') <BAR> set hls <CR>
+  \cgni<Esc>
   \:'i,'j-1 delete<CR>
-  \n:echo 'Press . to replace each '.@j.' usage with '.@i<CR>
+  \n
+  \:echo 'Press . to replace each '.@j.' usage with '.@i<CR>
 
 " - Resize current window with arrow keys
 nnoremap <Right> :vertical resize +2<CR>
