@@ -244,8 +244,9 @@ nnoremap <leader>gc :! gh pr checks<CR>
 nnoremap <leader>is :call <SID>Snippet()<cr>
 function! <SID>Snippet() abort
   let l:tempname = tempname()
-  execute 'silent ! snippet ' . &filetype . ' > ' . fnameescape(l:tempname)
   try
+    execute 'silent ! snippet ' . &filetype . ' > ' . fnameescape(l:tempname)
+    " Insert text returned into file below cursor position
     execute 'read ' . l:tempname
     redraw!
   finally
