@@ -7,7 +7,7 @@
 #  dockerenv help
 #
 # Dependencies:
-#  - bash
+#  - bash (v4.4+ for ${var@Q} support)
 #  - docker
 #  - awk
 #  - basename
@@ -42,8 +42,6 @@ function main() {
       dwn "$@";;
     binstub)
       binstub "$@";;
-    binstubs)
-      binstubs "$@";;
     help)
       hlp "$@";;
     *)
@@ -156,9 +154,14 @@ table \
 
 function binstub() {
   local name="$1"
-  [ -z "$name" ] && echo "Name required, see help" >/dev/stderr && exit 1
+  shift
 
-  local newalias="dockerenv exec $@"
+  [ -z "$name" ] && echo "Name required, see help" >/dev/stderr && exit 1
+  [ -z "$@" ] && echo "Command required, see help" >/dev/stderr && exit 1
+
+  # Use the bash ${variable@operator} "Q" operator to get quoted args
+  # (needs bash v4.4+)
+  local newalias="dockerenv exec ${@@Q}"
 
   cat <<-END
 		! alias ${name} &> /dev/null
@@ -166,13 +169,6 @@ function binstub() {
 		&& (echo "# Success! Added alias:" && alias ${name})
 		|| (echo "# Nope! Existing alias:" && alias ${name} && exit 1);
 	END
-}
-
-function binstubs() {
-  for name in "$@"
-  do
-    binstub "${name}"
-  done
 }
 
 function unknown() {
@@ -282,30 +278,20 @@ function hlp() {
 		
 		      If supplied, options are passed to docker rm.
 		
-		    binstub name [args...]
+		    binstub name cmd [args...]
 		      Output the text of a bash script to setup an alias suitable for use
 		      as a bin stub in the current directory.  To create the alias, eval
 		      the raw text:
-		        $ eval \$(dockerenv binstub foo)  # create temporary alias
-		        $ foo somefile.foo                # use alias as if local
-		        $ unalias foo                     # remove the alias
+		        $ eval \$(dockerenv binstub foo foo)  # create temporary alias
+		        $ foo somefile.foo                    # use alias as if local
+		        $ unalias foo                         # remove the alias
 		
-		      name is the program to alias, and is also used as the name of the
-		      function.
+		      name is the name of the alias created.
 		
-		      If supplied args are additional arguments supplied to the named
+		      cmd is the command to run for that alias.
+		
+		      If supplied args are additional arguments supplied to the command
 		      program via the alias.
-		
-		    binstubs [name...]
-		      Convenient way to create binstubs for a number of names.  To create
-		      the alias eval the raw text:
-		        $ eval \$(dockerenv binstubs irb ruby)  # create aliases
-		        $ ruby foo.rb                           # use aliases
-		        $ irb
-		        $ unalias irb ruby                      # remove them
-		
-		      Argument passing is not possible with this command.  If the named
-		      program needs arguments baked into the alias then use binstub.
 		END
 }
 
