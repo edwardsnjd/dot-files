@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# begin:help-docs
+# NAME
+#   gradlew-test-to-errors - transform gradlew test failure format to compile errors
+#
+# SYNOPSIS
+#   gradlew check | gradlew-test-to-errors [command]
+#
+# ARGUMENTS
+#   command can be one of the following:
+#     - help
+#     - ds section = print the named data section from this script
+#     - errors (default) = add a parseable output line for failed tests
+#
+# OUTPUT
+#   A line like the following is added for each failed test:
+#     e: <base file name>: (line number): message
+#   e.g.
+#     e: <ParserTest.kt>: (90): Parses delete space statement() --     com.edwardnjd.parser.ParseException
+# end:help-docs
+
+function main() {
+  case $1 in
+    help|--help) help ;;
+    ds|--data-section) data-section "$2" ;;
+    errors|*) convert-failures-to-errors "$@" ;;
+  esac
+}
+
+function help() {
+  data-section "help-docs" | sed -E 's/^#.?//'
+}
+
+function convert-failures-to-errors() {
+  sed -E -f <(data-section "sed-convert-script") "$@"
+}
+
+function data-section() {
+  # Extract named section from comment blocks in this file
+  sed -En '/^# begin:'$1'/,/^# end:'$1'/ p' "$0" | sed '1d; $d'
+}
+
+main "$@"
+
+exit
+
+# Named comment blocks for better syntax highlighting of sed/awk scripts etc.
+# See data-section for the function used to extract these sections.
+
+# begin:sed-convert-script
+#n
+
+/^> Task :test FAILED/,/^FAILURE/ {
+  /^(.+) > (.+) FAILED$/ {
+    s//\1\n\2/
+    # (Module, Msg)
+    h
+    n
+    s/\s+(.+) at (.+):(.+)$/\1\n\2\n\3/
+    # (Msg2, BaseName, Line)
+    G
+    # (Msg2, BaseName, Line, Module, Msg)
+    s/(.*)\n(.*)\n(.*)\n(.*)\n(.*)/e: <\2>: (\3): \5 -- \1/
+    # e: <ParserTest.kt>: (20): Expecting blah -- exception blah
+    p
+    d
+  }
+}
+
+/^> Task :test FAILED/,/^FAILURE/ ! p
+# end:sed-convert-script
