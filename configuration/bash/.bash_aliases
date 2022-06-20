@@ -38,12 +38,12 @@ alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
 alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
 # Simple lap timer (uses `date` to measure duration in seconds)
-function stopwatch() {
+function laptimer() {
   local total=0
   local number=0
-  local key="?"
 
   # Exit on "s"
+  local key="?"
   while [[ "$key" != "s" ]]
   do
     # Print help first time, or on "?"
@@ -61,7 +61,7 @@ function stopwatch() {
     # Unless help requested, record a lap
     if [[ "$key" != "?" ]]
     then
-      local lap=$(( after - before ))
+      local lap=$(( $after - $before ))
       number=$(( $number + 1 ))
       total=$(( $total + $lap ))
 
