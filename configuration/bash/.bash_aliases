@@ -37,6 +37,42 @@ alias isodate='date -u +"%Y-%m-%d"'
 alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
 alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
+# Simple lap timer (uses `date` to measure duration in seconds)
+function stopwatch() {
+  local total=0
+  local number=0
+  local key="?"
+
+  # Exit on "s"
+  while [[ "$key" != "s" ]]
+  do
+    # Print help first time, or on "?"
+    if [[ "$key" == "?" ]]
+    then
+      echo "# Commands: s=stop, ?=help, anything else=lap " 1>&2
+    fi
+
+    # Wait for a key
+    local before=$(date +%s)
+    read -n 1 -p "> " key 1>&2
+    local after=$(date +%s)
+    echo > /dev/stderr
+
+    # Unless help requested, record a lap
+    if [[ "$key" != "?" ]]
+    then
+      local lap=$(( after - before ))
+      number=$(( $number + 1 ))
+      total=$(( $total + $lap ))
+
+      printf "Lap\t$number\t$lap (s)\t$(( $total / $number )) (avg s)\n"
+    fi
+  done
+
+  echo "# Stopped" 1>&2
+  printf "Total\t$number (#)\t$total (s)\t$(( $total / $number )) (avg s)\n"
+}
+
 # iTerm2 tmux (control mode and reuse session)
 alias tm='tmux -CC new-session -As'
 # Alias for convenient tmux session picker
