@@ -73,6 +73,21 @@ function laptimer() {
   printf "Total\t$number (#)\t$total (s)\t$(( $total / $number )) (avg s)\n"
 }
 
+function stopwatch() {
+  local start=$(date +%s)
+
+  printf "0 (s)"  # No newline
+
+  while sleep 1
+  do
+    local now=$(date +%s)
+    # NB. '\r' moves cursor to start of line
+    printf "\r$(( $now - $start )) (s)"  # No newline
+  done
+
+  echo # Add missing newline
+}
+
 # iTerm2 tmux (control mode and reuse session)
 alias tm='tmux -CC new-session -As'
 # Alias for convenient tmux session picker
