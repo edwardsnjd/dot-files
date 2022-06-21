@@ -9,9 +9,10 @@ alias   ..='cd ..'          # Go up one directory
 alias  ...='cd ../..'       # Go up two directories
 alias ....='cd ../../..'    # And for good measure
 # Simple tree view
-alias   t='tree -aF -I .git -L 1 --dirsfirst'
-alias  tt='tree -aF -I .git -L 2 --dirsfirst'
-alias ttt='tree -aF -I .git -L 3 --dirsfirst'
+alias    t='tree -aF -I .git --dirsfirst -L 1'
+alias   tt='tree -aF -I .git --dirsfirst -L 2'
+alias  ttt='tree -aF -I .git --dirsfirst -L 3'
+alias tree='tree -aF -I .git --dirsfirst'
 
 # Dockerised tools
 function elm {
