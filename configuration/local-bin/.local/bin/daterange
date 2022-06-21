@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require "date"
+
+from = ARGV[0]
+to = ARGV[1]
+
+date1 = Date.iso8601(from)
+date2 = Date.iso8601(to)
+
+(date1..date2)
+  .map { |date| date.strftime("%Y-%m-%d%tW%V%t%a") }
+  .each { |d| puts(d) }
