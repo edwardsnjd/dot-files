@@ -1,5 +1,27 @@
 #!/usr/bin/env ruby
 
+# NAME
+#   daterange - print the dates in a given range
+#
+# SYNOPSIS
+#   daterange from to
+#
+# DESCRIPTION
+#   from = inclusive start date in ISO8601 format
+#   to   = inclusive end date in ISO8601 format
+#
+# EXAMPLES
+#   $ daterange 2000-01-01 2000-01-09
+#   2000-01-01	W52	Sat
+#   2000-01-02	W52	Sun
+#   2000-01-03	W01	Mon
+#   2000-01-04	W01	Tue
+#   2000-01-05	W01	Wed
+#   2000-01-06	W01	Thu
+#   2000-01-07	W01	Fri
+#   2000-01-08	W01	Sat
+#   2000-01-09	W01	Sun
+
 require "date"
 
 from = ARGV[0]
