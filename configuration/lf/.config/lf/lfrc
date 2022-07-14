@@ -40,6 +40,20 @@ set preview on
 set previewer ~/.config/lf/lf-preview.sh
 map i $~/.config/lf/lf-preview.sh $f
 
+# Columns
+cmd auto_cols ${{
+    w=$(tput cols)
+    if [ $w -le 80 ]; then
+        lf -remote "send $id set nopreview"
+        lf -remote "send $id set ratios 1:3"
+    elif [ $w -ge 160 ]; then
+        lf -remote "send $id set ratios 1:1:3:3"
+    else
+        lf -remote "send $id set ratios 1:2:2"
+    fi
+}}
+auto_cols
+
 # Integrations (see https://github.com/gokcehan/lf/wiki/Integrations)
 
 # FZF
