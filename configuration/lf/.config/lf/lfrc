@@ -58,7 +58,7 @@ auto_cols
 
 # FZF
 cmd fzf_jump ${{
-    res="$(fd . --color=always | fzf --reverse --header='Jump to location')"
+    res="$(fzf --reverse --header='Jump to location')"
     if [ -d "$res" ] ; then
         cmd="cd"
     elif [ -f "$res" ] ; then
@@ -68,4 +68,4 @@ cmd fzf_jump ${{
     fi
     lf -remote "send $id $cmd \"$res\""
 }}
-map <c-f> :fzf_jump
+map <c-p> :fzf_jump
