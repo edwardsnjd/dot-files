@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+# Usage: hundredblocks-time
+#
+# Examples:
+#   06:00 = |                         |
+#   06:20 = |:                        |
+#   12:00 = |∷∷∷∷∷∷∷∷∷∷∷∷∷            |
+#   22:00 = |∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷∷|
+#
+# Notes:
+#   100 blocks awake time per day
+#   25 blocks of 4 dot characters per day
+#   100 * 10 minute blocks = 16 hours = 06:00 -> 22:00
+
+function main() {
+  local blocks=$(block-number)
+  ascii-render $blocks
+}
+
+function block-number() {
+  local SECONDS_PER_MINUTE=60
+  local MINUTES_PER_BLOCK=10
+  local now=$(date +%s)
+  local start=$(date -v 6H -v 0M -v 0S +%s)
+  local blocks=$(( ($now - $start) / $SECONDS_PER_MINUTE / $MINUTES_PER_BLOCK ))
+
+  if [ $blocks -lt 0 ]; then
+    blocks=0
+  elif [ $blocks -gt 100 ]; then
+    blocks=100
+  fi
+
+  echo $blocks
+}
+
+function ascii-render() {
+  local blocks=$1
+  local fullsquares=$(( $blocks / 4 ))
+  local leftovers=$(( $blocks - ( $fullsquares * 4 ) ))
+  local emptysquares=$(( ( 100 - $blocks ) / 4 ))
+
+  printf "["
+
+  if [ $fullsquares -gt 0 ]; then
+    seq $fullsquares | while read; do printf "∷"; done
+  fi
+
+  case $leftovers in
+    3) printf "∴";;
+    2) printf ":";;
+    1) printf "·";;
+  esac
+
+  if [ $emptysquares -gt 0 ]; then
+    seq $emptysquares | while read; do printf " "; done
+  fi
+
+  printf "]"
+}
+
+main
