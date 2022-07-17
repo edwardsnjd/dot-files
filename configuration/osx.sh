@@ -15,7 +15,7 @@ function use_bash() {
     echo "Already using bash"
   else
     echo "Changing default shell to bash"
-    chsh -s /usr/local/bin/bash
+    chsh -s /opt/homebrew/bin/bash
   fi
 }
 
