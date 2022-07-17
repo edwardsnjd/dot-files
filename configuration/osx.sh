@@ -8,7 +8,20 @@ function speed_up_keys() {
   defaults write -g KeyRepeat -int 2
 }
 
+function use_bash() {
+  # Default shell is now zsh
+  local current_shell=$SHELL
+  if [[ $SHELL =~ bash ]]; then
+    echo "Already using bash"
+  else
+    echo "Changing default shell to bash"
+    chsh -s /bin/bash
+  fi
+}
+
 speed_up_keys
+
+use_bash
 
 stow --target="${HOME}" \
   alacritty \
