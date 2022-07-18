@@ -1,20 +1,23 @@
 {
   "entries": {
     "tap": {
+      "1password/tap": {
+        "revision": "99a42bcf70263f8ce2f2517be1ab59bc950a74e9"
+      },
       "homebrew/bundle": {
         "revision": "48497882863432d8f0bd7dd6727df325a0f00b35"
       },
       "homebrew/cask": {
-        "revision": "f65ef39ab44422f661c9d8bf333a350fb3fac77e"
+        "revision": "c62a2f683d19fa99ffd6aa61409baeaae64111f6"
       },
       "homebrew/cask-fonts": {
-        "revision": "c430c45609a09848d7955c03847b79da91f5a4a1"
+        "revision": "4db51074a44c9960502371ec4665d64d55965ac6"
       },
       "homebrew/cask-versions": {
         "revision": "a4cc1e8f896e7af7b8d44bd9056244a0cdfdb740"
       },
       "homebrew/core": {
-        "revision": "57eb6b5a67647692cc47f38f98e70c060ee10149"
+        "revision": "8c10d0c49f2689ce63dcce7dd81991870f8de911"
       },
       "homebrew/services": {
         "revision": "0b653a3102b15789885b5d4fdb38b0930a8fd342"
@@ -518,40 +521,40 @@
         }
       },
       "gnuplot": {
-        "version": "5.4.3_1",
+        "version": "5.4.4",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_monterey": {
               "cellar": "/opt/homebrew/Cellar",
-              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:8434d860865ab948c40b82e8ed9cfc20697e153f1018c747df82f21ec71ffc70",
-              "sha256": "8434d860865ab948c40b82e8ed9cfc20697e153f1018c747df82f21ec71ffc70"
+              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:397145507ccbb8b18d3b905b7aadbe6ff245c52eafcbcebf03ee1c3b4d9d53cf",
+              "sha256": "397145507ccbb8b18d3b905b7aadbe6ff245c52eafcbcebf03ee1c3b4d9d53cf"
             },
             "arm64_big_sur": {
               "cellar": "/opt/homebrew/Cellar",
-              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:c528b21b25c7c35f67cae3e71ea9f555112cd61f0add956d76e57a6f4cc6870b",
-              "sha256": "c528b21b25c7c35f67cae3e71ea9f555112cd61f0add956d76e57a6f4cc6870b"
+              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:d425c0cf13e4ccbf26bd026e5676027ecb039c556d38f8d0586856f47c9a9c4e",
+              "sha256": "d425c0cf13e4ccbf26bd026e5676027ecb039c556d38f8d0586856f47c9a9c4e"
             },
             "monterey": {
               "cellar": "/usr/local/Cellar",
-              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:5d66c5093a628fc3169e1d844a818710e63fe959258a51d25aee2ebad7b2724a",
-              "sha256": "5d66c5093a628fc3169e1d844a818710e63fe959258a51d25aee2ebad7b2724a"
+              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:f7d2153dcfa662bbf84ce32a40474e77330e07424ec7b020c0cd178f35cd0a30",
+              "sha256": "f7d2153dcfa662bbf84ce32a40474e77330e07424ec7b020c0cd178f35cd0a30"
             },
             "big_sur": {
               "cellar": "/usr/local/Cellar",
-              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:355caca1944918dc774073f8cbbe96355f04b2731cb73d2d0f0664a646404183",
-              "sha256": "355caca1944918dc774073f8cbbe96355f04b2731cb73d2d0f0664a646404183"
+              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:924b2e49026dc90a5cc8097b36776797765578baa09e0681231caf2bfb3a80e5",
+              "sha256": "924b2e49026dc90a5cc8097b36776797765578baa09e0681231caf2bfb3a80e5"
             },
             "catalina": {
               "cellar": "/usr/local/Cellar",
-              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:b0dc5bf8e5b3c703e0a3b590d130a9105849639f622189d9f49a7b4ad33619c9",
-              "sha256": "b0dc5bf8e5b3c703e0a3b590d130a9105849639f622189d9f49a7b4ad33619c9"
+              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:bb28e77545fc22d9dfd1b2bab184be15916a722b0e0024a20764d3e550520f45",
+              "sha256": "bb28e77545fc22d9dfd1b2bab184be15916a722b0e0024a20764d3e550520f45"
             },
             "x86_64_linux": {
               "cellar": "/home/linuxbrew/.linuxbrew/Cellar",
-              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:5171dbbb1add97ec81e2540392b89d9c271af07c1f6f5922376e6110319ef792",
-              "sha256": "5171dbbb1add97ec81e2540392b89d9c271af07c1f6f5922376e6110319ef792"
+              "url": "https://ghcr.io/v2/homebrew/core/gnuplot/blobs/sha256:3adcbd0950fe8c1ad0d65d9ec46144d93c3421d0127bc5d1c228653ca3d3c1b2",
+              "sha256": "3adcbd0950fe8c1ad0d65d9ec46144d93c3421d0127bc5d1c228653ca3d3c1b2"
             }
           }
         }
@@ -1466,6 +1469,18 @@
       }
     },
     "cask": {
+      "1password": {
+        "version": "8.7.3",
+        "options": {
+          "full_name": "1password"
+        }
+      },
+      "1password-cli": {
+        "version": "2.5.1",
+        "options": {
+          "full_name": "1password-cli"
+        }
+      },
       "brave-browser": {
         "version": "1.41.96.0,141.96",
         "options": {
@@ -1514,10 +1529,22 @@
           "full_name": "protonvpn"
         }
       },
+      "xbar": {
+        "version": "2.1.7-beta",
+        "options": {
+          "full_name": "xbar"
+        }
+      },
       "xquartz": {
         "version": "2.8.2",
         "options": {
           "full_name": "xquartz"
+        }
+      },
+      "zoom": {
+        "version": "5.11.1.8356",
+        "options": {
+          "full_name": "zoom"
         }
       }
     }
@@ -1525,9 +1552,9 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "3.5.4",
+        "HOMEBREW_VERSION": "3.5.5",
         "HOMEBREW_PREFIX": "/opt/homebrew",
-        "Homebrew/homebrew-core": "57eb6b5a67647692cc47f38f98e70c060ee10149",
+        "Homebrew/homebrew-core": "8c10d0c49f2689ce63dcce7dd81991870f8de911",
         "CLT": "13.0.0.0.1.1627064638",
         "Xcode": "13.2.1",
         "macOS": "12.3"
