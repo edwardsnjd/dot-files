@@ -41,4 +41,5 @@ stow --target="${HOME}" \
   local-bin \
   iterm2 \
   snippets \
-  ctags
+  ctags \
+  nb
