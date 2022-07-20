@@ -173,8 +173,22 @@ function gl {
     | fzf --ansi --layout=reverse-list --no-sort --bind="enter:execute($preview)"
 }
 
-# Interactive git history of a file
+# Interactive git history of a file (versions)
 function gtt {
+  pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show --color %%:$1 | less -c -+F -+X"
+
+  sha=$(
+    git log --pretty="$pretty" --color -- $1 \
+      | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind 'ctrl-/:toggle-preview' \
+      | grep -Eo '[a-f0-9]{7,}' | head -1
+  )
+  git show "$sha:$1" \
+    | bat --file-name="$1"
+}
+
+# Interactive git history of a file (diffs)
+function gtd {
   pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
   preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show --color %% -- $1 | less -c -+F -+X"
 
