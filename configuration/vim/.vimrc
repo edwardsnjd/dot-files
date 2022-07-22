@@ -60,7 +60,7 @@ map <F4> :emenu <C-Z>
 " Key bindings
 let mapleader = " "     " Change default leader from '\'
 
-" Normal mode mappings:
+" Mappings:
 
 " - Make copy consistent with other actions
 nnoremap Y y$
@@ -69,8 +69,9 @@ nnoremap Y y$
 nnoremap zh zm
 nnoremap zl zr
 
-" - More convenient way to toggle folding
-nnoremap <tab> za
+" - Retain selection when indenting
+vnoremap < <gv
+vnoremap > >gv
 
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
@@ -321,7 +322,7 @@ filetype indent plugin on
 
 " Specific file types
 autocmd Filetype gitcommit setlocal textwidth=80
-autocmd Filetype ruby setlocal colorcolumn=91
+autocmd Filetype ruby setlocal colorcolumn=120
 autocmd Filetype javascript setlocal colorcolumn=91
 autocmd Filetype typescript setlocal colorcolumn=91
 autocmd Filetype python setlocal colorcolumn=120
@@ -416,7 +417,7 @@ Plug 'https://github.com/tpope/vim-sensible'
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'https://github.com/tpope/vim-vinegar'
 Plug 'https://github.com/tpope/vim-surround'
-" Plug 'https://github.com/tpope/vim-rails'
+Plug 'https://github.com/tpope/vim-rails'
 Plug 'https://github.com/tpope/vim-repeat'
 Plug 'https://github.com/tpope/vim-projectionist'
 Plug 'https://github.com/tpope/vim-dispatch'
@@ -433,6 +434,7 @@ Plug 'https://github.com/junegunn/goyo.vim'
 Plug 'https://github.com/junegunn/limelight.vim'
 Plug 'https://github.com/wincent/terminus'
 Plug 'https://github.com/psf/black'
+Plug 'https://github.com/editorconfig/editorconfig-vim'
 call plug#end()
 
 " enable 24bit true color
