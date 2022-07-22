@@ -73,6 +73,9 @@ nnoremap zl zr
 vnoremap < <gv
 vnoremap > >gv
 
+" - Allow gf to edit files that don't exist
+nnoremap gf :e <cfile><CR>
+
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 
