@@ -53,12 +53,6 @@ set mouse=a
 set splitbelow
 set splitright
 
-" Terminal menus
-source $VIMRUNTIME/menu.vim
-set wildmenu
-set wildcharm=<C-Z>
-map <F4> :emenu <C-Z>
-
 " Key bindings
 let mapleader = " "     " Change default leader from '\'
 
