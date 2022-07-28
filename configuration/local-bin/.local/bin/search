@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 # Usage: search [options] QUERY
+#        search foo | search -t/--tsv
+#        search foo | search -t | search -x/--extension
 #
-# Recursively search all files and directories for the given query.
+# In the first form, recursively search all files and directories for the given
+# query.
 #
 # Options: -b, --browse = browse results (default) -B, --no-browse = just
 # output results rather than browsing
@@ -15,6 +18,12 @@
 #
 # With the `--no-browse` (or `-B`) option then the results are all printed to
 # stdout without browsing.
+#
+# In the second form, with `--tsv`, convert output from colon delimited to tab
+# delimited
+#
+# In the third form, with `--extension`, add an additional column to the tsv
+# for the extension.
 
 set -o nounset
 set -o errexit
@@ -22,18 +31,19 @@ set -o pipefail
 
 Main() {
   local browse=1
+  local query=""
 
-  while [[ $# -gt 1 ]]; do
+  while [[ $# -gt 0 ]]; do
     case "$1" in
       -b|--browse) browse=1 ;;
       -B|--no-browse) browse=0 ;;
-      *) echo "Warning: Ignoring unknown option: '$1'" > /dev/stderr ;;
+      -t|--tsv) ColonToTsv "$@"; exit ;;
+      -x|--extension) InsertExtensionColumn "$@"; exit ;;
+      *) query="$1"
     esac
 
     shift
   done
-
-  local query="$1"
 
   if [[ $browse -eq 1 ]]; then
     Browse "$query"
@@ -68,6 +78,15 @@ function List() {
     --hidden \
     --glob "!/.git/" \
     "$query"
+}
+
+function ColonToTsv() {
+  sed 's/\t/    /g' \
+   | sed -E 's/^([^:]+):([^:]+):([^:]+):(.*)$/\1\t\2\t\3\t\4/'
+}
+
+function InsertExtensionColumn() {
+  awk -v FS="\t" -v OFS="\t" '{ n=$1; sub(".*\\.", "", n); sub(".*/", "", n); print $1, n, $2, $3, $4 }'
 }
 
 Main "$@"
