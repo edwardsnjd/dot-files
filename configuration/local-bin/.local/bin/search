@@ -1,23 +1,48 @@
 #!/usr/bin/env bash
 
-# Usage: search QUERY
+# Usage: search [options] QUERY
 #
 # Recursively search all files and directories for the given query.
+#
+# Options: -b, --browse = browse results (default) -B, --no-browse = just
+# output results rather than browsing
 #
 # Each match is listed, so multiple matches on the same source line will result
 # in multiple search results.
 #
-# Matches are displayed in `fzf` for ease of browsing and selection.
+# By default matches are browsed in `fzf` for ease of browsing and selection,
+# then any selections are printed to stdout.
 #
-# Selections are printed to stdout.
+# With the `--no-browse` (or `-B`) option then the results are all printed to
+# stdout without browsing.
 
 set -o nounset
 set -o errexit
 set -o pipefail
 
 Main() {
+  local browse=1
+
+  while [[ $# -gt 1 ]]; do
+    case "$1" in
+      -b|--browse) browse=1 ;;
+      -B|--no-browse) browse=0 ;;
+      *) echo "Warning: Ignoring unknown option: '$1'" > /dev/stderr ;;
+    esac
+
+    shift
+  done
+
   local query="$1"
 
+  if [[ $browse -eq 1 ]]; then
+    Browse "$query"
+  else
+    List "$query"
+  fi
+}
+
+function Browse() {
   rg \
     --vimgrep \
     --color=always \
@@ -33,6 +58,16 @@ Main() {
     --bind "ctrl-/:toggle-preview" \
     --preview 'highlight-text {1} {2}' \
     --preview-window "+{2}-/2"
+}
+
+function List() {
+  rg \
+    --vimgrep \
+    --color=auto \
+    --smart-case \
+    --hidden \
+    --glob "!/.git/" \
+    "$query"
 }
 
 Main "$@"
