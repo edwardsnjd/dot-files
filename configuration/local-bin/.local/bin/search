@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# Usage: search QUERY
+#
+# Recursively search all files and directories for the given query.
+#
+# Each match is listed, so multiple matches on the same source line will result
+# in multiple search results.
+#
+# Matches are displayed in `fzf` for ease of browsing and selection.
+#
+# Selections are printed to stdout.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+Main() {
+  local query="$1"
+
+  rg \
+    --vimgrep \
+    --color=always \
+    --smart-case \
+    --hidden \
+    --glob "!/.git/" \
+    "$query" \
+  | fzf \
+    --ansi \
+    --multi \
+    --delimiter=":" \
+    --with-nth="1,4.." \
+    --bind "ctrl-/:toggle-preview" \
+    --preview 'highlight-text {1} {2}' \
+    --preview-window "+{2}-/2"
+}
+
+Main "$@"

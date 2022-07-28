@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Usage: highlight-text FILE [LINE]
+#
+# Render a pretty preview of the given file, optionally highlighting the given line.
+#
+# This is not paged, so to use as a preview for `fzf`, be sure to supply the
+# `--preview-window "+{2}-/2" argument to `fzf` so that it scrolls the line
+# number to the centre of the preview.
+
+set -o nounset
+set -o errexit
+
+Main() {
+  local file="$1"
+
+  local line_highlight=""
+  if [[ $# -gt 1 ]]; then
+    line_highlight="--highlight-line=$2"
+  fi
+
+  exec bat \
+    --color=always \
+    --paging=never \
+    --style=numbers \
+    $line_highlight \
+    "$file"
+}
+
+Main "$@"
