@@ -460,6 +460,8 @@ hi diffAdded   guifg=#40dd40
 hi diffRemoved guifg=#dd5874
 " - Subtle column marker
 hi ColorColumn guibg=#011728
+" - Add highlight for column, to match cursor line
+hi CursorColumn guibg=#112630
 
 " Trying to use Night Owl terminal colours
 let g:terminal_ansi_colors = [
