@@ -52,24 +52,6 @@ Main() {
   fi
 }
 
-function Browse() {
-  rg \
-    --vimgrep \
-    --color=always \
-    --smart-case \
-    --hidden \
-    --glob "!/.git/" \
-    "$query" \
-  | fzf \
-    --ansi \
-    --multi \
-    --delimiter=":" \
-    --with-nth="1,4.." \
-    --bind "ctrl-/:toggle-preview" \
-    --preview 'highlight-text {1} {2}' \
-    --preview-window "+{2}-/2"
-}
-
 function List() {
   rg \
     --vimgrep \
@@ -78,6 +60,28 @@ function List() {
     --hidden \
     --glob "!/.git/" \
     "$query"
+}
+
+function Browse() {
+  rg \
+    --vimgrep \
+    --color=always \
+    --smart-case \
+    --hidden \
+    --glob "!/.git/" \
+    "$query" \
+  | Select
+}
+
+function Select() {
+  fzf \
+    --ansi \
+    --multi \
+    --delimiter=":" \
+    --with-nth="1,4.." \
+    --bind "ctrl-/:toggle-preview" \
+    --preview 'highlight-text {1} {2}' \
+    --preview-window "+{2}-/2"
 }
 
 function ColonToTsv() {
