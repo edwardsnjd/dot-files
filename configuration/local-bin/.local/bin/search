@@ -3,6 +3,7 @@
 # Usage: search [options] QUERY
 #        search foo | search -t/--tsv
 #        search foo | search -t | search -x/--extension
+#        search foo | search -s
 #
 # In the first form, recursively search all files and directories for the given
 # query.
@@ -24,6 +25,8 @@
 #
 # In the third form, with `--extension`, add an additional column to the tsv
 # for the extension.
+#
+# In the fourth form, with `--select`, select the input from stdin.
 
 set -o nounset
 set -o errexit
@@ -37,6 +40,7 @@ Main() {
     case "$1" in
       -b|--browse) browse=1 ;;
       -B|--no-browse) browse=0 ;;
+      -s|--select) Select "$@"; exit ;;
       -t|--tsv) ColonToTsv "$@"; exit ;;
       -x|--extension) InsertExtensionColumn "$@"; exit ;;
       *) query="$1"
@@ -79,7 +83,7 @@ function Select() {
     --multi \
     --delimiter=":" \
     --with-nth="1,4.." \
-    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-/:toggle-preview,alt-a:select-all,alt-d:deselect-all" \
     --preview 'highlight-text {1} {2}' \
     --preview-window "+{2}-/2"
 }
