@@ -4,6 +4,7 @@
 #        search foo | search -t/--tsv
 #        search foo | search -t | search -x/--extension
 #        search foo | search -s
+#        search --tag TAG
 #
 # In the first form, recursively search all files and directories for the given
 # query.
@@ -27,10 +28,14 @@
 # for the extension.
 #
 # In the fourth form, with `--select`, select the input from stdin.
+#
+# In the fifth form, with `--tag`, browse available tags (from ctags `tags`
+# file)
 
 set -o nounset
 set -o errexit
 set -o pipefail
+#set -o xtrace
 
 Main() {
   local browse=1
@@ -40,9 +45,10 @@ Main() {
     case "$1" in
       -b|--browse) browse=1 ;;
       -B|--no-browse) browse=0 ;;
-      -s|--select) Select "$@"; exit ;;
-      -t|--tsv) ColonToTsv "$@"; exit ;;
-      -x|--extension) InsertExtensionColumn "$@"; exit ;;
+      -s|--select) shift; Select "$@"; exit ;;
+      -t|--tsv) shift; ColonToTsv "$@"; exit ;;
+      --tag) shift; SelectTag "$@"; exit ;;
+      -x|--extension) shift; InsertExtensionColumn "$@"; exit ;;
       *) query="$1"
     esac
 
@@ -57,22 +63,24 @@ Main() {
 }
 
 function List() {
+  local query="$1"
   rg \
     --vimgrep \
-    --color=auto \
     --smart-case \
     --hidden \
     --glob "!/.git/" \
+    --color=auto \
     "$query"
 }
 
 function Browse() {
+  local query="$1"
   rg \
     --vimgrep \
-    --color=always \
     --smart-case \
     --hidden \
     --glob "!/.git/" \
+    --color=always \
     "$query" \
   | Select
 }
@@ -85,7 +93,22 @@ function Select() {
     --with-nth="1,4.." \
     --bind "ctrl-/:toggle-preview,alt-a:select-all,alt-d:deselect-all" \
     --preview 'highlight-text {1} {2}' \
-    --preview-window "+{2}-/2"
+    --preview-window "~3,+{2}+3-/2"
+}
+
+function SelectTag() {
+  local query="$1"
+
+  # Extract the line number as field 6 for ease of use in fzf, then remove
+  # after
+  sed -E "s/\tline:([0-9]+)/&\t\1/" tags \
+  | fzf \
+    --delimiter "\t" \
+    --bind "ctrl-/:toggle-preview" \
+    --preview 'highlight-text {2} {6}' \
+    --preview-window "~3,+{6}+3-/2" \
+    --query "$query" \
+  | cut -d $'\t' -f1-5
 }
 
 function ColonToTsv() {

@@ -5,7 +5,7 @@
 # Render a pretty preview of the given file, optionally highlighting the given line.
 #
 # This is not paged, so to use as a preview for `fzf`, be sure to supply the
-# `--preview-window "+{2}-/2" argument to `fzf` so that it scrolls the line
+# `--preview-window "~3,+{2}+3-/2" argument to `fzf` so that it scrolls the line
 # number to the centre of the preview.
 
 set -o nounset
@@ -22,7 +22,7 @@ Main() {
   exec bat \
     --color=always \
     --paging=never \
-    --style=numbers \
+    --style=header,grid,numbers \
     $line_highlight \
     "$file"
 }
