@@ -1,0 +1,251 @@
+#!/usr/bin/env bash
+
+# NAME
+#   psql-info - little helper to graph postgresql tables and relations
+#
+# SYNOPSIS
+#   psql-info <subcommand> [options]
+#
+# DESCRIPTION
+#   One of the following subcommands must be supplied.
+#
+#   Output info about relations:
+#     constraints [psql opts]
+#     constraints --format tsv [psql opts]
+#     constraints --format dot [psql opts]
+#     constraints --format dot-fragment [psql opts]
+#     constraints --format svg [psql opts]
+#
+#   Output info about tables:
+#     tables [psql opts]
+#     tables --format tsv (default) [psql opts]
+#     tables --format dot [psql opts]
+#     tables --format dot-fragment [psql opts]
+#     tables --format svg [psql opts]
+#
+#   Output info about tables and relations:
+#     all [psql opts]
+#     all --format dot [psql opts]
+#     all --format svg [psql opts]
+#
+#   Convert dot on stdin to svg on stdout:
+#     dot2svg
+#
+#   Print this usage:
+#     help
+#     -h
+#     --help
+#
+# DEPENDENCIES
+#   - bash
+#   - utils: awk, cat, echo, printf, sed, sort
+#   - dot
+#   - psql
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  [[ $# -lt 1 ]] && Error "Missing command"
+
+  local subcommand="$1"
+  shift
+
+  case ${subcommand} in
+    tables)          Tables "$@" ;;
+    constraints)     Constraints "$@" ;;
+    all)             All "$@" ;;
+    dot2svg)         DotToSvg ;;
+    -h,--help,help)  Usage ;;
+    *)               Error "Unknown command: $subcommand" ;;
+  esac
+}
+
+function Error() {
+  echo "ERROR: $@" >&2
+  echo >&2
+  Usage >&2
+  exit 1
+}
+
+function Usage() {
+  sed -f <(GetSection "UsageSedScript") $0
+}
+
+function Tables() {
+  local format=tsv
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --format) shift; format=$1; ;;
+      --) shift; break ;;
+      *) break ;;
+    esac
+    shift
+  done
+
+  case "$format" in
+    tsv) TablesTsv "$@" ;;
+    dot-fragment) TablesTsv "$@" | TablesToDotFragment ;;
+    dot) TablesTsv "$@" | TablesToDotFragment | FragmentToFullDot ;;
+    svg) TablesTsv "$@" | TablesToDotFragment | FragmentToFullDot | DotToSvg ;;
+    *) Error "Unknown format: $format" ;;
+  esac
+}
+
+function Constraints() {
+  local format=tsv
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --format) shift; format=$1; ;;
+      --) shift; break ;;
+      *) break ;;
+    esac
+    shift
+  done
+
+  case "$format" in
+    tsv) ConstraintsTsv "$@" ;;
+    dot-fragment) ConstraintsTsv "$@" | ConstraintsToDotFragment ;;
+    dot) ConstraintsTsv "$@" | ConstraintsToDotFragment | FragmentToFullDot ;;
+    svg) ConstraintsTsv "$@" | ConstraintsToDotFragment | FragmentToFullDot | DotToSvg ;;
+    *) Error "Unknown format: $format" ;;
+  esac
+}
+
+function All() {
+  local format=dot
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --format) shift; format=$1; ;;
+      --) shift; break ;;
+      *) break ;;
+    esac
+    shift
+  done
+
+  case "$format" in
+    dot)
+      cat \
+        <(Tables --format dot-fragment "$@") \
+        <(echo) \
+        <(Constraints --format dot-fragment "$@") \
+      | FragmentToFullDot ;;
+    svg)
+      cat \
+        <(Tables --format dot-fragment "$@") \
+        <(echo) \
+        <(Constraints --format dot-fragment "$@") \
+      | FragmentToFullDot | DotToSvg ;;
+    *) Error "Unknown format: $format" ;;
+  esac
+}
+
+# Database access
+
+function TablesTsv() {
+  GetSection "ListTablesSql" | RunQuery "$@" | sort
+}
+
+function ConstraintsTsv() {
+  GetSection "ListConstraintsSql" | RunQuery "$@"
+}
+
+function RunQuery() {
+  psql \
+    --quiet \
+    --no-align \
+    --tuples-only \
+    --field-separator=$'\t' \
+    "$@"
+}
+
+# DOT
+
+function TablesToDotFragment() {
+  echo '// Tables'
+  awk '{ printf "\"%s\";\n", $1 }'
+}
+
+function ConstraintsToDotFragment() {
+  echo '// Constraints'
+  awk '{ printf "\"%s\"->\"%s\" [label=\"%s\"];\n", $1, $2, $3 }'
+}
+
+function FragmentToFullDot() {
+  sed 's/^/  /' \
+  | sed '/--Content--/ {
+      r /dev/stdin
+      d
+    }' <(GetSection "DotFileSkeleton")
+}
+
+function DotToSvg() {
+  dot -Tsvg
+}
+
+# Utils
+
+# Get a delimited section of this file
+function GetSection() {
+  local section="$1"
+  sed -En "/^# ${section}:Start/,/^# ${section}:End/ p" $0 | sed '1d; $d'
+}
+
+# Entry point
+
+Main "$@"
+
+exit 0
+
+# NOTE: The rest of this file is not executed, so can hold scripts for
+# different languages etc.  Use `GetSection xxx` to obtain the text for a
+# particular section.
+
+# UsageSedScript:Start
+#n
+/^#!/ n
+/^#/ {
+  :heading
+  /^#/ {
+    s/^# ?//
+    p
+    n
+    b heading
+  }
+  q
+}
+# UsageSedScript:End
+
+# ListTablesSql:Start
+SELECT
+    t.table_name
+FROM
+    information_schema.tables as t
+WHERE
+    t.table_schema = 'public'
+;
+# ListTablesSql:End
+
+# ListConstraintsSql:Start
+SELECT
+    tc.table_name, ccu.table_name, tc.constraint_name
+FROM
+    information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu ON
+    tc.constraint_name = kcu.constraint_name
+JOIN information_schema.constraint_column_usage AS ccu ON
+    ccu.constraint_name = tc.constraint_name
+WHERE
+    constraint_type = 'FOREIGN KEY'
+;
+# ListConstraintsSql:End
+
+# DotFileSkeleton:Start
+Digraph PostgresObjects {
+  rankdir=LR;
+
+  // --Content--
+}
+# DotFileSkeleton:End
