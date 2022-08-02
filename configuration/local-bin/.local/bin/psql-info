@@ -9,15 +9,15 @@
 # DESCRIPTION
 #   One of the following commands must be supplied:
 #
-#   *constraints*                                      (aliases: cons)
-#      Output info about constraints:
-#         psql-info constraints [--format <format>] [psql opts]
-#      where:
-#         <format> = tsv (default) | dot | dfr | svg
-#
 #   *tables*                                           (aliases: tabs)
 #      Output info about tables:
 #         psql-info tables [--format <format>] [psql opts]
+#      where:
+#         <format> = tsv (default) | dot | dfr | svg
+#
+#   *constraints*                                      (aliases: cons)
+#      Output info about constraints:
+#         psql-info constraints [--format <format>] [psql opts]
 #      where:
 #         <format> = tsv (default) | dot | dfr | svg
 #
@@ -145,42 +145,30 @@ function All() {
   done
 
   case "$format" in
-    dfr)
-      cat \
-        <(Tables --format dfr "$@") \
-        <(echo) \
-        <(Constraints --format dfr "$@")
-      ;;
-    dot)
-      cat \
-        <(Tables --format dfr "$@") \
-        <(echo) \
-        <(Constraints --format dfr "$@") \
-        | FragmentToFullDot
-      ;;
-    svg)
-      cat \
-        <(Tables --format dfr "$@") \
-        <(echo) \
-        <(Constraints --format dfr "$@") \
-        | FragmentToFullDot \
-        | DotToSvg
-      ;;
-    *) Error "Unknown format: $format" ;;
+    dfr) AllDotFragment "$@" ;;
+    dot) AllDotFragment "$@" | FragmentToFullDot ;;
+    svg) AllDotFragment "$@" | FragmentToFullDot | DotToSvg ;;
+    *)   Error "Unknown format: $format" ;;
   esac
 }
 
 function Interactive() {
   while true; do
     All --format dfr "$@" \
-      | fzf \
-        --multi \
-        --bind "ctrl-a:select-all" \
-        --history ~/.psql_info_history \
+      | InteractivelySelectItems \
       | DotToSvg --wrap > ~/.psql_info_interactive.svg \
       && open ~/.psql_info_interactive.svg
     read -p "Ctrl-C to stop, anything else to go again... "
   done
+}
+
+function InteractivelySelectItems() {
+  # The history file allows Ctrl-N and Ctrl-P navigation through
+  # previously selected psql-info filters
+  fzf \
+    --multi \
+    --bind "ctrl-a:select-all" \
+    --history ~/.psql_info_history
 }
 
 # Database access
@@ -191,6 +179,13 @@ function TablesTsv() {
 
 function ConstraintsTsv() {
   GetSection "ListConstraintsSql" | RunQuery "$@" | sort
+}
+
+function AllDotFragment() {
+  cat \
+    <(Tables --format dfr "$@") \
+    <(echo) \
+    <(Constraints --format dfr "$@")
 }
 
 function RunQuery() {
