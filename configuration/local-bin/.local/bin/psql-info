@@ -13,13 +13,13 @@
 #      Output info about constraints:
 #         psql-info constraints [--format <format>] [psql opts]
 #      where:
-#         <format> = tsv (default) | dot | dot-fragment | svg
+#         <format> = tsv (default) | dot | dfr | svg
 #
 #   *tables*                                           (aliases: tabs)
 #      Output info about tables:
 #         psql-info tables [--format <format>] [psql opts]
 #      where:
-#         <format> = tsv (default) | dot | dot-fragment, svg
+#         <format> = tsv (default) | dot | dfr, svg
 #
 #   *all*
 #      Output info about tables and constraints:
@@ -53,12 +53,12 @@ function Main() {
   shift
 
   case ${command} in
-    tables|tabs)      Tables "$@" ;;
-    constraints|cons) Constraints "$@" ;;
-    all)              All "$@" ;;
-    dot2svg|svg)      DotToSvg ;;
-    -h|--help|help)   Usage ;;
-    *)                Error "Unknown command: $command" ;;
+    tables | tabs)      Tables "$@" ;;
+    constraints | cons) Constraints "$@" ;;
+    all)                All "$@" ;;
+    dot2svg | svg)      DotToSvg ;;
+    -h | --help | help) Usage ;;
+    *)                  Error "Unknown command: $command" ;;
   esac
 }
 
@@ -77,8 +77,8 @@ function Tables() {
   local format=tsv
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --format) shift; format=$1; ;;
-      --)       shift; break ;;
+      --format) shift && format=$1 ;;
+      --)       shift && break ;;
       *)        break ;;
     esac
     shift
@@ -86,8 +86,7 @@ function Tables() {
 
   case "$format" in
     tsv) TablesTsv "$@" ;;
-    dot-fragment)
-         TablesTsv "$@" | TablesToDotFragment ;;
+    dfr) TablesTsv "$@" | TablesToDotFragment ;;
     dot) TablesTsv "$@" | TablesToDotFragment | FragmentToFullDot ;;
     svg) TablesTsv "$@" | TablesToDotFragment | FragmentToFullDot | DotToSvg ;;
     *)   Error "Unknown format: $format" ;;
@@ -98,8 +97,8 @@ function Constraints() {
   local format=tsv
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --format) shift; format=$1; ;;
-      --)       shift; break ;;
+      --format) shift && format=$1 ;;
+      --)       shift && break ;;
       *)        break ;;
     esac
     shift
@@ -107,8 +106,7 @@ function Constraints() {
 
   case "$format" in
     tsv) ConstraintsTsv "$@" ;;
-    dot-fragment)
-         ConstraintsTsv "$@" | ConstraintsToDotFragment ;;
+    dfr) ConstraintsTsv "$@" | ConstraintsToDotFragment ;;
     dot) ConstraintsTsv "$@" | ConstraintsToDotFragment | FragmentToFullDot ;;
     svg) ConstraintsTsv "$@" | ConstraintsToDotFragment | FragmentToFullDot | DotToSvg ;;
     *)   Error "Unknown format: $format" ;;
@@ -119,8 +117,8 @@ function All() {
   local format=dot
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --format) shift; format=$1; ;;
-      --)       shift; break ;;
+      --format) shift && format=$1 ;;
+      --)       shift && break ;;
       *)        break ;;
     esac
     shift
@@ -129,17 +127,19 @@ function All() {
   case "$format" in
     dot)
       cat \
-        <(Tables --format dot-fragment "$@") \
+        <(Tables --format dfr "$@") \
         <(echo) \
-        <(Constraints --format dot-fragment "$@") \
-      | FragmentToFullDot ;;
+        <(Constraints --format dfr "$@") \
+        | FragmentToFullDot
+      ;;
     svg)
       cat \
-        <(Tables --format dot-fragment "$@") \
+        <(Tables --format dfr "$@") \
         <(echo) \
-        <(Constraints --format dot-fragment "$@") \
-      | FragmentToFullDot \
-      | DotToSvg ;;
+        <(Constraints --format dfr "$@") \
+        | FragmentToFullDot \
+        | DotToSvg
+      ;;
     *) Error "Unknown format: $format" ;;
   esac
 }
@@ -177,7 +177,7 @@ function ConstraintsToDotFragment() {
 
 function FragmentToFullDot() {
   sed 's/^/  /' \
-  | sed '/--Content--/ {
+    | sed '/--Content--/ {
       r /dev/stdin
       d
     }' <(GetSection "DotFileSkeleton")
