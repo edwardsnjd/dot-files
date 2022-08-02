@@ -19,27 +19,46 @@
 #      Output info about tables:
 #         psql-info tables [--format <format>] [psql opts]
 #      where:
-#         <format> = tsv (default) | dot | dfr, svg
+#         <format> = tsv (default) | dot | dfr | svg
 #
 #   *all*
 #      Output info about tables and constraints:
-#         psql-info all [--format <format>] [    psql opts]
+#         psql-info all [--format <format>] [psql opts]
 #      where:
-#         <format> = dot (default) | svg
+#         <format> = dot (default) | dfr | svg
 #
 #   *dot2svg*                                           (aliases: svg)
 #      Convert dot on stdin to svg on stdout:
-#         psql-info dot2svg
+#         psql-info dot2svg [--wrap]
+#      where:
+#         --wrap = wrap the given dot fragment into a valid graph
+#
+#   *interactive*
+#      Interactively select objects to show, display the graph, and
+#      loop forever (until Ctrl-C):
+#         psql-info interactive [psql opts]
 #
 #   *help*                                       (aliases: -h, --help)
 #      Print this usage:
 #         psql-info help
+#
+# INTERACTIVE USAGE
+#   If you have `fzf` then it's possible to interactively filter the
+#   dot format lines before converting it to svg by putting an `fzf`
+#   in the middle of the pipeline:
+#
+#     psql-info all --format dfr \
+#      | fzf --multi \
+#      | psql-info svg --wrap > filtered.svg
+#
+#   That is broadly what the `interactive` command does.
 #
 # DEPENDENCIES
 #   - bash
 #   - core utils: awk, cat, echo, printf, sed, sort
 #   - psql
 #   - dot
+#   - fzf (for interactive)
 
 set -o nounset
 set -o errexit
@@ -56,7 +75,8 @@ function Main() {
     tables | tabs)      Tables "$@" ;;
     constraints | cons) Constraints "$@" ;;
     all)                All "$@" ;;
-    dot2svg | svg)      DotToSvg ;;
+    dot2svg | svg)      DotToSvg "$@" ;;
+    interactive)        Interactive "$@" ;;
     -h | --help | help) Usage ;;
     *)                  Error "Unknown command: $command" ;;
   esac
@@ -125,6 +145,12 @@ function All() {
   done
 
   case "$format" in
+    dfr)
+      cat \
+        <(Tables --format dfr "$@") \
+        <(echo) \
+        <(Constraints --format dfr "$@")
+      ;;
     dot)
       cat \
         <(Tables --format dfr "$@") \
@@ -142,6 +168,19 @@ function All() {
       ;;
     *) Error "Unknown format: $format" ;;
   esac
+}
+
+function Interactive() {
+  while true; do
+    All --format dfr "$@" \
+      | fzf \
+        --multi \
+        --bind "ctrl-a:select-all" \
+        --history ~/.psql_info_history \
+      | DotToSvg --wrap > ~/.psql_info_interactive.svg \
+      && open ~/.psql_info_interactive.svg
+    read -p "Ctrl-C to stop, anything else to go again... "
+  done
 }
 
 # Database access
@@ -184,7 +223,20 @@ function FragmentToFullDot() {
 }
 
 function DotToSvg() {
-  dot -Tsvg
+  local wrap=0
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --wrap) wrap=1 ;;
+      *) Error "Unknown flag: $1" ;;
+    esac
+    shift
+  done
+
+  if [[ $wrap -eq 1 ]]; then
+    FragmentToFullDot | dot -Tsvg
+  else
+    dot -Tsvg
+  fi
 }
 
 # Utils
