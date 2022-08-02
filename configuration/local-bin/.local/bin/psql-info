@@ -239,7 +239,7 @@ function DotToSvg() {
 # Get a delimited section of this file
 function GetSection() {
   local section="$1"
-  sed -En "/^# ${section}:Start/,/^# ${section}:End/ { s/^#//; p; }" $0 | sed '1d; $d'
+  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# //; p; }" $0 | sed '1d; $d'
 }
 
 # Entry point
@@ -252,49 +252,49 @@ exit 0
 # different languages etc.  Use `GetSection xxx` to obtain the text for a
 # particular section.
 
-# UsageSedScript:Start
-##n
-#/^#!/ n
-#/^#/ {
-#  :heading
-#  /^#/ {
-#    s/^# ?//
-#    p
-#    n
-#    b heading
-#  }
-#  q
-#}
-# UsageSedScript:End
+#~~~~~~~~~~~~~~~~~~~~UsageSedScript:Start~~~~~~~~~~~~~~~~~~~~
+# #n
+# /^#!/ n
+# /^#/ {
+#   :heading
+#   /^#/ {
+#     s/^# ?//
+#     p
+#     n
+#     b heading
+#   }
+#   q
+# }
+#~~~~~~~~~~~~~~~~~~~~~UsageSedScript:End~~~~~~~~~~~~~~~~~~~~~
 
-# ListTablesSql:Start
-#SELECT
-#    t.table_name
-#FROM
-#    information_schema.tables as t
-#WHERE
-#    t.table_schema = 'public'
-#;
-# ListTablesSql:End
+#~~~~~~~~~~~~~~~~~~~~ListTablesSql:Start~~~~~~~~~~~~~~~~~~~~~
+# SELECT
+#     t.table_name
+# FROM
+#     information_schema.tables as t
+# WHERE
+#     t.table_schema = 'public'
+# ;
+#~~~~~~~~~~~~~~~~~~~~~ListTablesSql:End~~~~~~~~~~~~~~~~~~~~~~
 
-# ListConstraintsSql:Start
-#SELECT
-#    tc.table_name, ccu.table_name, tc.constraint_name
-#FROM
-#    information_schema.table_constraints AS tc
-#JOIN information_schema.key_column_usage AS kcu ON
-#    tc.constraint_name = kcu.constraint_name
-#JOIN information_schema.constraint_column_usage AS ccu ON
-#    ccu.constraint_name = tc.constraint_name
-#WHERE
-#    constraint_type = 'FOREIGN KEY'
-#;
-# ListConstraintsSql:End
+#~~~~~~~~~~~~~~~~~~ListConstraintsSql:Start~~~~~~~~~~~~~~~~~~
+# SELECT
+#     tc.table_name, ccu.table_name, tc.constraint_name
+# FROM
+#     information_schema.table_constraints AS tc
+# JOIN information_schema.key_column_usage AS kcu ON
+#     tc.constraint_name = kcu.constraint_name
+# JOIN information_schema.constraint_column_usage AS ccu ON
+#     ccu.constraint_name = tc.constraint_name
+# WHERE
+#     constraint_type = 'FOREIGN KEY'
+# ;
+#~~~~~~~~~~~~~~~~~~~ListConstraintsSql:End~~~~~~~~~~~~~~~~~~~
 
-# DotFileSkeleton:Start
-#Digraph PostgresObjects {
-#  rankdir=LR;
+#~~~~~~~~~~~~~~~~~~~DotFileSkeleton:Start~~~~~~~~~~~~~~~~~~~~
+# Digraph PostgresObjects {
+#   rankdir=LR;
 #
-#  // --Content--
-#}
-# DotFileSkeleton:End
+#   // --Content--
+# }
+#~~~~~~~~~~~~~~~~~~~~DotFileSkeleton:End~~~~~~~~~~~~~~~~~~~~~
