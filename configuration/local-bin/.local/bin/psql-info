@@ -4,43 +4,42 @@
 #   psql-info - little helper to graph postgresql tables and relations
 #
 # SYNOPSIS
-#   psql-info <subcommand> [options]
+#   psql-info <command> [options]
 #
 # DESCRIPTION
-#   One of the following subcommands must be supplied.
+#   One of the following commands must be supplied:
 #
-#   Output info about relations:
-#     constraints [psql opts]
-#     constraints --format tsv [psql opts]
-#     constraints --format dot [psql opts]
-#     constraints --format dot-fragment [psql opts]
-#     constraints --format svg [psql opts]
+#   *constraints*                                      (aliases: cons)
+#      Output info about constraints:
+#         psql-info constraints [--format <format>] [psql opts]
+#      where:
+#         <format> = tsv (default) | dot | dot-fragment | svg
 #
-#   Output info about tables:
-#     tables [psql opts]
-#     tables --format tsv (default) [psql opts]
-#     tables --format dot [psql opts]
-#     tables --format dot-fragment [psql opts]
-#     tables --format svg [psql opts]
+#   *tables*                                           (aliases: tabs)
+#      Output info about tables:
+#         psql-info tables [--format <format>] [psql opts]
+#      where:
+#         <format> = tsv (default) | dot | dot-fragment, svg
 #
-#   Output info about tables and relations:
-#     all [psql opts]
-#     all --format dot [psql opts]
-#     all --format svg [psql opts]
+#   *all*
+#      Output info about tables and constraints:
+#         psql-info all [--format <format>] [    psql opts]
+#      where:
+#         <format> = dot (default) | svg
 #
-#   Convert dot on stdin to svg on stdout:
-#     dot2svg
+#   *dot2svg*                                           (aliases: svg)
+#      Convert dot on stdin to svg on stdout:
+#         psql-info dot2svg
 #
-#   Print this usage:
-#     help
-#     -h
-#     --help
+#   *help*                                       (aliases: -h, --help)
+#      Print this usage:
+#         psql-info help
 #
 # DEPENDENCIES
 #   - bash
-#   - utils: awk, cat, echo, printf, sed, sort
-#   - dot
+#   - core utils: awk, cat, echo, printf, sed, sort
 #   - psql
+#   - dot
 
 set -o nounset
 set -o errexit
@@ -50,16 +49,16 @@ set -o pipefail
 function Main() {
   [[ $# -lt 1 ]] && Error "Missing command"
 
-  local subcommand="$1"
+  local command="$1"
   shift
 
-  case ${subcommand} in
-    tables)          Tables "$@" ;;
-    constraints)     Constraints "$@" ;;
-    all)             All "$@" ;;
-    dot2svg)         DotToSvg ;;
-    -h,--help,help)  Usage ;;
-    *)               Error "Unknown command: $subcommand" ;;
+  case ${command} in
+    tables|tabs)      Tables "$@" ;;
+    constraints|cons) Constraints "$@" ;;
+    all)              All "$@" ;;
+    dot2svg|svg)      DotToSvg ;;
+    -h|--help|help)   Usage ;;
+    *)                Error "Unknown command: $command" ;;
   esac
 }
 
@@ -71,7 +70,7 @@ function Error() {
 }
 
 function Usage() {
-  sed -f <(GetSection "UsageSedScript") $0
+  sed -E -f <(GetSection "UsageSedScript") $0
 }
 
 function Tables() {
@@ -79,18 +78,19 @@ function Tables() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --format) shift; format=$1; ;;
-      --) shift; break ;;
-      *) break ;;
+      --)       shift; break ;;
+      *)        break ;;
     esac
     shift
   done
 
   case "$format" in
     tsv) TablesTsv "$@" ;;
-    dot-fragment) TablesTsv "$@" | TablesToDotFragment ;;
+    dot-fragment)
+         TablesTsv "$@" | TablesToDotFragment ;;
     dot) TablesTsv "$@" | TablesToDotFragment | FragmentToFullDot ;;
     svg) TablesTsv "$@" | TablesToDotFragment | FragmentToFullDot | DotToSvg ;;
-    *) Error "Unknown format: $format" ;;
+    *)   Error "Unknown format: $format" ;;
   esac
 }
 
@@ -99,18 +99,19 @@ function Constraints() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --format) shift; format=$1; ;;
-      --) shift; break ;;
-      *) break ;;
+      --)       shift; break ;;
+      *)        break ;;
     esac
     shift
   done
 
   case "$format" in
     tsv) ConstraintsTsv "$@" ;;
-    dot-fragment) ConstraintsTsv "$@" | ConstraintsToDotFragment ;;
+    dot-fragment)
+         ConstraintsTsv "$@" | ConstraintsToDotFragment ;;
     dot) ConstraintsTsv "$@" | ConstraintsToDotFragment | FragmentToFullDot ;;
     svg) ConstraintsTsv "$@" | ConstraintsToDotFragment | FragmentToFullDot | DotToSvg ;;
-    *) Error "Unknown format: $format" ;;
+    *)   Error "Unknown format: $format" ;;
   esac
 }
 
@@ -119,8 +120,8 @@ function All() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --format) shift; format=$1; ;;
-      --) shift; break ;;
-      *) break ;;
+      --)       shift; break ;;
+      *)        break ;;
     esac
     shift
   done
@@ -137,7 +138,8 @@ function All() {
         <(Tables --format dot-fragment "$@") \
         <(echo) \
         <(Constraints --format dot-fragment "$@") \
-      | FragmentToFullDot | DotToSvg ;;
+      | FragmentToFullDot \
+      | DotToSvg ;;
     *) Error "Unknown format: $format" ;;
   esac
 }
@@ -149,7 +151,7 @@ function TablesTsv() {
 }
 
 function ConstraintsTsv() {
-  GetSection "ListConstraintsSql" | RunQuery "$@"
+  GetSection "ListConstraintsSql" | RunQuery "$@" | sort
 }
 
 function RunQuery() {
