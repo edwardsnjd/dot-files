@@ -51,6 +51,7 @@ mkdir -p "${XDG_STATE_HOME}"
 export ANDROID_HOME="${XDG_DATA_HOME}/android"
 export HISTFILE="${XDG_STATE_HOME}/bash/history"
 export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
+export SQLITE_HISTORY="${XDG_CACHE_HOME}/sqlite_history"
 
 # Use XDG directories
 alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
