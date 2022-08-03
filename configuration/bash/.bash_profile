@@ -48,6 +48,7 @@ mkdir -p "${XDG_STATE_HOME}"
 # Not making XDG_RUNTIME_DIR
 
 # Move files under XDG directories
+export ANDROID_HOME="${XDG_DATA_HOME}/android"
 export HISTFILE="${XDG_STATE_HOME}/bash/history"
 export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
 
