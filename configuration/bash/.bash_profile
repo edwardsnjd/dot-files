@@ -40,6 +40,12 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_RUNTIME_DIR="/run/user/$UID"
+# Ensure XDG directories exist
+mkdir -p "${XDG_CACHE_HOME}"
+mkdir -p "${XDG_CONFIG_HOME}"
+mkdir -p "${XDG_DATA_HOME}"
+mkdir -p "${XDG_STATE_HOME}"
+# Not making XDG_RUNTIME_DIR
 
 # --- Source other files ---
 
