@@ -11,27 +11,27 @@
 #
 #   *tables*                                           (aliases: tabs)
 #      Output info about tables:
-#         psql-info tables [--format <format>] [psql opts]
+#         psql-info tables [--format <format>] [--] [psql opts]
 #      where:
 #         <format> = tsv (default) | dot | dfr | svg
 #
 #   *constraints*                                      (aliases: cons)
 #      Output info about constraints:
-#         psql-info constraints [--format <format>] [psql opts]
+#         psql-info constraints [--format <format>] [--] [psql opts]
 #      where:
 #         <format> = tsv (default) | dot | dfr | svg
 #
 #   *all*
 #      Output info about tables and constraints:
-#         psql-info all [--format <format>] [psql opts]
+#         psql-info all [--format <format>] [--] [psql opts]
 #      where:
 #         <format> = dot (default) | dfr | svg
 #
 #   *dot2svg*                                           (aliases: svg)
 #      Convert dot on stdin to svg on stdout:
-#         psql-info dot2svg [--wrap]
+#         psql-info dot2svg [--format <format>] [--] [dot opts]
 #      where:
-#         --wrap = wrap the given dot fragment into a valid graph
+#         <format> = dot (default) | dfr
 #
 #   *interactive*
 #      Interactively select objects to show, display the graph, and
@@ -82,16 +82,7 @@ function Main() {
   esac
 }
 
-function Error() {
-  echo "ERROR: $@" >&2
-  echo >&2
-  Usage >&2
-  exit 1
-}
-
-function Usage() {
-  sed -E -f <(GetSection "UsageSedScript") $0
-}
+# Commands
 
 function Tables() {
   local format=tsv
@@ -152,23 +143,43 @@ function All() {
   esac
 }
 
+function DotToSvg() {
+  local format=dot
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --format) shift && format=$1 ;;
+      --)       shift && break ;;
+      *)        break ;;
+    esac
+    shift
+  done
+
+  case "$format" in
+    dfr) FragmentToFullDot | dot -Tsvg "$@" ;;
+    dot) dot -Tsvg "$@" ;;
+    *)   Error "Unknown format: $format" ;;
+  esac
+}
+
 function Interactive() {
   while true; do
     All --format dfr "$@" \
       | InteractivelySelectItems \
-      | DotToSvg --wrap > ~/.psql_info_interactive.svg \
+      | DotToSvg --format dfr > ~/.psql_info_interactive.svg \
       && open ~/.psql_info_interactive.svg
     read -p "Ctrl-C to stop, anything else to go again... "
   done
 }
 
-function InteractivelySelectItems() {
-  # The history file allows Ctrl-N and Ctrl-P navigation through
-  # previously selected psql-info filters
-  fzf \
-    --multi \
-    --bind "ctrl-a:select-all" \
-    --history ~/.psql_info_history
+function Usage() {
+  sed -E -f <(GetSection "UsageSedScript") $0
+}
+
+function Error() {
+  echo "ERROR: $@" >&2
+  echo >&2
+  Usage >&2
+  exit 1
 }
 
 # Database access
@@ -217,29 +228,21 @@ function FragmentToFullDot() {
     }' <(GetSection "DotFileSkeleton")
 }
 
-function DotToSvg() {
-  local wrap=0
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --wrap) wrap=1 ;;
-      *) Error "Unknown flag: $1" ;;
-    esac
-    shift
-  done
-
-  if [[ $wrap -eq 1 ]]; then
-    FragmentToFullDot | dot -Tsvg
-  else
-    dot -Tsvg
-  fi
-}
-
 # Utils
+
+function InteractivelySelectItems() {
+  # The history file allows Ctrl-N and Ctrl-P navigation through
+  # previously selected psql-info filters
+  fzf \
+    --multi \
+    --bind "ctrl-a:select-all" \
+    --history ~/.psql_info_history
+}
 
 # Get a delimited section of this file
 function GetSection() {
   local section="$1"
-  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# //; p; }" $0 | sed '1d; $d'
+  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# ?//; p; }" $0 | sed '1d; $d'
 }
 
 # Entry point
