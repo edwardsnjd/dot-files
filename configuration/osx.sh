@@ -43,4 +43,5 @@ stow --target="${HOME}" \
   snippets \
   ctags \
   nb \
-  zsh
+  zsh \
+  subversion

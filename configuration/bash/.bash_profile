@@ -52,6 +52,9 @@ export ANDROID_HOME="${XDG_DATA_HOME}/android"
 export HISTFILE="${XDG_STATE_HOME}/bash/history"
 export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
 
+# Use XDG directories
+alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
+
 # --- Source other files ---
 
 # Include any local machine things

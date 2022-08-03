@@ -16,4 +16,5 @@ stow --target=$HOME \
   local-bin \
   snippets \
   ctags \
-  zsh
+  zsh \
+  subversion
