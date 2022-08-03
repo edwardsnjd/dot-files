@@ -47,6 +47,10 @@ mkdir -p "${XDG_DATA_HOME}"
 mkdir -p "${XDG_STATE_HOME}"
 # Not making XDG_RUNTIME_DIR
 
+# Move files under XDG directories
+export HISTFILE="${XDG_STATE_HOME}/bash/history"
+export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
+
 # --- Source other files ---
 
 # Include any local machine things
