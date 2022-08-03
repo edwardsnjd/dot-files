@@ -35,4 +35,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -f ~/.bashrc.os ] && source ~/.bashrc.os
 
 # Cargo (added by rustup)
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"

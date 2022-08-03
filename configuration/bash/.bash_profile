@@ -31,16 +31,13 @@ export HISTIGNORE=history:clear
 # Include private bin if it exists
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
-# Include any local machine things
-[ -f ~/.bash_local ] && source ~/.bash_local
-
-# --- Source other files ---
-
-# Include rest of things used for all interactive shell
-[ -f ~/.bashrc ] && source ~/.bashrc
-
 # Tone down "other writeable" panic color
 export LS_COLORS="${LS_COLORS}:ow=07;36"
 
-# Cargo (added by rustup)
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+# --- Source other files ---
+
+# Include any local machine things
+[ -f ~/.bash_local ] && source ~/.bash_local
+
+# Include rest of things used for all interactive shell
+[ -f ~/.bashrc ] && source ~/.bashrc
