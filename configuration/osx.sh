@@ -42,4 +42,5 @@ stow --target="${HOME}" \
   iterm2 \
   snippets \
   ctags \
-  nb
+  nb \
+  zsh

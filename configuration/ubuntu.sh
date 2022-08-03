@@ -15,4 +15,5 @@ stow --target=$HOME \
   w3m \
   local-bin \
   snippets \
-  ctags
+  ctags \
+  zsh
