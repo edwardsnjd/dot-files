@@ -1,6 +1,4 @@
 # This is Git's per-user configuration file.
-[core]
-	excludesfile = ~/.gitexcludes
 [user]
 	name = Nicholas Edwards
 	email = edwardsnjd@googlemail.com
@@ -14,10 +12,10 @@
 [pull]
 	ff = only
 [include]
-	path = .gitconfig_aliases
-	path = .gitconfig_colours
-	path = .gitconfig.os
-	path = .gitconfig.local
+	path = aliases.gitconfig
+	path = colours.gitconfig
+	path = os.config
+	path = ~/.gitconfig_local
 [init]
 	defaultBranch = main
 [diff]
