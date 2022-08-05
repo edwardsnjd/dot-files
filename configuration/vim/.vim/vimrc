@@ -144,6 +144,10 @@ nnoremap <leader>H :HISTORY<CR>
 " - Fuzzy text search in buffer (in order)
 nnoremap <leader>/ :BSLines<CR>
 
+" - Fuzzy text search in buffer for selected text (in order)
+" NOTE: Uses x register
+xnoremap <leader>/ "xy:<C-U>BSLines =escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
+
 " - Fuzzy tag search in buffer
 nnoremap <leader>? :BTags<CR>
 
@@ -330,7 +334,9 @@ command! -bang -nargs=* RG call fzf#vim#grep(
 \ 1, fzf#vim#with_preview({'options': ['--exact']}), <bang>0)
 
 " Alternate :BLines command with all lines in order
-command! -bang -nargs=* BSLines call fzf#vim#buffer_lines({ 'options': ['--no-sort'] }, <bang>0)
+command! -bang -nargs=* BSLines call fzf#vim#buffer_lines(<q-args>,
+\ { 'options': ['--no-sort', '--query', len(split(<q-args>)) ? split(<q-args>)[0].' ' : '' ] },
+\ <bang>0)
 
 " Alternate :History command with all lines in order
 command! -bang -nargs=* HISTORY call fzf#vim#history({ 'options': ['--no-sort'] }, <bang>0)
