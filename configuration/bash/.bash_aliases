@@ -205,9 +205,31 @@ function gtd {
 
 # Edit journal entry for today
 function nbj {
-  notebook=journal
-  today=$(date +"%Y-%m-%d")
-  path=${today}.md
+  local command="edit"
+  if [[ $# -gt 0 ]]; then
+    command="$1"
+  fi
+
+  case "$command" in
+    initcontent)
+      echo '```'
+      emojify-cal cal
+      echo '```'
+      echo
+      return
+      ;;
+    edit)
+      # Default, fall through to main task
+      ;;
+    *)
+      echo "Unknown command: $1" >&2
+      return
+      ;;
+  esac
+
+  local notebook=journal
+  local today=$(date +"%Y-%m-%d")
+  local path=${today}.md
 
   # Ensure the notebook exists
   nb notebooks "${notebook}" \
@@ -216,7 +238,10 @@ function nbj {
   # Add or edit the note
   nb ls "${notebook}:${path}" \
     && nb edit "${notebook}:${path}" \
-    || nb add "${notebook}:${path}" --title "${today}" --tags "journal"
+    || nb add "${notebook}:${path}" \
+      --title "${today}" \
+      --tags "journal" \
+      --content "$(nbj initcontent)"
 }
 
 # Add note on topic
