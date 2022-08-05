@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# NAME
+#   emojify-cal - Simple wrapper to emojify output of `cal` or `ncal`
+#
+# SYNOPSIS
+#   emojify-cal ncal [opts]
+#   emojify-cal cal [opts]
+#
+# DESCRIPTION
+#   Capture and translate the current date highlighting into an emoji.
+#
+# DEPENDENCIES
+#   - tput (to obtain current terminal's escape sequences)
+#   - sed
+#   - faketty (to trick `cal` or `ncal` into highlighting current date)
+#
+# NOTES
+#
+#   cal and ncal use "standout mode" to highlight the current date.
+#   Search in `man terminfo` for "standout mode", "smso" and "rmso".
+
+function Main() {
+  local currentDateMarker="🟢"
+  local startStandoutRegex=$(tput smso | EscapeRegex)
+  local stopStandoutRegex=$(tput rmso | EscapeRegex)
+
+  faketty "$@" \
+    | sed -E "
+        s/${startStandoutRegex}.*${stopStandoutRegex}/${currentDateMarker}/
+      "
+}
+
+function EscapeRegex() {
+  # Escape special regex characters (well, just the `[` will do)
+  sed -E 's#\[#\\&#g'
+}
+
+Main "$@"
