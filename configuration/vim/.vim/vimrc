@@ -163,8 +163,19 @@ nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
 " NOTE: Uses x register
 xnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 
-" - Display spec outline
-nnoremap <leader>so :Redir global /\v\C<(describe\\|context\\|it) /<CR>
+" - Display file outline
+nnoremap <leader>so :call <SID>ShowOutline()<CR>
+function! <SID>ShowOutline()
+  let filetype = &ft
+  " TODO: Switch structural keywords according to ft
+  let keywords = ['module', 'class', 'def', 'describe', 'context', 'it']
+
+  let pattern = join(keywords, '\|')
+  execute 'Redir global /\v\C<('.pattern.')>/'
+
+  " Highlight selected lines as same filetype
+  execute 'setfiletype' filetype
+endfunction
 
 " - Display file git history
 nnoremap <leader>sg :Redir !git log --oneline -n 1000 -- %<CR>
