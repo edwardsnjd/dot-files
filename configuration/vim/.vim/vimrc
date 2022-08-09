@@ -163,8 +163,39 @@ nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
 " NOTE: Uses x register
 xnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 
+" - Display navigable file outline in local list
+nnoremap <leader>so :call <SID>ShowLocalOutline()<CR>
+function! <SID>ShowLocalOutline()
+  " TODO: Switch structural keywords according to ft
+  let keywords = ['module', 'class', 'def', 'describe', 'context', 'it']
+
+  let pattern = join(keywords, '\|')
+  let query = '\C\<\('.pattern.'\)\>'
+
+  let filepath = @%
+
+  " Print lines with leading whitespace preserved via prefix
+  let linefmt = '%s:%d:1:%s'
+  let invisibleSpace = '　'
+  let Formattext = { lineno, val ->
+        \ substitute( val, '^ *\ze[^ ]', invisibleSpace . repeat(' ', 5 - strlen(lineno)).'│ &', '' )
+        \}
+  let fmtexpr = 'printf(linefmt, filepath, v:key + 1, Formattext(v:key, v:val))'
+
+  " Use matching lines as local list
+  let lines = getline(1, '$')
+  let transform = 'v:val =~ query ? '.fmtexpr.' : ""'
+  let filteredlines = filter(map(lines, transform), 'len(v:val)')
+
+  " TODO: Try to update existing list if it exists
+  call setloclist(0, [], 'r', {'lines' : filteredlines, 'title': 'File outline'})
+
+  " Open the list (:lne, :lp, :lopen, :lcl to navigate and close the list)
+  lopen
+endfunction
+
 " - Display file outline
-nnoremap <leader>so :call <SID>ShowOutline()<CR>
+nnoremap <leader>sO :call <SID>ShowOutline()<CR>
 function! <SID>ShowOutline()
   let filetype = &ft
   " TODO: Switch structural keywords according to ft
