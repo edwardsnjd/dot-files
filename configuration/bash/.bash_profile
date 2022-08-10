@@ -57,7 +57,7 @@ mkdir -p "${XDG_STATE_HOME}"
 
 # Move files under XDG directories
 export ANDROID_HOME="${XDG_DATA_HOME}/android"
-export HISTFILE="${XDG_STATE_HOME}/bash/history"
+export HISTFILE="${XDG_STATE_HOME}/bash/history-$(date +%F)"
 export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"
 export REDISCLI_HISTFILE="${XDG_DATA_HOME}/redis/rediscli_history"
 export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
