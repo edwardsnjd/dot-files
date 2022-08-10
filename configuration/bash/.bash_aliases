@@ -152,7 +152,7 @@ function gc {
   format="%(color:yellow)%(refname:short)%(color:reset) %(color:red)%(HEAD)%(color:reset) %(upstream:trackshort) %(upstream:short) %(upstream:track)"
   preview="git lg -100 {1}"
   git branch --list --color --format="$format" \
-    | fzf --no-sort --layout=reverse-list --ansi --cycle --preview="$preview" \
+    | fzf --no-sort --layout=reverse-list --ansi --cycle --preview="$preview" --query="$1" \
     | cut -d" " -f1 \
     | xargs git checkout
 }
