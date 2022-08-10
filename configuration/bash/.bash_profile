@@ -29,6 +29,10 @@ export HISTIGNORE=history:clear
 export HISTSIZE=-1
 export HISTFILESIZE=-1
 
+# Include timestamp on history entries, and display in this format
+# YYYY-MM-DDTHH:MM (see strftime)
+export HISTTIMEFORMAT="$(tput setaf 5)%F$(tput sgr0)T$(tput setaf 4)%H:%M$(tput sgr0) "
+
 # Include private bin if it exists
 [ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
 
