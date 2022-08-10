@@ -176,7 +176,7 @@ function gl {
 # Interactive git history of a file (versions)
 function gtt {
   pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
-  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show --color %%:$1 | less -c -+F -+X"
+  preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show %%:$1 | bat --style=plain --color=always --file-name=$1"
 
   sha=$(
     git log --pretty="$pretty" --color -- $1 \
