@@ -7,10 +7,10 @@ export EDITOR=vim
 export CLICOLOR=1
 
 # fzf configuration
-export FZF_DEFAULT_COMMAND='fd --type file --hidden --color=always --exclude ".git/"'
+export FZF_DEFAULT_COMMAND='fd --type file --hidden --color=always'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS='--preview "bat --color=always {}" --bind=ctrl-/:toggle-preview'
-export FZF_ALT_C_COMMAND='fd --type directory --hidden --color=always --exclude ".git/" --max-depth=5'
+export FZF_ALT_C_COMMAND='fd --type directory --hidden --color=always --max-depth=5'
 export FZF_ALT_C_OPTS='--preview "tree -a -I .git -C --dirsfirst -L 3 {}"'
 export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up,alt-j:page-down,alt-k:page-up --ansi"
 

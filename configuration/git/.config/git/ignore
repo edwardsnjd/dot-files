@@ -12,3 +12,11 @@
 
 # Postgres credentials files
 .pgpass
+
+# Git data directories
+#
+# These are automatically ignored by git but not by some other tools that
+# respect this config file, like fzf and ripgrep.  Explicitly excluding them
+# here won't change anything for git but will make those other tools act more
+# like git.
+/.git/

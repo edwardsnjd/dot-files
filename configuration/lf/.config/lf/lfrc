@@ -58,7 +58,10 @@ auto_cols
 
 # FZF
 cmd fzf_jump ${{
-    res="$(fzf --reverse --header='Jump to location')"
+    res="$(
+        fd --hidden --color=always \
+        | fzf --reverse --header='Jump to location'
+    )"
     if [ -d "$res" ] ; then
         cmd="cd"
     elif [ -f "$res" ] ; then
