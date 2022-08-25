@@ -123,10 +123,16 @@ function dedup {
 
 # FZF browse of time zone and print current time
 function tz {
-  fd . /usr/share/zoneinfo \
-    | sed 's/.*zoneinfo\///' \
-    | fzf \
-    | xargs -I{} bash -c "printf \"{}: $(TZ={} date)\n\""
+  local preview="TZ={} date +'%z%t%+'"
+  local display="TZ={} date +'%FT%T%t%z%t{}%t%+'"
+  local query="$(while [[ $# -gt 0 ]]; do printf "$1 | "; shift; done)"
+  fd . --type file /usr/share/zoneinfo \
+    | sed 's|.*zoneinfo/||' \
+    | fzf --multi --query "$query" --preview "$preview" \
+    | xargs -I{} bash -c "$display" \
+    | sort \
+    | cut -d "	" -f 2- \
+    | column -s "	" -t
 }
 
 # Find current public IP address
