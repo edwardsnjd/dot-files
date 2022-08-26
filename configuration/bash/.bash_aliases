@@ -121,6 +121,16 @@ function dedup {
   awk '!count[$0]++'
 }
 
+# FZF browse all descendant files with enter to view details
+function b {
+  local preview="bat --color=always --style=plain {}"
+  local display="bat {}"
+  fzf \
+    --no-sort \
+    --preview "$preview" \
+    --bind="enter:execute($display)"
+}
+
 # FZF browse of time zone and print current time
 function tz {
   local preview="TZ={} date +'%z%t%+'"
