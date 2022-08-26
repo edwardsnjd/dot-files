@@ -127,6 +127,7 @@ function b {
   local display="bat {}"
   fzf \
     --no-sort \
+    --reverse \
     --preview "$preview" \
     --bind="enter:execute($display)"
 }
