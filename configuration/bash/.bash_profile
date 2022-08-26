@@ -15,7 +15,7 @@ export FZF_ALT_C_OPTS='--preview "tree -a -I .git -C --dirsfirst -L 3 {}"'
 export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up,alt-j:page-down,alt-k:page-up --ansi"
 
 # Use color for man and less
-export LESS="--quit-if-one-screen --RAW-CONTROL-CHARS --no-init"
+export LESS="--quit-if-one-screen --RAW-CONTROL-CHARS --no-init --incsearch"
 # Use bold green for bold in less
 export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 
