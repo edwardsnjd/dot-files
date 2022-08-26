@@ -121,15 +121,22 @@ function dedup {
   awk '!count[$0]++'
 }
 
-# FZF browse all descendant files with enter to view details
+# FZF file browser
 function b {
   local preview="bat --color=always --style=plain {}"
-  local display="bat {}"
+  # Page selected file (highlighting with less)
+  # NB. Using `bat` via less so less knows about filename(s)
+  local highlight="bat --force-colorization --plain"
+  local display="LESSOPEN='|$highlight %s' less -+F -+X +g {+}"
+  local edit="vim {+}"
   fzf \
-    --no-sort \
     --reverse \
+    --multi \
     --preview "$preview" \
-    --bind="enter:execute($display)"
+    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-e:execute($edit)" \
+    --bind "ctrl-d:execute($display)" \
+    --bind "enter:execute($display)"
 }
 
 # FZF browse of time zone and print current time
