@@ -95,7 +95,7 @@ function Select() {
 }
 
 function SelectTag() {
-  local query="$1"
+  local query="${1-}"
 
   # Extract the line number as field 6 for ease of use in fzf, then remove
   # after
