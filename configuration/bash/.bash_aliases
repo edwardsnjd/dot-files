@@ -122,20 +122,33 @@ function dedup {
 }
 
 # FZF file browser
-function b {
+alias b="file-browser"
+function file-browser {
   local preview="bat --color=always --style=plain {}"
   # Page selected file (highlighting with less)
   # NB. Using `bat` via less so less knows about filename(s)
   local highlight="bat --force-colorization --plain"
   local display="LESSOPEN='|$highlight %s' less -+F -+X +g {+}"
   local edit="vim {+}"
+
+  local ul=$(tput smul) # see terminfo
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort"
+  local header2="∷ Actions: ${magenta}C-E${normal} edit selected, ${magenta}Enter${normal} display selected"
+  local header="${header1}${nl}${header2}"
+
   fzf \
     --reverse \
     --multi \
+    --prompt "File(s)> " \
+    --header "$header" \
     --preview "$preview" \
-    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --bind "ctrl-s:toggle-sort" \
+    --bind "ctrl-alt-h:execute($help)" \
     --bind "ctrl-e:execute($edit)" \
-    --bind "ctrl-d:execute($display)" \
     --bind "enter:execute($display)"
 }
 
