@@ -13,7 +13,7 @@ function main() {
 function preview_directory() {
   # NB. Override LESS so less always requires `q` to quit
   tree -aF -I .git --dirsfirst -C -L 5 "$1" \
-    | LESS="" less --RAW-CONTROL-CHARS
+    | LESS="" less --RAW-CONTROL-CHARS --tilde +g
 }
 
 function preview_file() {
@@ -30,7 +30,7 @@ function preview_visual() {
     --animate=false \
     --duration=0 \
     --work=1 \
-    --size "$2x$3" \
+    --size "${2:-$COLUMNS}x${3:-$LINES}" \
     "$1"
 }
 
@@ -39,7 +39,7 @@ function preview_textual() {
   LESS="" \
   bat \
     --color=always \
-    --pager="less --RAW-CONTROL-CHARS" \
+    --pager="less --RAW-CONTROL-CHARS --tilde +g" \
     "$1"
 }
 
