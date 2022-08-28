@@ -128,7 +128,7 @@ function file-browser {
   # Page selected file (highlighting with less)
   # NB. Using `bat` via less so less knows about filename(s)
   local highlight="bat --force-colorization --plain"
-  local display="LESSOPEN='|$highlight %s' less -+F -+X +g {+}"
+  local display="LESSOPEN='|$highlight %s' less -+F -+X -N +g {+}"
   local edit="vim {+}"
 
   local ul=$(tput smul) # see terminfo
