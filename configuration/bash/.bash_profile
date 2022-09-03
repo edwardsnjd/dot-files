@@ -31,10 +31,11 @@ export FZF_DEFAULT_OPTS="\
 "
 export FZF_CTRL_T_OPTS="\
   --preview 'bat --color=always {}' \
-  --bind=ctrl-/:toggle-preview \
+  --bind 'ctrl-/:change-preview-window(bottom|hidden|default)' \
 "
 export FZF_ALT_C_OPTS="\
   --preview 'tree -a -I .git -C --dirsfirst -L 3 {}' \
+  --bind 'ctrl-/:change-preview-window(bottom|hidden|default)' \
 "
 
 # Use color for man and less
