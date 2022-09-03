@@ -58,6 +58,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # Specify command lines that should not appear in `history`
 export HISTIGNORE=history:clear
+export HISTCONTROL=ignorespace
 
 # Remember all history and write it all to the history file
 export HISTSIZE=-1

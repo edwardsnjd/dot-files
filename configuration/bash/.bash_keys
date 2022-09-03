@@ -20,10 +20,10 @@ bind -m vi-command -x '"\C-x;": tmux-word-widget'
 bind -m vi-insert -x '"\C-x;": tmux-word-widget'
 
 # CTRL-k  - List current directory
-bind -m emacs-standard '"\C-k": "clear && pwd && l\C-m"'
+bind -m emacs-standard '"\C-k": " clear && pwd && l\C-m"'
 
 # CTRL-j  - Tree current directory
-bind -m emacs-standard '"\C-j": "clear && pwd && t\C-m"'
+bind -m emacs-standard '"\C-j": " clear && pwd && t\C-m"'
 
 # CTRL-h  - Tree current directory
-bind -m emacs-standard '"\C-h": "clear && pwd && tt\C-m"'
+bind -m emacs-standard '"\C-h": " clear && pwd && tt\C-m"'
