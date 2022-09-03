@@ -7,15 +7,47 @@ export EDITOR=vim
 export CLICOLOR=1
 
 # fzf configuration
-export FZF_DEFAULT_COMMAND='fd --type file --hidden --color=always --strip-cwd-prefix'
+export FZF_DEFAULT_COMMAND="\
+  fd \
+    --type file \
+    --hidden \
+    --color=always \
+    --strip-cwd-prefix \
+"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_T_OPTS='--preview "bat --color=always {}" --bind=ctrl-/:toggle-preview'
-export FZF_ALT_C_COMMAND='fd --type directory --hidden --color=always --max-depth=5'
-export FZF_ALT_C_OPTS='--preview "tree -a -I .git -C --dirsfirst -L 3 {}"'
-export FZF_DEFAULT_OPTS="--bind=ctrl-h:preview-down,ctrl-l:preview-up,alt-j:page-down,alt-k:page-up --ansi"
+export FZF_ALT_C_COMMAND="\
+  fd \
+    --type directory \
+    --hidden \
+    --color=always \
+    --max-depth=5 \
+"
+export FZF_DEFAULT_OPTS="\
+  --bind=ctrl-h:preview-down \
+  --bind=ctrl-l:preview-up \
+  --bind=alt-j:page-down \
+  --bind=alt-k:page-up \
+  --ansi \
+"
+export FZF_CTRL_T_OPTS="\
+  --preview 'bat --color=always {}' \
+  --bind=ctrl-/:toggle-preview \
+"
+export FZF_ALT_C_OPTS="\
+  --preview 'tree -a -I .git -C --dirsfirst -L 3 {}' \
+"
 
 # Use color for man and less
-export LESS="--quit-if-one-screen --RAW-CONTROL-CHARS --no-init --incsearch --use-color --line-num-width=3 --color=NK-$ --color=SwK$"
+export LESS="\
+  --quit-if-one-screen \
+  --RAW-CONTROL-CHARS \
+  --no-init \
+  --incsearch \
+  --use-color \
+  --line-num-width=3 \
+  --color=NK-$ \
+  --color=SwK$ \
+"
 # Use bold green for bold in less
 export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 
