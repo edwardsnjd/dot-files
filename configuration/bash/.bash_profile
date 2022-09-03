@@ -44,6 +44,7 @@ export LESS="\
   --RAW-CONTROL-CHARS \
   --no-init \
   --incsearch \
+  --ignore-case \
   --use-color \
   --line-num-width=3 \
   --color=NK-$ \
