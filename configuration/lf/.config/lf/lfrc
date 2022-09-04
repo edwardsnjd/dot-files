@@ -1,5 +1,5 @@
 # interpreter for shell commands
-set shell sh
+set shell bash
 
 # set '-eu' options for shell commands
 # These options are used to have safer shell commands. Option '-e' is used to
@@ -37,8 +37,8 @@ set scrolloff 10
 
 # Use custom preview script
 set preview on
-set previewer ~/.config/lf/lf-preview.sh
-map i $~/.config/lf/lf-preview.sh $f
+set previewer render
+map i $paginate $f
 
 # Columns
 cmd auto_cols ${{

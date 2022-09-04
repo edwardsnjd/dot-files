@@ -124,11 +124,8 @@ function dedup {
 # FZF file browser
 alias b="file-browser"
 function file-browser {
-  local preview="bat --color=always --style=plain {}"
-  # Page selected file (highlighting with less)
-  # NB. Using `bat` via less so less knows about filename(s)
-  local highlight="bat --force-colorization --plain"
-  local display="LESSOPEN='|$highlight %s' less -+F -+X -N +g {+}"
+  local preview="render {}"
+  local display="paginate {+}"
   local edit="vim {+}"
 
   local ul=$(tput smul) # see terminfo
@@ -147,7 +144,6 @@ function file-browser {
     --preview "$preview" \
     --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
     --bind "ctrl-s:toggle-sort" \
-    --bind "ctrl-alt-h:execute($help)" \
     --bind "ctrl-e:execute($edit)" \
     --bind "enter:execute($display)"
 }
