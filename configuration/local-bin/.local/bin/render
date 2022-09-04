@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Render selected file or directory
+# Usage: render file [width] [height]
+
+function main() {
+  if [ -d "$1" ]; then
+    render_directory "$@"
+  else
+    render_file "$@"
+  fi
+}
+
+function render_directory() {
+  tree -aF -I .git --dirsfirst -C -L 4 "$1"
+}
+
+function render_file() {
+  case ${1,,} in
+    *.png|*.gif|*.jpg|*.jpeg|*.mov|*.mp4|*.3gp)
+      render_visual "$@";;
+    *.md)
+      render_markdown "$@";;
+    *)
+      render_textual "$@";;
+  esac
+}
+
+function render_visual() {
+  chafa \
+    --animate=false \
+    --duration=0 \
+    --work=1 \
+    --size "${2:-$(tput cols)}x${3:-$(tput lines)}" \
+    "$1"
+}
+
+function render_markdown() {
+  glow --width "${2:-$(tput cols)}" --style "auto" "$1"
+}
+
+function render_textual() {
+  bat --force-colorization --plain --paging "never" "$1"
+}
+
+main "$@"

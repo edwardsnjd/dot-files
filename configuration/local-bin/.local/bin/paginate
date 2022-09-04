@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Paginate selected files
+# Usage: paginate files...
+
+function main() {
+  local width=$(( $(tput cols) - 4 ))  # allow room for line numbers
+  local height=$(tput lines)
+
+  # Use less for pager but preprocess to beautify it
+  LESSOPEN="|render %s $width $height" \
+  less \
+    -+F \
+    -+X \
+    --tilde \
+    --LINE-NUMBERS \
+    +g \
+    "$@"
+}
+
+main "$@"
