@@ -18,6 +18,12 @@
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+# bash config
+shopt -s autocd     # directory path is treated as a `cd`
+shopt -s cdspell    # correct minor errors in directory names for `cd`
+shopt -s direxpand  # expand directory names
+shopt -s dirspell   # correct minor errors in directory names on expansion
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -f "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" --no-use
