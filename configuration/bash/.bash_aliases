@@ -245,10 +245,19 @@ function nbj {
 
   case "$command" in
     initcontent)
-      echo '```'
-      emojify-cal cal
-      echo '```'
-      echo
+      cat <<-EOF
+			\`\`\`
+			$(emojify-cal cal)
+			\`\`\`
+			
+			## Tasks
+			
+			- [ ] <+ TODO +>
+			
+			## Notes
+			
+			- <+ TODO +>
+			EOF
       return
       ;;
     edit)
