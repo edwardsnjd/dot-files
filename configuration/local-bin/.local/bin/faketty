@@ -1,38 +1,29 @@
-#!/bin/bash
+#!/usr/bin/perl -w
 
-# Run a command in fake TTY, allows things like watch to display color
-# See: https://stackoverflow.com/a/60279429
-function faketty {
-  # Create a temporary file for storing the status code
-  tmp=$(mktemp)
+# https://www.perlmonks.org/?node_id=299012
 
-  # Ensure it worked or fail with status 99
-  [ "$tmp" ] || return 99
+# Fools a process into thinking that STDOUT is a terminal,
+# when in fact it may be a file or a pipe.
+use IO::Pty;
+use strict;
+die "usage: $0 command [args]\n" unless @ARGV;
 
-  # Produce a script that runs the command provided to faketty as
-  # arguments and stores the status code in the temporary file
-  cmd="$(printf '%q ' "$@")"'; echo $? > '$tmp
+my $pty = IO::Pty->new;
+my $slave = $pty->slave;
+open TTY,"/dev/tty" or die "not connected to a terminal\n";
+$pty->clone_winsize_from(\*TTY);
+close TTY;
 
-  # Run the script through /bin/sh with fake tty
-  if [ "$(uname)" = "Darwin" ]; then
-    # MacOS
-    script -Fq /dev/null /bin/sh -c "$cmd"
-  else
-    script -qfc "/bin/sh -c $(printf "%q " "$cmd")" /dev/null
-  fi
-
-  # Ensure that the status code was written to the temporary file or
-  # fail with status 99
-  [ -s $tmp ] || return 99
-
-  # Collect the status code from the temporary file
-  err=$(cat $tmp)
-
-  # Remove the temporary file
-  rm -f $tmp
-
-  # Return the status code
-  return $err
+my $pid = fork();
+die "bad fork: $!\n" unless defined $pid;
+if (!$pid) {
+    $slave->close();
+    open STDOUT,">&=".$pty->fileno() or die $!;
+    exec @ARGV;
 }
-
-faketty "$@"
+else {
+    $pty->close();
+    while (defined (my $line = <$slave>)) {
+        print $line;
+    }
+}
