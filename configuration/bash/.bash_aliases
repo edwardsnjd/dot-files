@@ -132,8 +132,8 @@ function file-browser {
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
-  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort"
-  local header2="∷ Actions: ${magenta}C-E${normal} edit selected, ${magenta}Enter${normal} display selected"
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-Spc${normal} toggle all"
+  local header2="∷ Actions: ${magenta}A-Enter${normal} edit selected, ${magenta}Enter${normal} display selected"
   local header="${header1}${nl}${header2}"
 
   fzf \
@@ -144,7 +144,8 @@ function file-browser {
     --preview "$preview" \
     --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
     --bind "ctrl-s:toggle-sort" \
-    --bind "ctrl-e:execute($edit)" \
+    --bind "alt-space:toggle-all" \
+    --bind "alt-enter:execute($edit)" \
     --bind "enter:execute($display)"
 }
 
