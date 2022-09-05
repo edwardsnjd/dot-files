@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# NAME
+#  cheat-sheet - little helper over "curl cht.sh/TOPIC/QUERY"
+#
+# DEPENDENCIES
+#   - core utils
+#   - awk
+#   - fzf - fuzzy select the search topic
+#   - curl - fetch the search result
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local topic=$(SelectTopic)
+  [[ -z "$topic" ]] && exit
+  local subtopic=$(SelectSubtopic "$topic")
+
+  local topicStep=$(echo $topic | tr ' ' '+')
+  local queryStep=$(echo $subtopic | tr ' ' '+')
+
+  local query=''
+  if [[ -n "$subtopic" ]]; then
+    if [[ "$subtopic" =~ ^~ ]]; then
+      query="$queryStep"
+    else
+      query="/$queryStep"
+    fi
+  fi
+  local url="https://cheat.sh/${topicStep}${query}"
+
+  echo "(URL: $url)"
+  curl -s $url
+}
+
+function SelectTopic() {
+  local lolight=$(tput bold; tput setaf 0) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+
+  # The history file allows Ctrl-N and Ctrl-P navigation through
+  # previously selected filters
+  {
+    Languages | sed -E "s/^/${lolight}(L)${normal} /"
+    Utils     | sed -E "s/^/${lolight}(U)${normal} /"
+  } \
+    | fzf \
+      --delimiter " " \
+      --no-sort \
+      --nth "2" \
+      --reverse \
+      --header "$(TopicHeader)" \
+      --exact \
+      -i \
+      --history ~/.chtsh_topic_history \
+      --print-query \
+      | awk 'NR==1{value=$0} NR==2{value=$2} END{print value}'
+}
+
+function SelectSubtopic() {
+  local topic="$1"
+
+  local lolight=$(tput bold; tput setaf 0) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+
+  # Dummy use of fzf to share UX between topic and subtopic
+  # The history file allows Ctrl-N and Ctrl-P navigation through
+  # previously selected filters
+  echo \
+    | fzf \
+      --reverse \
+      --header "$(SubtopicHeader)" \
+      --prompt "$topic subtopic (opt)> " \
+      --history ~/.chtsh_subtopic_history \
+      --print-query \
+    | awk 'NR==1{value=$0} NR==2{value=$2} END{print value}'
+}
+
+function TopicHeader() {
+  cat <<-EOF
+	:help       main help page
+	:list       list all cheat sheets
+	:styles     list of color styles
+	:random     fetches a random cheat sheet
+	~keyword    search for keyword in this topic
+	~keyword/r  search for keyword recursively
+	EOF
+}
+
+function SubtopicHeader() {
+  cat <<-EOF
+	~keyword    search for keyword in this topic
+	~keyword/r  search for keyword recursively
+	hello       hello world + how to start the program
+	:learn      big cheat sheet for learning language from scratch
+	:list       list of topics
+	:random     fetches a random cheat sheet belonging to the topic
+	EOF
+}
+
+function Languages() {
+  echo "rust lua javascript typescript nodejs ruby css haskell elm python kotlin java" \
+    | tr ' ' '\n' \
+    | sort
+}
+
+function Utils() {
+  echo "xargs find mv sed awk ps bash fzf curl tar bat cat vim" \
+    | tr ' ' '\n' \
+    | sort
+}
+
+Main "$@"
