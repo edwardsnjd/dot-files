@@ -11,17 +11,24 @@
 #   Capture and translate the current date highlighting into an emoji.
 #
 # DEPENDENCIES
+#   - cal/ncal
 #   - tput (to obtain current terminal's escape sequences)
 #   - sed
 #   - faketty (to trick `cal` or `ncal` into highlighting current date)
 #
 # NOTES
 #
-#   cal and ncal use "standout mode" to highlight the current date.
-#   Search in `man terminfo` for "standout mode", "smso" and "rmso".
+#   cal and ncal only highlight the current date if connected to a tty hence
+#   the use of `faketty` and why we can't use a pipe: `cal | emojify-cal`
+#
+#   cal and ncal use "standout mode" to highlight the current date.  Search in
+#   `man terminfo` for "standout mode", "smso" and "rmso".
+#
+#   Optionally change the emoji marker for current date via the environment
+#   variable, EMOJIFYCAL_MARKER e.g. `EMOJIFYCAL_MARKER="👀" emojify-cal cal`.
 
 function Main() {
-  local currentDateMarker="🟢"
+  local currentDateMarker="${EMOJIFYCAL_MARKER:-🟢}"
   local startStandoutRegex=$(tput smso | EscapeRegex)
   local stopStandoutRegex=$(tput rmso | EscapeRegex)
 
