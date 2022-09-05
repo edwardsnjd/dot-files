@@ -13,6 +13,12 @@ alias    t='tree -aF -I .git --dirsfirst -L 1'
 alias   tt='tree -aF -I .git --dirsfirst -L 2'
 alias  ttt='tree -aF -I .git --dirsfirst -L 3'
 alias tree='tree -aF -I .git --dirsfirst'
+# List shell completions
+alias list_aliases='compgen -A alias | sort -u'
+alias list_commands='compgen -A command | sort -u'
+alias list_functions='compgen -A function | sort -u'
+alias list_users='compgen -A user | sort -u'
+alias list_variables='compgen -A variable | sort -u'
 
 # Dockerised tools
 function elm {
@@ -315,3 +321,5 @@ function demandcat {
     read
   done
 }
+
+
