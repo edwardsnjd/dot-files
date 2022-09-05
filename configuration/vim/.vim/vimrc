@@ -262,6 +262,10 @@ nnoremap <leader>tf :.!toilet -f future -W -w 300<CR>
 nnoremap <leader>tp :.!toilet -f pagga -W -w 300<CR>
 nnoremap <leader>tb :.!toilet -f term -F border -w 300<CR>
 
+" - Managing todo lists
+nnoremap <leader>ti :put ='- [ ] <+ TODO +>'<CR>
+nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":" ")."]"/<CR>
+
 " - Show presentation
 noremap <silent> <F5> :silent call <SID>Present()<CR>
 function! <SID>Present()
