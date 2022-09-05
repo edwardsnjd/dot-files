@@ -268,13 +268,15 @@ function nbj {
   nb notebooks "${notebook}" \
     || nb notebooks add "${notebook}"
 
-  # Add or edit the note
+  # Ensure the note exists
   nb ls "${notebook}:${path}" \
-    && nb edit "${notebook}:${path}" \
     || nb add "${notebook}:${path}" \
       --title "${today}" \
       --tags "journal" \
       --content "$(nbj initcontent)"
+
+  # Edit the note
+  nb edit "${notebook}:${path}"
 }
 
 # Add note on topic
