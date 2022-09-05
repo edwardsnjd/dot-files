@@ -128,7 +128,6 @@ function file-browser {
   local display="paginate {+}"
   local edit="vim {+}"
 
-  local ul=$(tput smul) # see terminfo
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
