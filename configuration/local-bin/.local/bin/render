@@ -3,6 +3,11 @@
 # Render selected file or directory
 # Usage: render file [width] [height]
 
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
 function main() {
   if [ -d "$1" ]; then
     render_directory "$@"
@@ -19,8 +24,12 @@ function render_file() {
   case ${1,,} in
     *.png|*.gif|*.jpg|*.jpeg|*.mov|*.mp4|*.3gp)
       render_visual "$@";;
+    *.svg)
+      render_svg "$@";;
     *.md)
       render_markdown "$@";;
+    *.html)
+      render_html "$@";;
     *)
       render_textual "$@";;
   esac
@@ -35,8 +44,28 @@ function render_visual() {
     "$1"
 }
 
+function render_svg() {
+  local file="$1"
+  shift
+
+  local png="$(mktemp).png"
+  convert "svg:$file" "$png"
+  render_visual "$png" "$@"
+  rm "$png"
+}
+
 function render_markdown() {
   glow --width "${2:-$(tput cols)}" --style "auto" "$1"
+}
+
+function render_html() {
+  if [[ -n ${RENDER_SIMPLE_HTML:-} ]]; then
+    w3m -dump -o display_borders=1 "$1"
+  else
+    local file="$1"
+    shift
+    render_markdown <(pandoc --to markdown "$file") "$@"
+  fi
 }
 
 function render_textual() {
