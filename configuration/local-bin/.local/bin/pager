@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Stub for less.
+#
+# This is useful to tricks tools like `nb` into thinking they are using a custom
+# pager so they do not add strange `less` flags.
+
+exec less "$@"

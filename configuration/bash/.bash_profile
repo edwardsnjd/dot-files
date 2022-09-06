@@ -42,7 +42,6 @@ export FZF_ALT_C_OPTS="\
 export LESS="\
   --quit-if-one-screen \
   --RAW-CONTROL-CHARS \
-  --no-init \
   --incsearch \
   --ignore-case \
   --use-color \
@@ -55,6 +54,9 @@ export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 
 # Add RVM to PATH for scripting
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# Use custom pager (but not really)
+export PAGER=pager
 
 # Specify command lines that should not appear in `history`
 export HISTIGNORE=history:clear
