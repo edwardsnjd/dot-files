@@ -2,6 +2,9 @@
 
 # Render selected file or directory
 # Usage: render file [width] [height]
+#
+# Optionally make the html render text only:
+#   RENDER_SIMPLE_HTML=1 render foo.html
 
 set -o nounset
 set -o errexit
