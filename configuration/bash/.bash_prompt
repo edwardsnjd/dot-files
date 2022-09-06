@@ -6,18 +6,19 @@
 
 # Colour attribute codes
 
+# See `man terminfo` for the codes to send
+# NOTE: Surround non-printing characters like `\[...\]`
 RESET="\[$(tput sgr0)\]"
 RED="\[$(tput setaf 1)\]"
 GREEN="\[$(tput setaf 2)\]"
-PURPLE="\[$(tput setaf 5)\]"
+BLUE="\[$(tput setaf 4)\]"
 LOLIGHT="\[$(tput bold; tput setaf 0)\]"
-PREFIX="${PURPLE}»${RESET}"
 
 # Functions
 
 function PromptPS1() {
   local exit="$(PromptExitInfo)"
-  PS1="${PREFIX} $(PromptTime)\W $(PromptGitInfo)${exit}\$ "
+  PS1="${BLUE}»${RESET} $(PromptTime)\W $(PromptGitInfo)${exit}\$ "
 }
 
 function PromptGitInfo() {
@@ -36,7 +37,7 @@ function PromptTime() {
 }
 
 function GitCurrentBranch() {
-  git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+  git branch 2>/dev/null | sed -e '/^[^*]/d; s/^* //'
 }
 
 # Prompt
