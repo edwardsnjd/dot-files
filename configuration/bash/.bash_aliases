@@ -44,6 +44,13 @@ alias isodate='date -u +"%Y-%m-%d"'
 alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
 alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
+# Helper to join args by a separator
+function join_by() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
 # Simple lap timer (uses `date` to measure duration in seconds)
 function laptimer() {
   local total=0
