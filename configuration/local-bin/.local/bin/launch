@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+fd \.app --maxdepth 1 /Applications \
+ | sed -E "s|(.*/)(([^/]*)\.app)/|&\t\3|" \
+ | sort -u \
+ | fzf --with-nth 2 --delimiter $'\t' \
+ | cut -f1 \
+ | xargs -I{} open "{}"
