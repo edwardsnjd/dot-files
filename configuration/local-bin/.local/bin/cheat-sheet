@@ -33,7 +33,7 @@ function Main() {
   local url="https://cheat.sh/${topicStep}${query}"
 
   echo "(URL: $url)"
-  curl -s $url
+  paginate <(curl -s $url)
 }
 
 function SelectTopic() {
