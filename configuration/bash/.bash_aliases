@@ -238,6 +238,9 @@ function file-browser {
     --bind "alt-space:toggle-all" \
     --bind "alt-enter:execute($edit)" \
     --bind "enter:execute($display)"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
 }
 
 # FZF browse of time zone and print current time
