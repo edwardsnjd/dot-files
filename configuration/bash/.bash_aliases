@@ -20,6 +20,85 @@ alias list_functions='compgen -A function | sort -u'
 alias list_users='compgen -A user | sort -u'
 alias list_variables='compgen -A variable | sort -u'
 
+# fzf browse of all configured key bindings in your shell (assumes
+# bash and tmux)
+function keys() {
+  # Performance: Capture data once to temp file (for multiple use)
+  local temp="$(mktemp)"
+  { keys_tmux; keys_readline; } > $temp
+
+  local cols=$(tput cols)
+
+  # HACK: Columnize header with data to match expected columns
+  local headerContent="app	mode	key(s)	command(s)"
+  local header=$(
+    { echo "$headerContent"; cat $temp; } \
+      | sed -E "s/(.{1,$cols}).*/\1/" \
+      | column -s $'\t' -t \
+      | head -1
+  )
+
+  # fzf to browse the bindings
+  cat $temp \
+    | sed -E "s/(.{1,$cols}).*/\1/" \
+    | column -s $'\t' -t \
+    | sort \
+    | fzf \
+      --reverse \
+      --no-sort \
+      --header "$header"
+
+  # Tidy up
+  rm $temp
+}
+
+# List all key bindings for Tmux
+# Rows: app	mode	key(s)	command(s)
+function keys_tmux() {
+  local prefix=$(tmux show-options -g prefix | cut -d " " -f2)
+  tmux list-keys \
+    | sed -E 's/bind-key .. -T //' \
+    | sed -E 's/^([^ ]+) +([^ ]+) +(.*)$/tmux\t\1\t\2\t\3/' \
+    | awk -F "\t" -v OFS="\t" '
+        # Strip backslash escape chars
+        $3 ~ /^\\.$/  { $3 = substr($3, 2) }
+        # Strip quoted keys
+        $3 ~ /^".+"$/ { $3 = substr($3, 2, length($3)-2) }
+        # Print all
+        { print }
+      '
+  printf "tmux\troot\t${prefix}\t# Main tmux prefix mode\n"
+}
+
+# List all key bindings for bash readline
+# NOTE: This will only return your keybindings if run in an interactive
+# shell session.  Running `bind` from a non-interactive script will not have
+# loaded your interactive bash configuration, which might include `readline`
+# keybindings.
+# Rows: app	mode	key(s)	command(s)
+function keys_readline() {
+  local selfInsertHex=$(printf ": self-insert" | xxd -c0 -p)
+  local quoteHex=$(printf '"' | xxd -c0 -p)
+  local newlineHex=$(printf "\n" | xxd -c0 -p)
+
+  # HACK: Detour via hex representation so we can remove mappings for
+  # non-textual lines, since they break all the normal line based tools.
+  {
+    bind -X \
+      | sed -E 's/^"(.*)": (.*)$/readline\troot\t\1\t\2/'
+    bind -p \
+      | tail +2 \
+      | xxd -c0 -p | sed -E "s/${quoteHex}.{2,8}${quoteHex}${selfInsertHex}${newlineHex}//g" | xxd -r -p \
+      | grep -v "^#" \
+      | sed -E 's/^"(.*)": (.*)$/readline\troot\t\1\t(readline)\2/'
+  } | awk -F $'\t' -v OFS=$'\t' '{
+      gsub(/ /, "Space", $3)
+      gsub(/\\C/, "C", $3)
+      gsub(/\\e/, "M-", $3)
+      print
+    }'
+}
+
 # Dockerised tools
 function elm {
   docker run \
