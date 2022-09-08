@@ -20,45 +20,46 @@ alias list_functions='compgen -A function | sort -u'
 alias list_users='compgen -A user | sort -u'
 alias list_variables='compgen -A variable | sort -u'
 
-# Format conversions
-
-function char2dec () { printf '%d' "'$1"; }
-function dec2char () { printf \\$(printf '%03o' "$1"); }
-
-function char2bin () { printf "$1" | ascii2bin; }
-function bin2char () { printf \\$(echo "ibase=2; obase=8; $1" | bc); }
+# Text format conversions
 
 function hex2dec() { printf "%d\n" "0x$1"; }
 function dec2hex() { printf "%x\n" "$1"; }
+function dec2oct() { printf "%03o\n" "$1"; }
+function bin2oct() { echo "ibase=2; obase=8; $1" | bc; }
+
+function ascii2base64 { exec base64; }
+function base642ascii { exec base64 -d; }
+
+function ascii2hex { exec xxd -c8 -p; }
+function hex2ascii { exec xxd -p -r; }
 
 function ascii2dec {
-  # Use xxd to process every character (including newlines)
-  xxd -c1 -p \
-    | while read hex; do hex2dec "$hex"; done \
-    | paste -d" " - - - - - - - -
+  # Convert every input character (including newlines)
+  xxd -c1 -p | while read hex; do hex2dec "$hex"; done
 }
 function dec2ascii() {
   # Process each word as decimal, ignore all whitespace
-  while read l; do
-    for d in $l; do
-      dec2char "$d"
+  while read line; do
+    for dec in $line; do
+      printf \\$(dec2oct "$dec")
     done
   done
 }
 
 function ascii2bin() {
-  xxd -c1 -b \
-    | cut -d " " -f2 \
-    | paste -d" " - - - -
+  # Convert every input character (including newlines)
+  xxd -c1 -b | cut -d " " -f2
 }
 function bin2ascii() {
   # Process each word as binary, ignore all whitespace
-  while read l; do
-    for b in $l; do
-      bin2char "$b"
+  while read line; do
+    for bin in $line; do
+      printf \\$(bin2oct "$bin");
     done
   done
 }
+
+# Keys
 
 # fzf browse of all configured key bindings in your shell (assumes
 # bash and tmux)
