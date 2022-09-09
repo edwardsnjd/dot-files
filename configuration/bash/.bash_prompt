@@ -18,7 +18,7 @@ LOLIGHT="\[$(tput bold; tput setaf 0)\]"
 
 function PromptPS1() {
   local exit="$(PromptExitInfo)"
-  PS1="${BLUE}»${RESET} $(PromptTime)\W $(PromptGitInfo)${exit}\$ "
+  PS1="${BLUE}»${RESET} $(PromptHistoryInfo)\W $(PromptGitInfo)${exit}\$ "
 }
 
 function PromptGitInfo() {
@@ -32,8 +32,8 @@ function PromptExitInfo() {
   [[ $exitCode != 0 ]] && printf "${RED}${exitCode}${RESET} "
 }
 
-function PromptTime() {
-  printf "${LOLIGHT}$(date +%H:%M)${RESET} "
+function PromptHistoryInfo() {
+  printf "${LOLIGHT}!\!${RESET} "
 }
 
 function GitCurrentBranch() {
