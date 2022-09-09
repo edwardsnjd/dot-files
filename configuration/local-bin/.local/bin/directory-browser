@@ -11,6 +11,7 @@ set -o pipefail
 
 function Main {
   local preview="render {}"
+  local output="for f in {+}; do render \"\$f\"; echo; done"
   local display="paginate {+}"
   local edit="vim {+}"
 
@@ -18,7 +19,7 @@ function Main {
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
   local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-a${normal} toggle all"
-  local header2="∷ Actions: ${magenta}Enter${normal} display selected"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} output selected"
   local header="${header1}${nl}${header2}"
 
   fd \
@@ -39,6 +40,7 @@ function Main {
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --bind "ctrl-s:toggle-sort" \
       --bind "alt-a:toggle-all" \
+      --bind "alt-enter:execute($output)" \
       --bind "enter:execute($display)"
 
   # Force happy exit code (expect to quit fzf with Ctrl-C)
