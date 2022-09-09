@@ -5,7 +5,7 @@
 
 function main() {
   local width=$(( $(tput cols) - 4 ))  # allow room for line numbers
-  local height=$(tput lines)
+  local height=$(( $(tput lines) - 1 ))  # allow room for less prompt
 
   # Use less for pager but preprocess to beautify it
   LESSOPEN="|render %s $width $height" \
