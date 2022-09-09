@@ -20,7 +20,24 @@ function main() {
 }
 
 function render_directory() {
+  local title="$(tput setaf 3; tput smul)"
+  local heading="$(tput smul)"
+  local reset="$(tput sgr0)"
+
+  echo "${title}Tree${reset}"
+  echo
   tree -aF -I .git --dirsfirst -C -L 4 "$1"
+  echo
+  echo "${title}Code${reset}"
+  echo
+  {
+    printf "Type\tLines\n"
+    tokei-json -- --hidden "$1" | jq --color-output --raw-output '
+    .lines | to_entries | .[] | [.key, .value] | @tsv
+    '
+  } \
+    | column -s $'\t' -t \
+    | sed -E "1s/[^ \t]+/${heading}&${reset}/g"
 }
 
 function render_file() {
