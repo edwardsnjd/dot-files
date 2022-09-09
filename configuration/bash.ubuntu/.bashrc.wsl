@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Forward X11 to host if running inside WSL
 if [[ "$(< /proc/sys/kernel/osrelease)" == *microsoft* ]]; then
   # WSL inserts a line at the end of resolve.conf pointing to the host

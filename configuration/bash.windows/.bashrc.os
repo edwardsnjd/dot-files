@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export BAT_CONFIG_PATH="$HOME/bat/config"
 
 export ANDROID_SDK_ROOT="/c/Users/Nicholas Edwards/AppData/Local/Android/Sdk"

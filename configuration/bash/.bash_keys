@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Interactive FZF browser of all previous words in this tmux pane
 function tmux-word {
   tmux capture-pane -p -S - -E - \

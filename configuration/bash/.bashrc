@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # --- Bash aliases ---
 
 # Alias definitions

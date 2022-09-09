@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Handy command aliases to make terminal more pleasant
 
 # some more ls aliases

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Disable annoying bash shell warning
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
