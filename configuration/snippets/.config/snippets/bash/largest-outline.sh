@@ -76,7 +76,8 @@ function Error() {
 # Get a delimited section of this file
 function GetSection() {
   local section="$1"
-  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# ?//; p; }" $0 | sed '1d; $d'
+  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# ?//; p; }" $0 \
+  | sed '1d; $d'
 }
 
 # Entry point
