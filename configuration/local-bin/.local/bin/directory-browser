@@ -5,7 +5,7 @@
 # fzf browse of rendered directories.
 
 set -o nounset
-set -o errexit
+#set -o errexit
 set -o pipefail
 #set -o xtrace
 
@@ -25,10 +25,13 @@ function Main {
     --type directory \
     --hidden \
     --color=always \
+    --max-depth=5 \
     --strip-cwd-prefix \
+    | sort \
     | fzf \
       --reverse \
       --multi \
+      --no-sort \
       --prompt "Directories(s)> " \
       --header "$header" \
       --preview "$preview" \

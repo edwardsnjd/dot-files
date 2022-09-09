@@ -5,7 +5,7 @@
 # fzf browse of rendered files.
 
 set -o nounset
-set -o errexit
+#set -o errexit
 set -o pipefail
 #set -o xtrace
 
@@ -26,9 +26,11 @@ function Main {
     --hidden \
     --color=always \
     --strip-cwd-prefix \
+    | sort \
     | fzf \
       --reverse \
       --multi \
+      --no-sort \
       --prompt "File(s)> " \
       --header "$header" \
       --preview "$preview" \
