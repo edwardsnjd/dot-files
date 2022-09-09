@@ -256,35 +256,9 @@ function dedup {
   awk '!count[$0]++'
 }
 
-# FZF file browser
-alias b="file-browser"
-function file-browser {
-  local preview="render {}"
-  local display="paginate {+}"
-  local edit="vim {+}"
-
-  local magenta=$(tput setaf 5) # see terminfo
-  local normal=$(tput sgr0) # see terminfo
-  local nl=$'\n'
-  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-Spc${normal} toggle all"
-  local header2="∷ Actions: ${magenta}A-Enter${normal} edit selected, ${magenta}Enter${normal} display selected"
-  local header="${header1}${nl}${header2}"
-
-  fzf \
-    --reverse \
-    --multi \
-    --prompt "File(s)> " \
-    --header "$header" \
-    --preview "$preview" \
-    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-    --bind "ctrl-s:toggle-sort" \
-    --bind "alt-space:toggle-all" \
-    --bind "alt-enter:execute($edit)" \
-    --bind "enter:execute($display)"
-
-  # Force happy exit code (expect to quit fzf with Ctrl-C)
-  return 0
-}
+# FZF file system browsers
+alias f="file-browser"
+alias d="directory-browser"
 
 # FZF browse of time zone and print current time
 function tz {
