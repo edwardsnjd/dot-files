@@ -17,7 +17,7 @@ function Main {
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
-  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-Spc${normal} toggle all"
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-a${normal} toggle all"
   local header2="∷ Actions: ${magenta}Enter${normal} display selected"
   local header="${header1}${nl}${header2}"
 
@@ -25,7 +25,7 @@ function Main {
     --type directory \
     --hidden \
     --color=always \
-    --max-depth=5 \
+    --max-depth=4 \
     --strip-cwd-prefix \
     | sort \
     | fzf \
@@ -37,7 +37,7 @@ function Main {
       --preview "$preview" \
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --bind "ctrl-s:toggle-sort" \
-      --bind "alt-space:toggle-all" \
+      --bind "alt-a:toggle-all" \
       --bind "enter:execute($display)"
 
   # Force happy exit code (expect to quit fzf with Ctrl-C)
