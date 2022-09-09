@@ -24,6 +24,7 @@ function Main {
   fd \
     --type directory \
     --hidden \
+    --exclude '\.git' \
     --color=always \
     --max-depth=4 \
     --strip-cwd-prefix \
