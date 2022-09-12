@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+
+# NAME
+#    lines-of-code - simple analysis of code
+#
+# SYNOPSIS
+#    lines-of-code [--files] [--help] [path path...]
+#
+# OPTIONS
+#    --files
+#      Output information about all discovered files
+#    --help, -h
+#      Print this usage info.
+#
+# OUTPUT
+#    TSV with one line per path per lang:
+#    <path> <lang> <lines> <code> <comments> <blanks>
+#
+#    By default, only supplied paths will be have rows.  With
+#    --files, the rows will be for all discovered files.
+#
+# DEPENDENCIES
+#   - tokei
+#   - sed
+#   - jq
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local files=0
+  local pretty=0
+  local print_path=1
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --help | -h) Usage "$@"; exit 0 ;;
+      --pretty)     shift && pretty=1 ;;
+      --strip-path) shift && print_path=0 ;;
+      --files)      shift && files=1 ;;
+      *)            break ;;
+    esac
+  done
+
+  case "$files" in
+    0) SummaryTable "${@:-$PWD}" ;;
+    1) FilesTable "${@:-$PWD}" ;;
+  esac \
+    | if [[ $print_path -eq 1 ]]; then cat; else StripPath; fi  \
+    | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi
+}
+
+function Error() {
+  echo "ERROR: $@" >&2
+  echo >&2
+  Usage >&2
+  exit 1
+}
+
+function Usage() {
+  sed -E -f <(GetSection "UsageSedScript") $0
+}
+
+# Get a delimited section of this file
+function GetSection() {
+  local section="$1"
+  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# ?//; p; }" $0 \
+    | sed '1d; $d'
+}
+
+function SummaryTable() {
+  PrintHeader
+  for path in "$@"; do
+    tokei --output="json" --compact --hidden --exclude .git "$path" \
+      | jq -f <(GetSection "JqSummaryScript") \
+      | jq --raw-output --arg path "$path" \
+        '[$path, .language, .lines, .code, .comments, .blanks] | @tsv'
+  done
+}
+
+function FilesTable() {
+  PrintHeader
+  for path in "$@"; do
+    tokei --output="json" --compact --hidden --exclude .git "$path" --files \
+      | jq -f <(GetSection "JqFilesScript") \
+      | jq --raw-output \
+        '[.path, .language, .lines, .code, .comments, .blanks] | @tsv'
+  done
+}
+
+function PrintHeader() {
+  printf "Path\tType\tLines\tCode\tComments\tBlanks\n"
+}
+
+function PrettyPrint() {
+  local heading="$(tput smul)"
+  local reset="$(tput sgr0)"
+  column -s $'\t' -t \
+    | sed -E "1s/[^ 	]+/${heading}&${reset}/g"
+}
+
+function StripPath() {
+  cut -f2-
+}
+
+Main "$@"
+
+exit 0
+
+# The rest of this file is not executed, so can hold scripts for
+# different languages etc.  Use `GetSection xxx` to obtain the
+# text for a particular section.
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ UsageSedScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# #n
+# /^#!/ n
+# /^#/ {
+#   :heading
+#   /^#/ {
+#     s/^# ?//
+#     p
+#     n
+#     b heading
+#   }
+#   q
+# }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UsageSedScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqSummaryScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# to_entries[] | {
+#   language: .key,
+#   lines: .value | (.code + .comments + .blanks),
+#   code: .value.code,
+#   comments: .value.comments,
+#   blanks: .value.blanks,
+# }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqSummaryScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# to_entries[] | .key as $lang | .value.reports[] | {
+#   language: $lang,
+#   path: .name,
+#   lines: .stats | (.code + .comments + .blanks),
+#   code: .stats.code,
+#   comments: .stats.comments,
+#   blanks: .stats.blanks
+# }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k

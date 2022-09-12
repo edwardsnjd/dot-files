@@ -27,7 +27,7 @@ function render_directory() {
 
   echo "${title}Contents${reset}"
   echo
-  tokei-summary -- --hidden "$directory"
+  lines-of-code --pretty --strip-path "$directory"
   echo
   echo "${title}Tree${reset}"
   echo
