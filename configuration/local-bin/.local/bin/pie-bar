@@ -35,7 +35,7 @@ function Main() {
 }
 
 function Total() {
-  echo "$@" | tr ' ' '\n' | awk '{t+=$1} END {print t}'
+  echo "$@" | tr ' ' '\n' | awk '$1 >= 0 {t+=$1} END {print t}'
 }
 
 function PickCharacter() {
