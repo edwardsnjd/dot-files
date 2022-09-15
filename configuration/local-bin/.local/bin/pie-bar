@@ -51,6 +51,12 @@ function Bar() {
 
   local total="$(Total "$@")"
 
+  if [[ $total -le 0 ]]; then
+    seq 1 $cols | while read; do printf "␣"; done
+    printf "\n"
+    return
+  fi
+
   local ind=0
   local col=0
   local cumulativeTotal=0
