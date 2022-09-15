@@ -27,7 +27,7 @@ function render_directory() {
 
   echo "${title}Contents${reset}"
   echo
-  lines-of-code --pretty --strip-path "$directory"
+  lines-of-code --pretty --strip-path --graph "$directory"
   echo
   echo "${title}Tree${reset}"
   echo
