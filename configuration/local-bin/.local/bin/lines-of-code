@@ -32,11 +32,13 @@ set -o pipefail
 function Main() {
   local files=0
   local pretty=0
+  local graph=0
   local print_path=1
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --help | -h) Usage "$@"; exit 0 ;;
       --pretty)     shift && pretty=1 ;;
+      --graph)      shift && graph=1 ;;
       --strip-path) shift && print_path=0 ;;
       --files)      shift && files=1 ;;
       *)            break ;;
@@ -49,6 +51,15 @@ function Main() {
   esac \
     | if [[ $print_path -eq 1 ]]; then cat; else StripPath; fi  \
     | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi
+
+  # Note: Recalculating for graph since it seems fast enough
+  if [[ $graph -eq 1 ]]; then
+    case "$files" in
+      0) SummaryTable "${@:-$PWD}" ;;
+      1) FilesTable "${@:-$PWD}" ;;
+    esac \
+      | Graph
+  fi
 }
 
 function Error() {
@@ -102,6 +113,22 @@ function PrettyPrint() {
 
 function StripPath() {
   cut -f2-
+}
+
+function Graph() {
+  tail +2 \
+    | grep -v Total \
+    | cut -f2,3 \
+    | datamash transpose \
+    | {
+      read headers
+      xargs pie-bar
+      echo "$headers" \
+        | tr $'\t ' $'\n_' \
+        | xargs pie-bar --key \
+        | paste - - - \
+        | column -s $'\t' -t
+    }
 }
 
 Main "$@"
