@@ -7,14 +7,47 @@
 function Main() {
   local use_color=1
   local cols="${COLS:-$(tput cols)}"
+  local print_key=0
   while [[ $# -gt 0 ]]; do
     case $1 in
       --no-color) use_color=0 ;;
+      --key) print_key=1 ;;
       --width) shift && cols="$1" ;;
       *) break ;;
     esac
     shift
   done
+
+  if [[ $print_key -eq 1 ]]; then
+    Key "$use_color" "$@"
+  else
+    Bar "$use_color" "$cols" "$@"
+  fi
+}
+
+function Key() {
+  local use_color="$1"
+  shift
+
+  local ind=0
+
+  while [[ $# -gt 0 ]]; do
+    local label=$1
+    shift
+
+    local char=$(PickCharacter $use_color $ind)
+
+    echo "$char = $label"
+
+    ind=$(( $ind + 1 ))
+  done
+}
+
+function Bar() {
+  local use_color="$1"
+  local cols="$2"
+  shift
+  shift
 
   local total="$(Total "$@")"
 
@@ -26,7 +59,7 @@ function Main() {
     local val=$1
     shift
 
-    local char=$(PickCharacter $use_color $ind $val)
+    local char=$(PickCharacter $use_color $ind)
 
     # Print characters until we've reached the column appropriate
     # for this cumulative total
@@ -49,7 +82,6 @@ function Total() {
 function PickCharacter() {
   local use_color=$1
   local ind=$2
-  local val=$3
 
   local chars="▩▤▣▥▦▧▢▨"
   local colors="1234567"
