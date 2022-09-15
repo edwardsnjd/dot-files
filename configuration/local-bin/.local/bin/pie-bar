@@ -19,6 +19,8 @@ function Main() {
   local total="$(Total "$@")"
 
   local ind=0
+  local col=0
+  local cumulativeTotal=0
 
   while [[ $# -gt 0 ]]; do
     local val=$1
@@ -26,10 +28,14 @@ function Main() {
 
     local char=$(PickCharacter $use_color $ind $val)
 
-    local width=$(( $cols * $val / $total ))
-    if [[ $width -gt 0 ]]; then
-      seq 1 $width | while read; do printf "$char"; done
-    fi
+    # Print characters until we've reached the column appropriate
+    # for this cumulative total
+    cumulativeTotal=$(( $cumulativeTotal + $val ))
+    local finalCol=$(( $cols * $cumulativeTotal / $total ))
+    while [[ $col -lt $finalCol ]]; do
+      printf "$char"
+      col=$(( $col + 1 ))
+    done
 
     ind=$(( $ind + 1 ))
   done
