@@ -2,21 +2,23 @@
 
 # Pie bar
 # Usage: pie-bar value1 value2 ...
-# Dependencies: tput, awk
+# Dependencies: tput, seq, awk
 
 function Main() {
   local use_color=1
+  local cols="${COLS:-$(tput cols)}"
   while [[ $# -gt 0 ]]; do
     case $1 in
-      --no-color) shift && use_color=0 ;;
+      --no-color) use_color=0 ;;
+      --width) shift && cols="$1" ;;
       *) break ;;
     esac
+    shift
   done
 
   local total="$(Total "$@")"
 
   local ind=0
-  local cols="${COLS:-$(tput cols)}"
 
   while [[ $# -gt 0 ]]; do
     local val=$1
