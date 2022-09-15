@@ -22,18 +22,18 @@ function Main {
   local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} output selected"
   local header="${header1}${nl}${header2}"
 
-  fd \
-    --type directory \
-    --hidden \
-    --exclude '\.git' \
-    --color=always \
-    --max-depth=4 \
-    --strip-cwd-prefix \
-    | sort \
+  {
+    echo "./"
+    fd \
+      --type directory \
+      --hidden \
+      --exclude '\.git' \
+      --color=always \
+      --max-depth=4
+  } \
     | fzf \
       --reverse \
       --multi \
-      --no-sort \
       --prompt "Directories(s)> " \
       --header "$header" \
       --preview "$preview" \
