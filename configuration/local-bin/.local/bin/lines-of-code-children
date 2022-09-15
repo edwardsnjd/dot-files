@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# lines-of-code-children
+# Usage: lines-of-code-children
+# Print pretty table showing code makeup of child directories
+
+fd . --type d --max-depth 1 -0 --strip-cwd-prefix \
+ | xargs -0 lines-of-code \
+ | grep -v Total \
+ | datamash --sort --header-in --filler 0 crosstab Path,Type sum Lines \
+ | {
+   # Consume top line (header) for use in key later
+   read
+   # Process data lines
+   awk "{
+     printf(\"%25.25s \", \$1)
+     cmd=\"cut -f2- | xargs pie-bar --width $(( $(tput cols) - 26 ))\"
+     print | cmd
+     close(cmd)
+   }"
+   # Now print key
+   echo "Key:"
+   echo "$REPLY" \
+     | tr $'\t ' $'\n_' \
+     | xargs pie-bar --key \
+     | paste - - - - - - - \
+     | column -s $'\t' -t
+ }
