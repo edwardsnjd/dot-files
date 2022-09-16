@@ -128,7 +128,7 @@ function Graph() {
         | xargs pie-bar --key \
         | paste - - - \
         | column -s $'\t' -t
-    }
+    } || true
 }
 
 Main "$@"
