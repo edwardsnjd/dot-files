@@ -31,7 +31,7 @@ function render_directory() {
   echo
   echo "${title}Tree${reset}"
   echo
-  tree -aF -I .git --dirsfirst -C -L 4 "$directory"
+  exa --long --tree --git --group-directories-first --all --ignore-glob ".git" --classify --color always --level 4 --no-permissions --no-user "$directory"
 }
 
 function render_file() {
