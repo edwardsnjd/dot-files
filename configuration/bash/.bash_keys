@@ -11,6 +11,7 @@ function tmux-word {
 
 # Interactive FZF browser of all previous lines in this tmux pane
 function tmux-line {
+  # NOTE: Start with query to exclude command lines (use Ctrl-R for that)
   tmux capture-pane -p -S - -E - \
     | tac \
     | dedup \
