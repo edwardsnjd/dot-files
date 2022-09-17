@@ -12,13 +12,14 @@ set -o pipefail
 function Main {
   local preview="render {}"
   local display="paginate {+}"
+  local output="for f in {+}; do render \"\$f\"; echo; done"
   local edit="vim {+}"
 
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
   local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-a${normal} toggle all"
-  local header2="∷ Actions: ${magenta}A-Enter${normal} edit selected, ${magenta}Enter${normal} display selected"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} edit selected, ${magenta}C-o${normal} output selected"
   local header="${header1}${nl}${header2}"
 
   fd \
@@ -37,6 +38,7 @@ function Main {
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --bind "ctrl-s:toggle-sort" \
       --bind "alt-a:toggle-all" \
+      --bind "ctrl-o:execute($output)" \
       --bind "alt-enter:execute($edit)" \
       --bind "enter:execute($display)"
 
