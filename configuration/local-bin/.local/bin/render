@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Render selected file or directory
-# Usage: render file [width] [height]
+# Usage: render file [width] [height] [opts]
 #
 # Optionally make the html render text only:
 #   RENDER_SIMPLE_HTML=1 render foo.html
@@ -21,20 +21,52 @@ function main() {
 
 function render_directory() {
   local directory="${1%%/}"
+  shift
 
+  local format="full"
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --simple) format="simple" ;;
+      --full) format="full" ;;
+      *) break ;;
+    esac
+    shift
+  done
+
+  case "$format" in
+    simple) render_directory_simple "$directory" "$@" ;;
+    full) render_directory_full "$directory" "$@" ;;
+    *) echo "Unknown format '$format'" >&2 ;;
+  esac
+}
+
+function render_directory_simple() {
+  local directory="${1%%/}"
   exa \
-    --long \
     --header \
     --tree \
-    --level 3 \
     --git \
     --group-directories-first \
     --all \
     --ignore-glob ".git" \
     --classify \
     --color always \
-    --no-user \
-    --no-time \
+    --level 2 \
+    "$directory"
+}
+
+function render_directory_full() {
+  local directory="${1%%/}"
+  exa \
+    --header \
+    --tree \
+    --git \
+    --group-directories-first \
+    --all \
+    --ignore-glob ".git" \
+    --classify \
+    --color always \
+    --long \
     "$directory"
 }
 

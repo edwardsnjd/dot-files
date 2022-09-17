@@ -10,7 +10,7 @@ set -o pipefail
 #set -o xtrace
 
 function Main {
-  local preview="render {}"
+  local preview="render {} --simple"
   local output="for f in {+}; do render \"\$f\"; echo; done"
   local display="paginate {+}"
   local edit="vim {+}"
