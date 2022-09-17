@@ -25,6 +25,7 @@ function Main {
   fd \
     --type file \
     --hidden \
+    --exclude '\.git' \
     --color=always \
     --strip-cwd-prefix \
     | sort \
