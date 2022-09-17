@@ -68,7 +68,7 @@ function bin2ascii() {
 function keys() {
   # Performance: Capture data once to temp file (for multiple use)
   local temp="$(mktemp)"
-  { keys_tmux; keys_readline; } > $temp
+  { keys_tmux; keys_readline; keys_fzf; } > $temp
 
   local cols=$(tput cols)
 
@@ -111,6 +111,35 @@ function keys_tmux() {
         { print }
       '
   printf "tmux\troot\t${prefix}\t# Main tmux prefix mode\n"
+}
+
+# List default key bindings for fzf
+# Rows: app	mode	key(s)	command(s)
+function keys_fzf() {
+  echo "/AVAILABLE ACTION/+4,/ACTION COMPOSITION/-3 p" \
+    | ex <( MANWIDTH=200 man -P cat fzf | col -b ) \
+    | sed -E '
+      # Strip leading spaces
+      s/^ +//
+      # Separate first field
+      s/^([^ ]+) +/\1	/
+      # Handle second field notes
+      s/^([^	]+)	\((.+)\)$/\1	?	\2/
+      # Handle second field keys
+      s/^([^	]+)	([^	]+)$/\1	\2	/
+      # Handle single fields
+      s/^([^	]+)$/\1	?	/
+      # Handle 3 fields
+      s/^([^	]+)	([^	]+) +\((.+)\)\t$/\1	\2	\3/
+    ' \
+    | awk -F $'\t' '{
+      split($2, keys, " +")
+      for (i in keys) {
+        printf("fzf	root	%s	%s\n", keys[i], $1)
+      }
+    }' \
+    | sed -E 's/ \(\)$//' \
+    | sed -E 's/ctrl-/C-/g; s/alt-/M-/g'
 }
 
 # List all key bindings for bash readline
