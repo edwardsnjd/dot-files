@@ -1,28 +1,46 @@
 #!/usr/bin/env bash
 
-# lines-of-code-children
-# Usage: lines-of-code-children
-# Print pretty table showing code makeup of child directories
+# NAME
+#   lines-of-code-children - pretty table of lines of code in
+#   child directories
+# USAGE
+#   lines-of-code-children [path]
+# OUTPUT
+#   Path               Lines Graph
+#   ./                 11189 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
+#   ./configuration/    4816 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
+#   ./tools/            6353 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
 
-fd . --type d --max-depth 1 -0 --strip-cwd-prefix \
- | xargs -0 lines-of-code \
- | grep -v Total \
- | datamash --sort --header-in --filler 0 crosstab Path,Type sum Lines \
- | {
-   # Consume top line (header) for use in key later
-   read
-   # Process data lines
-   awk "{
-     printf(\"%25.25s \", \$1)
-     cmd=\"cut -f2- | xargs pie-bar --width $(( $(tput cols) - 26 ))\"
-     print | cmd
-     close(cmd)
-   }"
-   # Now print key
-   echo "Key:"
-   echo "$REPLY" \
-     | tr $'\t ' $'\n_' \
-     | xargs pie-bar --key \
-     | paste - - - - - - - \
-     | column -s $'\t' -t
- }
+
+function Main() {
+  local dir="${1:-./}"
+
+  local heading="$(tput smul)"
+  local reset="$(tput sgr0)"
+
+  fd . \
+    --type d \
+    --max-depth 1 \
+    --print0 "$dir" \
+    --hidden \
+    --exclude '\.git' \
+    | xargs -0 lines-of-code --total $dir \
+    | awk "
+      NR==1 {
+        printf(\"%-27.27s %7s Graph\n\", \$1, \$3)
+      }
+      NR==2 {
+        total=\$3
+        width=$(( $(tput cols) - 27 - 1 - 7 - 1 ))
+        cmd=\"xargs pie-bar --no-color --total \" total \" --width \" width
+      }
+      NR>=2 {
+        printf(\"%-27.27s %7d \", \$1, \$3)
+        print \$3 | cmd
+        close(cmd)
+      }
+    " \
+    | sed -E "1s/[^ ]+/${heading}&${reset}/g"
+}
+
+Main "$@"
