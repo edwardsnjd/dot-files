@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
 # NAME
-#    lines-of-code - simple analysis of code
+#    lines-of-code - simple report of lines of code
 #
 # SYNOPSIS
-#    lines-of-code [--files] [--help] [path path...]
+#    lines-of-code [options] [path path...]
 #
 # OPTIONS
-#    --files
-#      Output information about all discovered files
-#    --help, -h
-#      Print this usage info.
+#    --files      = Output information about all discovered files
+#    --pretty     = Pretty print the table
+#    --graph      = Output a pie bar of the numbers
+#    --strip-path = Do not print the "path" column
+#    --type t     = Only print the row for type "t"
+#    --total      = Short hand for "--type Total"
+#    --lines      = Only output number of total lines
+#    --help, -h   = Print this usage info.
 #
 # OUTPUT
 #    TSV with one line per path per lang:
@@ -34,23 +38,32 @@ function Main() {
   local pretty=0
   local graph=0
   local print_path=1
+  local lines_only=0
+  local type=
+
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --help | -h) Usage "$@"; exit 0 ;;
-      --pretty)     shift && pretty=1 ;;
-      --graph)      shift && graph=1 ;;
-      --strip-path) shift && print_path=0 ;;
-      --files)      shift && files=1 ;;
+      --files)      files=1 ;;
+      --pretty)     pretty=1 ;;
+      --graph)      graph=1 ;;
+      --strip-path) print_path=0 ;;
+      --type)       shift && type="$1" ;;
+      --total)      type="Total" ;;
+      --lines)      lines_only=1 ;;
+      --help | -h)  Usage "$@"; exit 0 ;;
       *)            break ;;
     esac
+    shift
   done
 
   case "$files" in
     0) SummaryTable "${@:-$PWD}" ;;
     1) FilesTable "${@:-$PWD}" ;;
   esac \
+    | if [[ -n "${type}" ]]; then FilterType "$type"; else cat; fi  \
     | if [[ $print_path -eq 1 ]]; then cat; else StripPath; fi  \
-    | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi
+    | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi \
+    | if [[ $lines_only -eq 1 ]]; then LinesOnly; else cat; fi
 
   # Note: Recalculating for graph since it seems fast enough
   if [[ $graph -eq 1 ]]; then
@@ -58,6 +71,7 @@ function Main() {
       0) SummaryTable "${@:-$PWD}" ;;
       1) FilesTable "${@:-$PWD}" ;;
     esac \
+      | if [[ -n "${type}" ]]; then FilterType "$type"; else cat; fi  \
       | Graph
   fi
 }
@@ -86,7 +100,7 @@ function SummaryTable() {
     tokei --output="json" --compact --hidden --exclude .git "$path" \
       | jq -f <(GetSection "JqSummaryScript") \
       | jq --raw-output --arg path "$path" \
-        '[$path, .language, .lines, .code, .comments, .blanks] | @tsv'
+        '[$path, .type, .lines, .code, .comments, .blanks] | @tsv'
   done
 }
 
@@ -96,7 +110,7 @@ function FilesTable() {
     tokei --output="json" --compact --hidden --exclude .git "$path" --files \
       | jq -f <(GetSection "JqFilesScript") \
       | jq --raw-output \
-        '[.path, .language, .lines, .code, .comments, .blanks] | @tsv'
+        '[.path, .type, .lines, .code, .comments, .blanks] | @tsv'
   done
 }
 
@@ -109,6 +123,15 @@ function PrettyPrint() {
   local reset="$(tput sgr0)"
   column -s $'\t' -t \
     | sed -E "1s/[^ 	]+/${heading}&${reset}/g"
+}
+
+function FilterType() {
+  local type="$1"
+  awk -v type="$type" 'NR == 1; $2 == type;'
+}
+
+function LinesOnly() {
+  awk 'NR > 1 {print $3}'
 }
 
 function StripPath() {
@@ -156,7 +179,7 @@ exit 0
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqSummaryScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # to_entries[] | {
-#   language: .key,
+#   type: .key,
 #   lines: .value | (.code + .comments + .blanks),
 #   code: .value.code,
 #   comments: .value.comments,
@@ -165,8 +188,8 @@ exit 0
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqSummaryScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# to_entries[] | .key as $lang | .value.reports[] | {
-#   language: $lang,
+# to_entries[] | .key as $type | .value.reports[] | {
+#   type: $type,
 #   path: .name,
 #   lines: .stats | (.code + .comments + .blanks),
 #   code: .stats.code,
