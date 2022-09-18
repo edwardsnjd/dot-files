@@ -1,18 +1,30 @@
 #!/usr/bin/env bash
 
-# Pie bar
-# Usage: pie-bar value1 value2 ...
-# Dependencies: tput, seq, awk
+# Name
+#   pie-bar - print a relative width bar for each value ala
+#   a pie chart but linear
+# Usage
+#   pie-bar [--width w] [--total t] value1 value2 ...
+#   pie-bar --key label1 label2 ...
+# Options:
+#   --key = treat values as labels and print a key
+#   --width w = print a bar exactly w wide
+#   --total t = override total of values (allows for blanks)
+# Dependencies:
+#   tput, seq, awk
 
 function Main() {
   local use_color=1
   local cols="${COLS:-$(tput cols)}"
   local print_key=0
+  local total=0
+
   while [[ $# -gt 0 ]]; do
     case $1 in
       --no-color) use_color=0 ;;
       --key) print_key=1 ;;
       --width) shift && cols="$1" ;;
+      --total) shift && total="$1" ;;
       *) break ;;
     esac
     shift
@@ -21,7 +33,10 @@ function Main() {
   if [[ $print_key -eq 1 ]]; then
     Key "$use_color" "$@"
   else
-    Bar "$use_color" "$cols" "$@"
+    if [[ $total -le 0 ]]; then
+      total="$(Total "$@")"
+    fi
+    Bar "$use_color" "$cols" "$total" "$@"
   fi
 }
 
@@ -46,10 +61,11 @@ function Key() {
 function Bar() {
   local use_color="$1"
   local cols="$2"
-  shift
-  shift
+  local total="$3"
 
-  local total="$(Total "$@")"
+  shift
+  shift
+  shift
 
   if [[ $total -le 0 ]]; then
     seq 1 $cols | while read; do printf "␣"; done
