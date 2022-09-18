@@ -18,25 +18,31 @@ function Main() {
   local heading="$(tput smul)"
   local reset="$(tput sgr0)"
 
-  fd . \
-    --type d \
-    --max-depth 1 \
-    --print0 "$dir" \
-    --hidden \
-    --exclude '\.git' \
-    | xargs -0 lines-of-code --total $dir \
+  {
+    printf "$dir\\0"
+    fd . \
+      --type d \
+      --max-depth 1 \
+      --print0 \
+      --hidden \
+      --exclude '\.git' \
+      "$dir"
+  } \
+    | xargs -0 lines-of-code --total \
+    | cut -f1,3 \
+    | column -t \
     | awk "
-      NR==1 {
-        printf(\"%-27.27s %7s Graph\n\", \$1, \$3)
-      }
+      NR==1
       NR==2 {
-        total=\$3
-        width=$(( $(tput cols) - 27 - 1 - 7 - 1 ))
+        total=\$2
+        lhs=length(\$0)
+        totalwidth=$(tput cols)
+        width=totalwidth - lhs - 2
         cmd=\"xargs pie-bar --no-color --total \" total \" --width \" width
       }
       NR>=2 {
-        printf(\"%-27.27s %7d \", \$1, \$3)
-        print \$3 | cmd
+        printf(\"%-\" lhs \"s  \", \$0)
+        print \$2 | cmd
         close(cmd)
       }
     " \
