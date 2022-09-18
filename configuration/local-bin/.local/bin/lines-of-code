@@ -127,11 +127,11 @@ function PrettyPrint() {
 
 function FilterType() {
   local type="$1"
-  awk -v type="$type" 'NR == 1; $2 == type;'
+  awk -v type="$type" -v OFS=$'\t' 'NR == 1; $2 == type;'
 }
 
 function LinesOnly() {
-  awk 'NR > 1 {print $3}'
+  awk -v OFS=$'\t' 'NR > 1 {print $3}'
 }
 
 function StripPath() {
