@@ -97,20 +97,32 @@ function GetSection() {
 function SummaryTable() {
   PrintHeader
   for path in "$@"; do
-    tokei --output="json" --compact --hidden --exclude .git "$path" \
-      | jq -f <(GetSection "JqSummaryScript") \
-      | jq --raw-output --arg path "$path" \
-        '[$path, .type, .lines, .code, .comments, .blanks] | @tsv'
+    # BUG: tokei has a bug meaning .gitignore is not respected
+    # when child directories are supplied, so use subshell:
+    # https://github.com/XAMPPRocky/tokei/issues/811
+    (
+      cd "$path"
+      tokei --output="json" --compact --hidden --exclude .git \
+        | jq -f <(GetSection "JqSummaryScript") \
+        | jq --raw-output --arg path "$path" \
+          '[$path, .type, .lines, .code, .comments, .blanks] | @tsv'
+    )
   done
 }
 
 function FilesTable() {
   PrintHeader
   for path in "$@"; do
-    tokei --output="json" --compact --hidden --exclude .git "$path" --files \
-      | jq -f <(GetSection "JqFilesScript") \
-      | jq --raw-output \
-        '[.path, .type, .lines, .code, .comments, .blanks] | @tsv'
+    # BUG: tokei has a bug meaning .gitignore is not respected
+    # when child directories are supplied, so use subshell:
+    # https://github.com/XAMPPRocky/tokei/issues/811
+    (
+      cd "$path"
+      tokei --output="json" --compact --hidden --exclude .git --files \
+        | jq -f <(getsection "jqfilesscript") \
+        | jq --raw-output \
+          '[.path, .type, .lines, .code, .comments, .blanks] | @tsv'
+    )
   done
 }
 
