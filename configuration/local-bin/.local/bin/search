@@ -55,6 +55,9 @@ Main() {
     shift
   done
 
+  # Default to search for start of line (not every character)
+  query=${query:-^}
+
   if [[ $browse -eq 1 ]]; then
     Browse "$query"
   else
@@ -87,6 +90,7 @@ function Select() {
   fzf \
     --ansi \
     --multi \
+    --reverse \
     --delimiter=":" \
     --with-nth="1,4.." \
     --bind "ctrl-/:toggle-preview,alt-a:select-all,alt-d:deselect-all" \
@@ -102,6 +106,7 @@ function SelectTag() {
   sed -E "s/\tline:([0-9]+)/&\t\1/" tags \
   | fzf \
     --delimiter "\t" \
+    --reverse \
     --bind "ctrl-/:toggle-preview" \
     --preview 'highlight-text {2} {6}' \
     --preview-window "~3,+{6}+3-/2" \
