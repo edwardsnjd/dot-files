@@ -11,6 +11,10 @@
 #   ./configuration/    4816 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
 #   ./tools/            6353 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
 
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
 
 function Main() {
   local dir="${1:-./}"
