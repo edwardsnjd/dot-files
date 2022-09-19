@@ -31,7 +31,7 @@ function readline-complete() {
 
   # Find the completion
   local currentWord="${start##* }"
-  local prefix="${start:0:-${#currentWord}}"
+  local prefix="${start:0:$(( ${#start} - ${#currentWord} ))}"
   local result="$($cmd "$currentWord")"
 
   # Nothing to do if nothing selected
