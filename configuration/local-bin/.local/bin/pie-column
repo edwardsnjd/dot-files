@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+# Name
+#   pie-column - add a column containing horiz stacked bar chart
+# Usage
+#   lines-of-code | pie-column column column...
+# Options:
+#   column = index of column(s) to plot
+# Dependencies:
+#   tput, seq, awk, pie-bar
+
+#  while [[ $# -gt 0 ]]; do
+#    case $1 in
+#      *) break ;;
+#    esac
+#    shift
+#  done
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local columns="$@"
+
+  awk \
+    -v columns="$columns" \
+    -v totalWidth="${COLS:-$(tput cols)}" \
+    '
+    function max(a,b) { if (a > b) return a; else return b; }
+
+    BEGIN {
+      split(columns, columnIndices, ",| ")
+      headerRows = 1
+    }
+
+    # Widths (capture)
+    {
+      width = length($0)
+      maxWidth = max(maxWidth, width)
+    }
+
+    # Header row(s) (print)
+    NR <= headerRows
+
+    # Data rows (capture)
+    NR > headerRows {
+      raw[NR] = $0
+
+      rowTotal = 0
+      for (i in columnIndices) {
+        value = $columnIndices[i]
+        rowTotal += max(0, value)
+        colValues[NR] = colValues[NR] " " value
+      }
+
+      total += rowTotal
+      maxValue = max(maxValue, rowTotal)
+    }
+
+    # End (print)
+    END {
+      width = totalWidth - maxWidth - 2
+      cmd = "xargs pie-bar --no-color --total " maxValue " --width " width
+
+      for (i in raw) {
+        printf "%-" maxWidth "s  ", raw[i]
+        print colValues[i] | cmd
+        close(cmd)
+      }
+    }
+  '
+}
+
+Main "$@"
