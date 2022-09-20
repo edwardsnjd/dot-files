@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# NAME
+#   merge-columns - merge a source column as a prefix of a target
+# USAGE
+#   merge-columns [prefixColumn [targetColumn [joinBy]]]
+# ARGUMENTS
+#   prefixColumn = index of column(s) to use as prefix
+#   targetColumn = index of column(s) to use as target
+#   joinBy = value to separate prefix and target
+# EXAMPLE
+#   $ seq 6 | paste - - - | merge-columns 3 1 ":"
+#   3:1	2
+#   6:4	5
+# DEPENDENCIES
+#   tr, awk
+
+function Main() {
+  local prefixColumn="${1:-1}"
+  local targetColumn="${2:-$(( $prefixColumn + 1 ))}"
+  local joinWith="${3:-" "}"
+
+  tr " " _ \
+    | awk \
+      -v prefixColumn="$prefixColumn" \
+      -v targetColumn="$targetColumn" \
+      -v joinWith="$joinWith" \
+      '
+      BEGIN { FS = OFS = "\t" }
+      {
+        if (length($prefixColumn)) {
+          $targetColumn = $prefixColumn joinWith $targetColumn
+        }
+        for (i = 1; i <= NF; i++) {
+          if (i != prefixColumn) {
+            printf $i
+            if (i < NF && i+1 != prefixColumn) printf "\t"
+          }
+        }
+        printf "\n"
+      }
+    ' \
+    | tr _ " "
+}
+
+Main "$@"
