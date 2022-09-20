@@ -7,7 +7,7 @@
 # Options:
 #   column = index of column(s) to plot
 # Dependencies:
-#   tput, seq, awk, pie-bar
+#   tput, tr, column, awk, pie-bar
 # Output:
 #   Path               Lines
 #   ./                 11189 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
@@ -22,53 +22,56 @@ set -o pipefail
 function Main() {
   local columns="$@"
 
-  awk \
-    -v columns="$columns" \
-    -v totalWidth="${COLS:-$(tput cols)}" \
-    '
-    function max(a,b) { if (a > b) return a; else return b; }
+  tr ' ' '_' \
+    | column -t \
+    | awk \
+      -v columns="$columns" \
+      -v totalWidth="${COLS:-$(tput cols)}" \
+      '
+      function max(a,b) { if (a > b) return a; else return b; }
 
-    BEGIN {
-      split(columns, columnIndices, ",| ")
-      headerRows = 1
-    }
-
-    # Widths (capture)
-    {
-      width = length($0)
-      maxWidth = max(maxWidth, width)
-    }
-
-    # Header row(s) (print)
-    NR <= headerRows
-
-    # Data rows (capture)
-    NR > headerRows {
-      raw[NR] = $0
-
-      rowTotal = 0
-      for (i in columnIndices) {
-        value = $columnIndices[i]
-        rowTotal += max(0, value)
-        colValues[NR] = colValues[NR] " " value
+      BEGIN {
+        split(columns, columnIndices, ",| ")
+        headerRows = 1
       }
 
-      total += rowTotal
-      maxValue = max(maxValue, rowTotal)
-    }
-
-    # End (print)
-    END {
-      width = totalWidth - maxWidth - 2
-      cmd = "xargs pie-bar --no-color --total " maxValue " --width " width
-
-      for (i in raw) {
-        printf "%-" maxWidth "s  ", raw[i]
-        print colValues[i] | cmd
-        close(cmd)
+      # Widths (capture)
+      {
+        width = length($0)
+        maxWidth = max(maxWidth, width)
       }
-    }
-  '
+
+      # Header row(s) (print)
+      NR <= headerRows
+
+      # Data rows (capture)
+      NR > headerRows {
+        raw[NR] = $0
+
+        rowTotal = 0
+        for (i in columnIndices) {
+          value = $columnIndices[i]
+          rowTotal += max(0, value)
+          colValues[NR] = colValues[NR] " " value
+        }
+
+        total += rowTotal
+        maxValue = max(maxValue, rowTotal)
+      }
+
+      # End (print)
+      END {
+        width = totalWidth - maxWidth - 2
+        cmd = "xargs pie-bar --no-color --total " maxValue " --width " width
+
+        for (i in raw) {
+          printf "%-" maxWidth "s  ", raw[i]
+          print colValues[i] | cmd
+          close(cmd)
+        }
+      }
+    ' \
+    | tr '_' ' '
 }
 
 Main "$@"

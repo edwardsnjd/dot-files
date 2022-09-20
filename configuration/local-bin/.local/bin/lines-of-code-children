@@ -16,12 +16,8 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local heading="$(tput smul)"
-  local reset="$(tput sgr0)"
-
   {
     for d in "${@:-./}"; do
-      printf "$d\\0"
       fd . \
         --type d \
         --max-depth 1 \
@@ -33,11 +29,8 @@ function Main() {
   } \
     | xargs -0 lines-of-code --merge-types \
     | cut -f1,3- \
-    | tr ' ' '_' \
-    | column -t \
     | pie-column 3 4 5 \
-    | tr '_' ' ' \
-    | sed -E "1s/[^ ]+/${heading}&${reset}/g"
+    | underline-headers 1
 }
 
 Main "$@"

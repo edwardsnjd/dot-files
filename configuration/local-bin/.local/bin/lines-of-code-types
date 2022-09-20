@@ -8,6 +8,7 @@
 #    Type   Lines  Code  Comments  Blanks
 #    BASH   104    62    20        22      ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▤▤▤▤▤▤▤▣▣▣▣▣▣▣▣▣
 #    Shell  82     36    26        20      ▩▩▩▩▩▩▩▩▩▩▩▩▩▤▤▤▤▤▤▤▤▤▣▣▣▣▣▣▣
+#    TSX    82     36    26        20      ▩▩▩▩▩▩▩▩▩▩▩▩▩▤▤▤▤▤▤▤▤▤▣▣▣▣▣▣▣
 
 set -o nounset
 set -o errexit
@@ -15,22 +16,10 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local heading="$(tput smul)"
-  local reset="$(tput sgr0)"
-
-  {
-    for d in "${@:-./}"; do
-      printf "$d\\0"
-    done
-  } \
-    | xargs -0 lines-of-code --merge-paths \
+  lines-of-code --merge-paths "${@:-./}" \
     | cut -f2- \
-    | grep -v Total \
-    | tr ' ' '_' \
-    | column -t \
     | pie-column 3 4 5 \
-    | tr '_' ' ' \
-    | sed -E "1s/[^ ]+/${heading}&${reset}/g"
+    | underline-headers 1
 }
 
 Main "$@"

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# NAME
+#   underline-headers - underline words in header lines
+# USAGE
+#   underline-headers [number of lines]
+
+function Main() {
+  local headerLines="${1:-1}"
+
+  local start=1
+  local end=$(( $start + $headerLines - 1 ))
+  local heading="$(tput smul)"
+  local reset="$(tput sgr0)"
+
+  sed -E "${start},${end} s/[^ ]+/${heading}&${reset}/g"
+}
+
+Main "$@"
