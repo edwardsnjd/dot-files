@@ -1,28 +1,32 @@
 #!/usr/bin/env bash
 
-# Name
+# NAME
 #   pie-bar - print a relative width bar for each value ala
 #   a pie chart but linear
-# Usage
+#
+# USAGE
 #   pie-bar [--width w] [--total t] value1 value2 ...
-#   pie-bar --key label1 label2 ...
-# Options:
-#   --key = treat values as labels and print a key
+#   pie-bar --markers value1 value2 ...
+#
+# OPTIONS
+#   --markers = print the markers for given values (for scripting)
+#   --no-color = do not use color
 #   --width w = print a bar exactly w wide
 #   --total t = override total of values (allows for blanks)
-# Dependencies:
+#
+# DEPENDENCIES
 #   tput, seq, awk
 
 function Main() {
   local use_color=1
   local cols="${COLS:-$(tput cols)}"
-  local print_key=0
+  local markers=0
   local total=0
 
   while [[ $# -gt 0 ]]; do
     case $1 in
       --no-color) use_color=0 ;;
-      --key) print_key=1 ;;
+      --markers) markers=1 ;;
       --width) shift && cols="$1" ;;
       --total) shift && total="$1" ;;
       *) break ;;
@@ -30,8 +34,8 @@ function Main() {
     shift
   done
 
-  if [[ $print_key -eq 1 ]]; then
-    Key "$use_color" "$@"
+  if [[ $markers -eq 1 ]]; then
+    Markers "$use_color" "$@"
   else
     if [[ $total -le 0 ]]; then
       total="$(Total "$@")"
@@ -40,19 +44,18 @@ function Main() {
   fi
 }
 
-function Key() {
+function Markers() {
   local use_color="$1"
   shift
 
   local ind=0
 
   while [[ $# -gt 0 ]]; do
-    local label=$1
     shift
 
     local char=$(PickCharacter $use_color $ind)
 
-    echo "$char = $label"
+    echo "$char"
 
     ind=$(( $ind + 1 ))
   done
@@ -68,7 +71,7 @@ function Bar() {
   shift
 
   if [[ $total -le 0 ]]; then
-    seq 1 $cols | while read; do printf "␣"; done
+    seq 1 $cols | while read; do printf " "; done
     printf "\n"
     return
   fi

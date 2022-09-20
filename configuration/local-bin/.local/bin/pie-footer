@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# NAME
+#   pie-footer - add a pie-bar footer with inline key to a table
+#
+# USAGE
+#   lines-of-code | pie-footer labelColumn valueColumn
+#
+# ARGUMENTS
+#   labelColumn = index of column(s) to use as label (marker inserted here)
+#   valueColumn = index of column(s) to use as value for pie-bar
+#   headerRows = number of header rows (default 0)
+#
+# DEPENDENCIES
+#   tput, tr, column, awk, seq, cat, pie-bar, merge-columns
+#
+# EXAMPLE
+#   $ lines-of-code configuration/snippets | grep -v Total | pie-footer 2 3 1
+#   Type	Path Lines	Code	Comments	Blanks
+#   configuration/snippets	▩ BASH	24	12	7	5
+#   configuration/snippets	▤ HTML	14	12	0	2
+#   configuration/snippets	▣ JavaScript	3	3	0	0
+#   configuration/snippets	▥ Makefile	27	15	4	8
+#   configuration/snippets	▦ Python	70	43	7	20
+#   configuration/snippets	▧ Shell	193	82	76	35
+#   ▩▩▩▩▩▤▤▤▤▥▥▥▥▥▥▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local labelColumn="$1"
+  local valueColumn="$2"
+  local headerRows="${3:-0}"
+
+  # Capture to a temp file to allow processing it multiple times
+  local tmp="$(mktemp)"
+  cat > "$tmp"
+
+  # Insert marker as prefix of label column
+  paste \
+    <(Markers "$headerRows" < "$tmp") \
+    <(cat < "$tmp") \
+    | merge-columns 1 "$(( $labelColumn + 1 ))" \
+    | tr ' ' '_' \
+    | column -t \
+    | tr '_' ' '
+
+  Bar "$headerRows" < "$tmp"
+
+  rm "$tmp"
+}
+
+function Bar() {
+  local headerRows="$1"
+  tail +$(( $headerRows + 1 )) \
+    | cut -f ${valueColumn} \
+    | xargs pie-bar
+}
+
+function Markers() {
+  local headerRows="$1"
+  # Empty markers for header rows
+  [[ $headerRows -gt 0 ]] \
+    && seq "$headerRows" | while read; do echo; done
+  # Markers for data rows
+  tail +$(( $headerRows + 1 )) \
+    | cut -f ${valueColumn} \
+    | xargs pie-bar --markers
+}
+
+Main "$@"
