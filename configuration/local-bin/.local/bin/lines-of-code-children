@@ -31,7 +31,7 @@ function Main() {
       --exclude '\.git' \
       "$dir"
   } \
-    | xargs -0 lines-of-code --total \
+    | xargs -0 lines-of-code --merge-types \
     | cut -f1,3- \
     | tr ' ' '_' \
     | column -t \

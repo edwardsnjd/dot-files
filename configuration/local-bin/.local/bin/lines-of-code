@@ -7,15 +7,13 @@
 #    lines-of-code [options] [path path...]
 #
 # OPTIONS
-#    --files      = Output information about all discovered files
-#    --pretty     = Pretty print the table
-#    --graph      = Output a pie bar of the numbers
-#    --strip-path = Do not print the "path" column
-#    --type t     = Only print the row for type "t"
-#    --total      = Short hand for "--type Total"
-#    --lines      = Only output number of total lines
-#    --merge-path = Merge data for each type for all paths
-#    --help, -h   = Print this usage info.
+#    --files       = Output information about all discovered files
+#    --pretty      = Pretty print the table
+#    --graph       = Output a pie bar of the numbers
+#    --type t      = Only print the row for type "t"
+#    --merge-types = Short hand for "--type Total"
+#    --merge-paths = Merge data for each type for all paths
+#    --help, -h    = Print this usage info.
 #
 # OUTPUT
 #    TSV with one line per path per lang:
@@ -38,23 +36,19 @@ function Main() {
   local files=0
   local pretty=0
   local graph=0
-  local print_path=1
-  local lines_only=0
-  local merge_path=0
+  local merge_paths=0
   local type=
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --files)      files=1 ;;
-      --pretty)     pretty=1 ;;
-      --graph)      graph=1 ;;
-      --strip-path) print_path=0 ;;
-      --type)       shift && type="$1" ;;
-      --total)      type="Total" ;;
-      --lines)      lines_only=1 ;;
-      --merge-path) merge_path=1 ;;
-      --help | -h)  Usage "$@"; exit 0 ;;
-      *)            break ;;
+      --files)       files=1 ;;
+      --pretty)      pretty=1 ;;
+      --graph)       graph=1 ;;
+      --type)        shift && type="$1" ;;
+      --merge-types) type="Total" ;;
+      --merge-paths) merge_paths=1 ;;
+      --help | -h)   Usage "$@"; exit 0 ;;
+      *)             break ;;
     esac
     shift
   done
@@ -64,9 +58,7 @@ function Main() {
     1) FilesTable "${@:-$PWD}" ;;
   esac \
     | if [[ -n "${type}" ]]; then FilterType "$type"; else cat; fi  \
-    | if [[ $merge_path -eq 1 ]]; then MergePath; else cat; fi  \
-    | if [[ $lines_only -eq 1 ]]; then LinesOnly; else cat; fi \
-    | if [[ $print_path -eq 1 ]]; then cat; else StripPath; fi  \
+    | if [[ $merge_paths -eq 1 ]]; then MergePaths; else cat; fi  \
     | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi
 
   # Note: Recalculating for graph since it seems fast enough
@@ -146,7 +138,7 @@ function FilterType() {
   awk -v type="$type" -v OFS=$'\t' 'NR == 1; $2 == type;'
 }
 
-function MergePath() {
+function MergePaths() {
   awk -F $'\t' -v OFS=$'\t' '
     NR == 1
     NR > 1 {
@@ -171,14 +163,6 @@ function MergePath() {
     echo "$REPLY"
     sort
   }
-}
-
-function LinesOnly() {
-  awk -v OFS=$'\t' 'NR > 1 {print $3}'
-}
-
-function StripPath() {
-  cut -f2-
 }
 
 function Graph() {

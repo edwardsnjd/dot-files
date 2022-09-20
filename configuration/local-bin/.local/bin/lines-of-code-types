@@ -30,7 +30,8 @@ function Main() {
       --exclude '\.git' \
       "$dir"
   } \
-    | xargs -0 lines-of-code --merge-path --strip-path \
+    | xargs -0 lines-of-code --merge-paths \
+    | cut -f2- \
     | grep -v Total \
     | tr ' ' '_' \
     | column -t \
