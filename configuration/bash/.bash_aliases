@@ -330,7 +330,7 @@ function glg {
   pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
   preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs git show --color | less -c -+F -+X"
   git log --graph --color --pretty="$pretty" --date=short --decorate "$@" \
-    | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind 'ctrl-/:toggle-preview' \
+    | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
     | grep -Eo '[a-f0-9]{7,}' | head -1
 }
 
@@ -348,7 +348,7 @@ function gtt {
 
   sha=$(
     git log --pretty="$pretty" --color -- $1 \
-      | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind 'ctrl-/:toggle-preview' \
+      | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       | grep -Eo '[a-f0-9]{7,}' | head -1
   )
   git show "$sha:$1" \
@@ -362,7 +362,7 @@ function gtd {
 
   sha=$(
     git log --pretty="$pretty" --color -- $1 \
-      | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind 'ctrl-/:toggle-preview' \
+      | fzf --ansi --layout=reverse-list --no-sort --preview="$preview" --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       | grep -Eo '[a-f0-9]{7,}' | head -1
   )
   git show "$sha:$1" \
