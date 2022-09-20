@@ -3,7 +3,7 @@
 # NAME
 #   lines-of-code-children - pretty table of lines of code by child directory
 # USAGE
-#   lines-of-code-children [path]
+#   lines-of-code-children [path] [path...]
 # OUTPUT
 #   Path               Lines Graph
 #   ./                 11189 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
@@ -16,20 +16,20 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local dir="${1:-./}"
-
   local heading="$(tput smul)"
   local reset="$(tput sgr0)"
 
   {
-    printf "$dir\\0"
-    fd . \
-      --type d \
-      --max-depth 1 \
-      --print0 \
-      --hidden \
-      --exclude '\.git' \
-      "$dir"
+    for d in "${@:-./}"; do
+      printf "$d\\0"
+      fd . \
+        --type d \
+        --max-depth 1 \
+        --print0 \
+        --hidden \
+        --exclude '\.git' \
+        "$d"
+    done
   } \
     | xargs -0 lines-of-code --merge-types \
     | cut -f1,3- \

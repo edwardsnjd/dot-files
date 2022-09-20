@@ -3,7 +3,7 @@
 # NAME
 #   lines-of-code-types - pretty table of lines of code by type
 # USAGE
-#   lines-of-code-types [path]
+#   lines-of-code-types [path] [path...]
 # OUTPUT
 #    Type   Lines  Code  Comments  Blanks
 #    BASH   104    62    20        22      ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▤▤▤▤▤▤▤▣▣▣▣▣▣▣▣▣
@@ -15,20 +15,13 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local dir="${1:-./}"
-
   local heading="$(tput smul)"
   local reset="$(tput sgr0)"
 
   {
-    printf "$dir\\0"
-    fd . \
-      --type d \
-      --max-depth 1 \
-      --print0 \
-      --hidden \
-      --exclude '\.git' \
-      "$dir"
+    for d in "${@:-./}"; do
+      printf "$d\\0"
+    done
   } \
     | xargs -0 lines-of-code --merge-paths \
     | cut -f2- \
