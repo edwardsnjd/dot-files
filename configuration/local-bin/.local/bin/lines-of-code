@@ -9,7 +9,6 @@
 # OPTIONS
 #    --files       = Output information about all discovered files
 #    --pretty      = Pretty print the table
-#    --graph       = Output a pie bar of the numbers
 #    --type t      = Only print the row for type "t"
 #    --merge-types = Short hand for "--type Total"
 #    --merge-paths = Merge data for each type for all paths
@@ -35,7 +34,6 @@ set -o pipefail
 function Main() {
   local files=0
   local pretty=0
-  local graph=0
   local merge_paths=0
   local type=
 
@@ -43,7 +41,6 @@ function Main() {
     case "$1" in
       --files)       files=1 ;;
       --pretty)      pretty=1 ;;
-      --graph)       graph=1 ;;
       --type)        shift && type="$1" ;;
       --merge-types) type="Total" ;;
       --merge-paths) merge_paths=1 ;;
@@ -60,16 +57,6 @@ function Main() {
     | if [[ -n "${type}" ]]; then FilterType "$type"; else cat; fi  \
     | if [[ $merge_paths -eq 1 ]]; then MergePaths; else cat; fi  \
     | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi
-
-  # Note: Recalculating for graph since it seems fast enough
-  if [[ $graph -eq 1 ]]; then
-    case "$files" in
-      0) SummaryTable "${@:-$PWD}" ;;
-      1) FilesTable "${@:-$PWD}" ;;
-    esac \
-      | if [[ -n "${type}" ]]; then FilterType "$type"; else cat; fi  \
-      | Graph
-  fi
 }
 
 function Error() {
@@ -115,7 +102,7 @@ function FilesTable() {
     (
       cd "$path"
       tokei --output="json" --compact --hidden --exclude .git --files \
-        | jq -f <(getsection "jqfilesscript") \
+        | jq -f <(GetSection "JqFilesScript") \
         | jq --raw-output \
           '[.path, .type, .lines, .code, .comments, .blanks] | @tsv'
     )
@@ -139,46 +126,12 @@ function FilterType() {
 }
 
 function MergePaths() {
-  awk -F $'\t' -v OFS=$'\t' '
-    NR == 1
-    NR > 1 {
-      type = $2
-      types[type] = 1
-      lines[type] += $3
-      code[type] += $4
-      comments[type] += $5
-      blanks[type] += $6
-    }
-    END {
-      for (type in types) {
-        printf "%s\t%s\t%d\t%d\t%d\t%d\n",
-          "#merged#",
-          type,
-          lines[type], code[type], comments[type], blanks[type]
-      }
-    }
-  ' \
-  | {
-    read
-    echo "$REPLY"
-    sort
-  }
-}
-
-function Graph() {
-  tail +2 \
-    | grep -v Total \
-    | cut -f2,3 \
-    | datamash transpose \
+  awk -f <(GetSection "AwkMergePaths") \
     | {
       read headers
-      xargs pie-bar
-      echo "$headers" \
-        | tr $'\t ' $'\n_' \
-        | xargs pie-bar --key \
-        | paste - - - \
-        | column -s $'\t' -t
-    } || true
+      echo "$headers"
+      sort
+    }
 }
 
 Main "$@"
@@ -212,9 +165,9 @@ exit 0
 #   comments: .value.comments,
 #   blanks: .value.blanks,
 # }
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqSummaryScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqSummaryScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # to_entries[] | .key as $type | .value.reports[] | {
 #   type: $type,
 #   path: .name,
@@ -223,4 +176,25 @@ exit 0
 #   comments: .stats.comments,
 #   blanks: .stats.blanks
 # }
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JqFilesScript:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~ AwkMergePaths:Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# BEGIN { FS = OFS = "\t" }
+# NR == 1
+# NR > 1 {
+#   type = $2
+#   types[type] = 1
+#   lines[type] += $3
+#   code[type] += $4
+#   comments[type] += $5
+#   blanks[type] += $6
+# }
+# END {
+#   for (type in types) {
+#     printf "%s\t%s\t%d\t%d\t%d\t%d\n",
+#       "#merged#",
+#       type,
+#       lines[type], code[type], comments[type], blanks[type]
+#   }
+# }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ AwkMergePaths:End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
