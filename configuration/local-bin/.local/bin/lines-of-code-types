@@ -20,6 +20,7 @@ set -o pipefail
 function Main() {
   lines-of-code --merge-paths "${@:-./}" \
     | cut -f2- \
+    | grep -v Total \
     | pie-column 3 4 5 \
     | underline-headers 1
 }
