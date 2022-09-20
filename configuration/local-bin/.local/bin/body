@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# NAME
+#   body - run a command on the input body
+# SYNOPSIS
+#   foo | body cmd...
+# DESCRIPTION
+#   Print the header (the first line of input) and then run the
+#   specified command on the body (the rest of the input).
+# EXAMPLE
+#   ps | body grep somepattern
+# CREDITS
+#   Mikel Ward
+#   - https://unix.stackexchange.com/a/11859
+#   - https://unix.stackexchange.com/users/3169/mikel
+
+function Main() {
+    IFS= read -r header
+    printf '%s\n' "$header"
+    "$@"
+}
+
+Main "$@"
