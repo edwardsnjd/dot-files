@@ -159,7 +159,10 @@ function MergePath() {
     }
     END {
       for (type in types) {
-        printf "%s\t%s\t%d\t%d\t%d\t%d\n", "#merged#", type, lines[type], code[type], comments[type], blanks[type]
+        printf "%s\t%s\t%d\t%d\t%d\t%d\n",
+          "#merged#",
+          type,
+          lines[type], code[type], comments[type], blanks[type]
       }
     }
   ' \
