@@ -35,22 +35,7 @@ function Main() {
     | xargs -0 lines-of-code --total \
     | cut -f1,3 \
     | column -t \
-    | awk \
-      -v totalwidth="$(tput cols)" \
-      '
-        NR==1
-        NR==2 {
-          total=$2
-          lhs=length($0)
-          width=totalwidth - lhs - 2
-          cmd="xargs pie-bar --no-color --total " total " --width " width
-        }
-        NR>=2 {
-          printf("%-" lhs "s  ", $0)
-          print $2 | cmd
-          close(cmd)
-        }
-      ' \
+    | pie-column 2 \
     | sed -E "1s/[^ ]+/${heading}&${reset}/g"
 }
 
