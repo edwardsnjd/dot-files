@@ -315,11 +315,11 @@ xnoremap <leader>er :silent .write ! tmux-send .right<CR>
 " - Execute lines and append output
 " Uses x register.
 nnoremap <leader>eeb "xyy"xPj!!bash<CR>
-xnoremap <leader>eeb "xy"xPgv:!bash<CR>
+xnoremap <leader>eeb "xy"xo<Esc>p!!bash<CR>gv
 nnoremap <leader>eer "xyy"xPj!!ruby<CR>
-xnoremap <leader>eer "xy"xPgv:!ruby<CR>
+xnoremap <leader>eer "xy"xo<Esc>p!!ruby<CR>gv
 nnoremap <leader>eep "xyy"xPj!!python3<CR>
-xnoremap <leader>eep "xy"xPgv:!python3<CR>
+xnoremap <leader>eep "xy"xo<Esc>p!!python3<CR>gv
 
 " Snippets
 nnoremap <leader>is :call <SID>Snippet()<cr>
