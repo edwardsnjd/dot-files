@@ -8,13 +8,11 @@
 #   column = index of column(s) to plot
 # Dependencies:
 #   tput, seq, awk, pie-bar
-
-#  while [[ $# -gt 0 ]]; do
-#    case $1 in
-#      *) break ;;
-#    esac
-#    shift
-#  done
+# Output:
+#   Path               Lines
+#   ./                 11189 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
+#   ./configuration/    4816 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
+#   ./tools/            6353 ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩
 
 set -o nounset
 set -o errexit
