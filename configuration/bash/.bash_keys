@@ -1,23 +1,5 @@
 #!/usr/bin/env bash
 
-# Interactive FZF browser of all previous words in this tmux pane
-function tmux-word {
-  tmux capture-pane -p -S - -E - \
-    | tr " " "\n" \
-    | tac \
-    | dedup \
-    | fzf --no-sort --query "${1:-}"
-}
-
-# Interactive FZF browser of all previous lines in this tmux pane
-function tmux-line {
-  # NOTE: Start with query to exclude command lines (use Ctrl-R for that)
-  tmux capture-pane -p -S - -E - \
-    | tac \
-    | dedup \
-    | fzf --no-sort --query "!» ${1:-}"
-}
-
 # Complete the word at current location in the readline.
 # Usage: readline-complete <cmd>
 # <cmd> is the name of command to use to pick a completion.

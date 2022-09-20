@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Deduplicate lines on stdin
+
+# Print unique lines in the order they appear
+# See: https://stackoverflow.com/a/60688574
+
+function Main() {
+  awk '!count[$0]++'
+}
+
+Main "$@"

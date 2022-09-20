@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Interactive FZF browser of all previous words in this tmux pane
+
+function Main() {
+  tmux capture-pane -p -S - -E - \
+    | tr " " "\n" \
+    | tac \
+    | dedup \
+    | fzf --no-sort --query "${1:-}"
+}
+
+Main "$@"

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Interactive FZF browser of all previous lines in this tmux pane
+
+function Main() {
+  # NOTE: Start with query to exclude command lines (use Ctrl-R for that)
+  tmux capture-pane -p -S - -E - \
+    | tac \
+    | dedup \
+    | fzf --no-sort --query "!» ${1:-}"
+}
+
+Main "$@"

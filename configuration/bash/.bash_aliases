@@ -279,12 +279,6 @@ alias watch='wtch 5'
 # Github CLI aliases
 alias ghw='watch gh'
 
-# Print unique lines in the order they appear
-# See: https://stackoverflow.com/a/60688574
-function dedup {
-  awk '!count[$0]++'
-}
-
 # FZF file system browsers
 alias f="file-browser"
 alias d="directory-browser"
