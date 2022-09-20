@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # NAME
-#   lines-of-code-children - pretty table of lines of code in
-#   child directories
+#   lines-of-code-children - pretty table of lines of code by child directory
 # USAGE
 #   lines-of-code-children [path]
 # OUTPUT
@@ -33,9 +32,11 @@ function Main() {
       "$dir"
   } \
     | xargs -0 lines-of-code --total \
-    | cut -f1,3 \
+    | cut -f1,3- \
+    | tr ' ' '_' \
     | column -t \
-    | pie-column 2 \
+    | pie-column 3 4 5 \
+    | tr '_' ' ' \
     | sed -E "1s/[^ ]+/${heading}&${reset}/g"
 }
 

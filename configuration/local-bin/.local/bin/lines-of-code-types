@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# NAME
+#   lines-of-code-types - pretty table of lines of code by type
+# USAGE
+#   lines-of-code-types [path]
+# OUTPUT
+#    Type   Lines  Code  Comments  Blanks
+#    BASH   104    62    20        22      ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▤▤▤▤▤▤▤▣▣▣▣▣▣▣▣▣
+#    Shell  82     36    26        20      ▩▩▩▩▩▩▩▩▩▩▩▩▩▤▤▤▤▤▤▤▤▤▣▣▣▣▣▣▣
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local dir="${1:-./}"
+
+  local heading="$(tput smul)"
+  local reset="$(tput sgr0)"
+
+  {
+    printf "$dir\\0"
+    fd . \
+      --type d \
+      --max-depth 1 \
+      --print0 \
+      --hidden \
+      --exclude '\.git' \
+      "$dir"
+  } \
+    | xargs -0 lines-of-code --merge-path --strip-path \
+    | grep -v Total \
+    | tr ' ' '_' \
+    | column -t \
+    | pie-column 3 4 5 \
+    | tr '_' ' ' \
+    | sed -E "1s/[^ ]+/${heading}&${reset}/g"
+}
+
+Main "$@"
