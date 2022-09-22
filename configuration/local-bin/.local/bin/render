@@ -57,15 +57,17 @@ function render_directory_simple() {
 
 function render_directory_full() {
   local directory="${1%%/}"
+  # HACK: Limit max depth to 5 to make listing ~ possible
   exa \
     --header \
     --tree \
     --git \
     --group-directories-first \
     --all \
-    --ignore-glob ".git" \
+    --ignore-glob ".android|.cargo|.git|node_modules" \
     --classify \
     --color always \
+    --level 5 \
     --long \
     "$directory"
 }
