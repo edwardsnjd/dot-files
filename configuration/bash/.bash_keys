@@ -24,6 +24,11 @@ function readline-complete() {
   READLINE_POINT=$(( ${#prefix} + ${#result} ))
 }
 
+# CTRL-x CTRL-g - Complete/replace the current word with interesting git files
+bind -m emacs-standard -x '"\C-x\C-g": readline-complete git-interesting-files'
+bind -m vi-command -x     '"\C-x\C-g": readline-complete git-interesting-files'
+bind -m vi-insert -x      '"\C-x\C-g": readline-complete git-interesting-files'
+
 # CTRL-x CTRL-k - Complete/replace the current word with dictionary words
 bind -m emacs-standard -x '"\C-x\C-k": readline-complete words'
 bind -m vi-command -x     '"\C-x\C-k": readline-complete words'
