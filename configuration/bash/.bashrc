@@ -3,19 +3,19 @@
 # --- Bash aliases ---
 
 # Alias definitions
-[ -f ~/.bash_aliases ] && source ~/.bash_aliases
+[ -f $XDG_CONFIG_HOME/bash/bash_aliases ] && source $XDG_CONFIG_HOME/bash/bash_aliases
 
 # Bash keybindings
-[ -f ~/.bash_keys ] && source ~/.bash_keys
+[ -f $XDG_CONFIG_HOME/bash/bash_keys ] && source $XDG_CONFIG_HOME/bash/bash_keys
 
 # Readline configuration
-[ -f ~/.bash_readline ] && source ~/.bash_readline
+[ -f $XDG_CONFIG_HOME/bash/bash_readline ] && source $XDG_CONFIG_HOME/bash/bash_readline
 
 # Prompt (env)
-[ -f ~/.bash_prompt ] && source ~/.bash_prompt
+[ -f $XDG_CONFIG_HOME/bash/bash_prompt ] && source $XDG_CONFIG_HOME/bash/bash_prompt
 
 # fzf autocompletion
-[ -f ~/.bash_gpg ] && source ~/.bash_gpg
+[ -f $XDG_CONFIG_HOME/bash/bash_gpg ] && source $XDG_CONFIG_HOME/bash/bash_gpg
 
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -37,7 +37,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -f "$HOME/.rvm/scripts/rvm" ] && source "$HOME/.rvm/scripts/rvm"
 
 # Allow broot convenient launch and extra features
-[ -f ~/.config/broot/launcher/bash/br ] && source ~/.config/broot/launcher/bash/br
+[ -f $XDG_CONFIG_HOME/broot/launcher/bash/br ] && source $XDG_CONFIG_HOME/broot/launcher/bash/br
 
 # Allow OS overrides
 [ -f ~/.bashrc.os ] && source ~/.bashrc.os
