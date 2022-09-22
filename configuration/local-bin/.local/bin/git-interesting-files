@@ -7,25 +7,15 @@ function Main() {
   local DELETED="$(tput setaf 1)"
   local RESET="$(tput sgr0)"
 
-  git ls-files \
-    --other \
-    --deleted \
-    --modified \
-    --exclude-standard \
-    --dedup \
-    | sort \
-    | while read file; do
-          if [[ -e "$file" ]]; then
-            echo "$file"
-          else
-            echo -e "${DELETED}${file}${RESET}"
-          fi
-        done \
+  git -c color.status=always \
+    status \
+    --short \
     | fzf \
       --header ":: Files interesting to git" \
       --reverse \
       --multi \
       --height "40%" \
+    | cut -c4- \
     | xargs echo
 }
 
