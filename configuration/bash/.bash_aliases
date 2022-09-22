@@ -283,6 +283,9 @@ alias ghw='watch gh'
 alias f="file-browser"
 alias d="directory-browser"
 
+# Clear and print ruler
+alias cl="clear && ruler"
+
 # FZF browse of time zone and print current time
 function tz {
   local preview="TZ={} date +'%z%t%+'"

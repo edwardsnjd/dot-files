@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Usage: cl
+# Usage: ruler
 #
-# Clear the screen and print a simple colum ruler.
+# Print a simple column ruler.
 #
 # Dependencies:
 # - bash: with [[ ... ]] and $(( ... ))
@@ -11,9 +11,8 @@
 
 function Main()
 {
-  local cols=$(tput cols)
+  local cols="${COLS:-$(tput cols)}"
 
-  clear
   Ruler $cols
 }
 
