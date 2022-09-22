@@ -21,6 +21,3 @@ alias la='gls --color=auto -AF  --group-directories-first'
 
 # Bash completion
 [ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
-
-# Graphviz (alias but should be a script)
-[ -f ~/.bash_graphviz ] && source ~/.bash_graphviz

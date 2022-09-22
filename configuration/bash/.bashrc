@@ -40,7 +40,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -f $XDG_CONFIG_HOME/broot/launcher/bash/br ] && source $XDG_CONFIG_HOME/broot/launcher/bash/br
 
 # Allow OS overrides
-[ -f ~/.bashrc.os ] && source ~/.bashrc.os
+[ -f $XDG_CONFIG_HOME/bash/bashrc_os ] && source $XDG_CONFIG_HOME/bash/bashrc_os
 
 # Cargo (added by rustup)
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
