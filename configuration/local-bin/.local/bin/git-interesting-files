@@ -15,6 +15,7 @@ function Main() {
       --reverse \
       --multi \
       --height "40%" \
+      --query "${1:-}" \
     | cut -c4- \
     | xargs echo
 }
