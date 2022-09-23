@@ -107,8 +107,5 @@ alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
 
 # --- Source other files ---
 
-# Include any local machine things
-[ -f ~/.bash_local ] && source ~/.bash_local
-
 # Include rest of things used for all interactive shell
 [ -f ~/.bashrc ] && source ~/.bashrc

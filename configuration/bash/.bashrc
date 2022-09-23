@@ -42,5 +42,8 @@ export NVM_DIR="$HOME/.nvm"
 # Allow OS overrides
 [ -f $XDG_CONFIG_HOME/bash/bashrc_os ] && source $XDG_CONFIG_HOME/bash/bashrc_os
 
+# Include any local machine things
+[ -f ~/.bash_local ] && source ~/.bash_local
+
 # Cargo (added by rustup)
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
