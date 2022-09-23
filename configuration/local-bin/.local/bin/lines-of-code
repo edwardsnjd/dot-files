@@ -59,13 +59,6 @@ function Main() {
     | if [[ $pretty -eq 1 ]]; then PrettyPrint; else cat; fi
 }
 
-function Error() {
-  echo "ERROR: $@" >&2
-  echo >&2
-  Usage >&2
-  exit 1
-}
-
 function Usage() {
   sed -E -f <(GetSection "UsageSedScript") $0
 }
