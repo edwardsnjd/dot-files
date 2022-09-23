@@ -293,7 +293,7 @@ function tz {
   local query="$(while [[ $# -gt 0 ]]; do printf "$1 | "; shift; done)"
   fd . --type file /usr/share/zoneinfo \
     | sed 's|.*zoneinfo/||' \
-    | fzf --multi --query "$query" --preview "$preview" \
+    | fzf --multi --query "$query" --bind "alt-a:toggle-all" --preview "$preview" \
     | xargs -I{} bash -c "$display" \
     | sort \
     | cut -d "	" -f 2- \
