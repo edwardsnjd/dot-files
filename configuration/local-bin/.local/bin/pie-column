@@ -4,9 +4,11 @@
 #   pie-column - add a column containing horiz stacked bar chart
 #
 # USAGE
-#   lines-of-code | pie-column column column...
+#   lines-of-code | pie-column [opts] column column...
 #
 # OPTIONS
+#   --headers N = number of headers (default = 1)
+#   --width N = total width available for table (default = terminal width)
 #   columns = index of column(s) to plot
 #
 # DEPENDENCIES
@@ -23,19 +25,32 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local columns="$@"
+  local totalWidth="${COLS:-$(tput cols)}"
+  local headerRows=1
+  local columns=""
 
-  tr ' ' '_' \
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --headers) shift && headerRows="$1" ;;
+      --width) shift && totalWidth="$1" ;;
+      *) break ;;
+    esac
+    shift
+  done
+
+  columns="$@"
+
+  tr ' ' '§' \
     | column -t \
     | awk \
       -v columns="$columns" \
-      -v totalWidth="${COLS:-$(tput cols)}" \
+      -v totalWidth="$totalWidth" \
+      -v headerRows="$headerRows" \
       '
       function max(a,b) { if (a > b) return a; else return b; }
 
       BEGIN {
         split(columns, columnIndices, ",| ")
-        headerRows = 1
       }
 
       # Widths (capture)
@@ -74,7 +89,7 @@ function Main() {
         }
       }
     ' \
-    | tr '_' ' '
+    | tr '§' ' '
 }
 
 Main "$@"

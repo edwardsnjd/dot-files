@@ -4,7 +4,7 @@
 #   pie-footer - add a pie-bar footer with inline key to a table
 #
 # USAGE
-#   lines-of-code | pie-footer labelColumn valueColumn
+#   lines-of-code | pie-footer labelColumn valueColumn [headerRows]
 #
 # ARGUMENTS
 #   labelColumn = index of column(s) to use as label (marker inserted here)
@@ -44,9 +44,9 @@ function Main() {
     <(Markers "$headerRows" < "$tmp") \
     <(cat < "$tmp") \
     | merge-columns 1 "$(( $labelColumn + 1 ))" \
-    | tr ' ' '_' \
+    | tr ' ' '§' \
     | column -t \
-    | tr '_' ' '
+    | tr '§' ' '
 
   Bar "$headerRows" < "$tmp"
 
