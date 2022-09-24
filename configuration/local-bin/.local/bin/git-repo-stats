@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
-# Usage: git_repo_stats
+# USAGE
+#   git-repo-stats [git log args...]
+#   git repo-stats [git log args...]
 #
-# Print stats about every commit in a Git repository.
+# OUTPUT
+#   Print stats about every commit in a Git repository:
+#   <sha>	<yyyy-mm-dd>	<author>	<files>	<lines added>	<lines deleted>
+#
+# EXAMPLE
+#   $ git repo-stats | head -3
+#   2cfb86f	2022-09-24	Nicholas Edwards	2	5	2
+#   d6bba4e	2022-09-23	Nicholas Edwards	2	0	124
+#   a5d0b8c	2022-09-23	Nicholas Edwards	2	3	3
 #
 # Dependencies: bash, git, and GNU utils
 
