@@ -346,7 +346,7 @@ endfunction
 function! <SID>GitContributor() abort
   let l:tempname = tempname()
   try
-    execute 'silent ! gitcontributor > ' . fnameescape(l:tempname)
+    execute 'silent ! git contributor > ' . fnameescape(l:tempname)
     " Return any person selected (without new line)
     let l:output = readfile(l:tempname, '', 1)
     return len(l:output) > 0 ? l:output[0] : v:null
