@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   git-related-files PATH...
+#   git related-files PATH...
+#
+# OUTPUT
+#   A row per path in any commits for the given file:
+#   <path>	<count>
+#
+# EXAMPLE
+#   $ git related-files README.md tools/homebrew/README.md
+#   README.md	4
+#   etc.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+git-related-files() {
+  local pretty="tformat:%h"
+
+  git log --pretty="$pretty" "$@" \
+    | while read sha; do
+        git diff-tree \
+          --name-only \
+          --no-commit-id \
+          --find-renames \
+          --find-copies \
+          -r \
+          "$sha"
+      done \
+    | sort \
+    | uniq -c \
+    | awk -v OFS="\t" '{print $2, $1}' \
+    | sort
+}
+
+git-related-files "$@"
