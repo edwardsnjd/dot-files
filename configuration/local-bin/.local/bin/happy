@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
+# USAGE
+#   happy <message>
+#
+# DEPENDENCIES
+#   toilet, sed
+
 toilet -f pagga --filter=gay:border "  $1  " \
  | sed -E 's/^(.*)$/ 🎉 \1 🎉 /'

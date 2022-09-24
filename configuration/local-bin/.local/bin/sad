@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
+# USAGE
+#   sad <message>
+#
+# DEPENDENCIES
+#   toilet, sed
+
 toilet -f pagga --filter=metal:border "  $1  " \
  | sed -E 's/^(.*)$/ 😢 \1 😢 /'
