@@ -66,7 +66,7 @@ function Bar() {
   local headerRows="$1"
   tail +$(( $headerRows + 1 )) \
     | cut -f ${valueColumn} \
-    | xargs pie-bar
+    | xargs pie-bar --no-color
 }
 
 function Markers() {
@@ -77,7 +77,7 @@ function Markers() {
   # Markers for data rows
   tail +$(( $headerRows + 1 )) \
     | cut -f ${valueColumn} \
-    | xargs pie-bar --markers
+    | xargs pie-bar --no-color --markers
 }
 
 Main "$@"
