@@ -20,7 +20,7 @@ function Main() {
   local targetColumn="${2:-$(( $prefixColumn + 1 ))}"
   local joinWith="${3:-" "}"
 
-  tr " " _ \
+  tr " " "§" \
     | awk \
       -v prefixColumn="$prefixColumn" \
       -v targetColumn="$targetColumn" \
@@ -40,7 +40,7 @@ function Main() {
         printf "\n"
       }
     ' \
-    | tr _ " "
+    | tr "§" " "
 }
 
 Main "$@"
