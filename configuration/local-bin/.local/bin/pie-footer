@@ -4,12 +4,12 @@
 #   pie-footer - add a pie-bar footer with inline key to a table
 #
 # USAGE
-#   lines-of-code | pie-footer labelColumn valueColumn [headerRows]
+#   lines-of-code | pie-footer [options] labelColumn valueColumn
 #
 # ARGUMENTS
+#   --headers N = number of header rows (default = 0)
 #   labelColumn = index of column(s) to use as label (marker inserted here)
 #   valueColumn = index of column(s) to use as value for pie-bar
-#   headerRows = number of header rows (default 0)
 #
 # DEPENDENCIES
 #   tput, tr, column, awk, seq, cat, pie-bar, merge-columns
@@ -31,9 +31,18 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
+  local headerRows=0
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --headers) shift && headerRows="$1" ;;
+      *) break ;;
+    esac
+    shift
+  done
+
   local labelColumn="$1"
   local valueColumn="$2"
-  local headerRows="${3:-0}"
 
   # Capture to a temp file to allow processing it multiple times
   local tmp="$(mktemp)"
