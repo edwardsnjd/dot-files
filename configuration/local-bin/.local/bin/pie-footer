@@ -15,8 +15,8 @@
 #   tput, tr, column, awk, seq, cat, pie-bar, merge-columns
 #
 # EXAMPLE
-#   $ lines-of-code configuration/snippets | grep -v Total | pie-footer 2 3 1
-#   Type	Path Lines	Code	Comments	Blanks
+#   $ lines-of-code configuration/snippets | grep -v Total | pie-footer --headers 1 2 3
+#   Path	Type	Lines	Code	Comments	Blanks
 #   configuration/snippets	▩ BASH	24	12	7	5
 #   configuration/snippets	▤ HTML	14	12	0	2
 #   configuration/snippets	▣ JavaScript	3	3	0	0
