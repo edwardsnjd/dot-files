@@ -115,7 +115,7 @@ function PrettyPrint() {
 
 function FilterType() {
   local type="$1"
-  awk -v type="$type" -v OFS=$'\t' 'NR == 1; $2 == type;'
+  awk -v type="$type" -F $'\t' -v OFS=$'\t' 'NR == 1; $2 == type;'
 }
 
 function MergePaths() {

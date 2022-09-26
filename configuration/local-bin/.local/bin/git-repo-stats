@@ -42,7 +42,7 @@ function git_commit_stats {
     | sed '1d' \
     | grep -v '^$' \
     | sed 's/\-	/0	/g' \
-    | awk -v OFS='\t' \
+    | awk -F $'\t' -v OFS=$'\t' \
       '
         BEGIN { files=0; added=0; removed=0; }
         { files+=1; added+=$1; removed+=$2; }

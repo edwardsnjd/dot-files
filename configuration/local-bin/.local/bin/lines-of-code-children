@@ -16,21 +16,23 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  {
-    for d in "${@:-./}"; do
-      fd . \
-        --type d \
-        --max-depth 1 \
-        --print0 \
-        --hidden \
-        --exclude '\.git' \
-        "$d"
-    done
-  } \
+  list-children "$@" \
+    | tr "\n" "\000" \
     | xargs -0 lines-of-code --merge-types \
     | cut -f1,3- \
     | pie-column 3 4 5 \
     | underline-headers 1
+}
+
+function list-children() {
+  for d in "${@:-./}"; do
+    fd . \
+      --type d \
+      --max-depth 1 \
+      --hidden \
+      --exclude '\.git' \
+      "$d"
+  done
 }
 
 Main "$@"

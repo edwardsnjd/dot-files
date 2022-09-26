@@ -33,7 +33,7 @@ git-related-files() {
       done \
     | sort \
     | uniq -c \
-    | awk -v OFS="\t" '{print $2, $1}' \
+    | awk -F $'\t' -v OFS=$'\t' '{print $2, $1}' \
     | sort
 }
 
