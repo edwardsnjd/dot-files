@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tidy-table - Fix column layout of a markdown table.
+#
+# USAGE
+#   cat table.md | tidy-table
+#
+# OUTPUT
+#   Corrects this (on stdin):
+#       Col  | Col2|Col3
+#       ---|-----|---
+#       1  |    2| last
+#       2    |  2| last
+#       3| 2| last
+#   to this (on stdout):
+#       Col    | Col2  |Col3
+#       -------|-------|----
+#       1      |    2  | last
+#       2      |  2    | last
+#       3      | 2     | last
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local dividerRowPattern="---"
+  local dividerRowCharacter="-"
+  local sentinel="§"
+
+  grep -v -e "$dividerRowPattern" \
+    | sed -e "s/|/${sentinel}&/g" \
+    | column -s "${sentinel}" -t \
+    | sed -e "1p; 1s/[^|]/${dividerRowCharacter}/g"
+}
+
+Main "$@"
