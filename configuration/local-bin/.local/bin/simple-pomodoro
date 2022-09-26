@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# NAME
+#   simple-pomodoro
+#
+# DEPENDENCIES
+#   - sleep
+#   - osascript (optional) - to display popup notifications
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local workSeconds=2
+  local startMessage="🍅 Start work"
+  local endMessage="🍅 Take a break"
+
+  Notify "$startMessage"
+  sleep "$workSeconds"
+  Notify "$endMessage"
+}
+
+function Notify() {
+  local message="$1"
+
+  echo "$message"
+  osascript -e "display notification \"$message\"" 2>/dev/null || true
+}
+
+Main "$@"
