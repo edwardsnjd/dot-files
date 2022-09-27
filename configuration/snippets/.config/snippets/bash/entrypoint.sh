@@ -1,5 +1,6 @@
-if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-    <+ sourced +>
-else
+# Entry point
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     <+ executed  +>
+else
+    <+ sourced +>
 fi
