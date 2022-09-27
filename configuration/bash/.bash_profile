@@ -107,5 +107,10 @@ alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
 
 # --- Source other files ---
 
+# Include homebrew binaries if present
+[ -d "/opt/local" ] && export HOMEBREW_PREFIX="/opt/local"
+[ -d "/opt/homebrew" ] && export HOMEBREW_PREFIX="/opt/homebrew"
+[ -n "${HOMEBREW_PREFIX:-}" ] && eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
+
 # Include rest of things used for all interactive shell
 [ -f ~/.bashrc ] && source ~/.bashrc
