@@ -27,12 +27,16 @@ set -o pipefail
 function Main() {
   local totalWidth="${COLS:-$(tput cols)}"
   local headerRows=1
+  local color=1
   local columns=""
+
+  if [[ ! -t 1 ]]; then color=0; fi
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --headers) shift && headerRows="$1" ;;
       --width) shift && totalWidth="$1" ;;
+      --no-color) color=0 ;;
       *) break ;;
     esac
     shift
@@ -46,11 +50,14 @@ function Main() {
       -v columns="$columns" \
       -v totalWidth="$totalWidth" \
       -v headerRows="$headerRows" \
+      -v color="$color" \
       '
       function max(a,b) { if (a > b) return a; else return b; }
 
       BEGIN {
         split(columns, columnIndices, ",| ")
+        if (color == 1) colorOption=""
+        else colorOption=" --no-color"
       }
 
       # Widths (capture)
@@ -80,7 +87,7 @@ function Main() {
       # End (print)
       END {
         width = totalWidth - maxWidth - 2
-        cmd = "xargs pie-bar --total " maxValue " --width " width
+        cmd = "xargs pie-bar --total " maxValue " --width " width colorOption
 
         for (i in raw) {
           printf "%-" maxWidth "s  ", raw[i]
