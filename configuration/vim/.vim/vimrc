@@ -242,6 +242,9 @@ nnoremap <leader>st :SearchThesaurus <C-R>=expand('<cword>')<CR><CR>
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
 
+" - Quickly copy current file (leaves you in command mode)
+nnoremap <leader>cp :! cp % %:h/
+
 " - Open in Github
 nnoremap <leader>- :GetCurrentBranchLink<CR>
 
