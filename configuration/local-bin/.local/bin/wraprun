@@ -19,7 +19,7 @@ function main {
   success_msg="${2:-Success}"
   failure_msg="${3:-Failure}"
 
-  /usr/bin/time -f "--- Time elapsed: %E ---" $cmd \
+  time $cmd \
     && happy "$success_msg" \
     || sad "$failure_msg"
 }
