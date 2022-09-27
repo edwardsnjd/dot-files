@@ -10,6 +10,7 @@
 #   --headers N = number of headers (default = 1)
 #   --width N = total width available for table (default = terminal width)
 #   columns = index of column(s) to plot
+#   --test = run tests (ignore other options)
 #
 # DEPENDENCIES
 #   tput, tr, column, awk, pie-bar
@@ -37,6 +38,7 @@ function Main() {
       --headers) shift && headerRows="$1" ;;
       --width) shift && totalWidth="$1" ;;
       --no-color) color=0 ;;
+      --test) RunTests; exit ;;
       *) break ;;
     esac
     shift
@@ -97,6 +99,109 @@ function Main() {
       }
     ' \
     | tr '§' ' '
+}
+
+function RunTests() {
+  local input=""
+  local output=""
+  local expected=""
+
+  function setUp() {
+    input="$SHUNIT_TMPDIR/input.txt"
+    output="$SHUNIT_TMPDIR/output.txt"
+    expected="$SHUNIT_TMPDIR/expected.txt"
+  }
+
+  function _result() {
+    "$0" "$@"
+  }
+
+  function testNoDataRows() {
+    cat <<-EOF >"$input"
+			A
+		EOF
+    cat <<-EOF >"$expected"
+			A
+		EOF
+    local width="$(( 1 + 2 + 6 ))"
+
+    _result --width "$width" 1 <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  function testPlotsSingleColumn() {
+    cat <<-EOF >"$input"
+			A
+			1
+			3
+		EOF
+    cat <<-EOF >"$expected"
+			A
+			1  ▩▩
+			3  ▩▩▩▩▩▩
+		EOF
+    local width="$(( 1 + 2 + 6 ))"
+
+    _result --width "$width" 1 <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  function testPlotsHeaderlessColumn() {
+    cat <<-EOF >"$input"
+			1
+			3
+		EOF
+    cat <<-EOF >"$expected"
+			1  ▩▩
+			3  ▩▩▩▩▩▩
+		EOF
+    local width="$(( 1 + 2 + 6 ))"
+
+    _result --width "$width" --headers 0 1 <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  function testPlotsNamedColumn() {
+    cat <<-EOF >"$input"
+			A	B	C
+			1	3	1
+			3	1	3
+		EOF
+    cat <<-EOF >"$expected"
+			A  B  C
+			1  3  1  ▩▩▩▩▩▩
+			3  1  3  ▩▩
+		EOF
+    local width="$(( 1+2+1+2+1 + 2 + 6 ))"
+
+    _result --width "$width" 2 <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  function testPlotsMultipleColumns() {
+    cat <<-EOF >"$input"
+			A	B	C
+			1	3	2
+			3	1	2
+		EOF
+    cat <<-EOF >"$expected"
+			A  B  C
+			1  3  2  ▩▤▤▤▣▣
+			3  1  2  ▩▩▩▤▣▣
+		EOF
+    local width="$(( 1+2+1+2+1 + 2 + 6 ))"
+
+    _result --width "$width" 1 2 3 <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  # Run tests
+  source shunit2
 }
 
 Main "$@"
