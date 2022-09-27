@@ -15,7 +15,7 @@
 #   --total t = override total of values (allows for blanks)
 #
 # DEPENDENCIES
-#   tput, seq, awk
+#   tput, seq, awk, shunit2 (for tests)
 
 function Main() {
   local use_color=1
@@ -29,6 +29,7 @@ function Main() {
       --markers) markers=1 ;;
       --width) shift && cols="$1" ;;
       --total) shift && total="$1" ;;
+      --test) RunTests; exit ;;
       *) break ;;
     esac
     shift
@@ -122,6 +123,47 @@ function PickCharacter() {
   else
     printf "$char"
   fi
+}
+
+function RunTests() {
+  function _bar() {
+    "$0" --no-color "$@"
+  }
+
+  function testEmptyBar() {
+    assertEquals "  " "$(_bar --width 2)"
+  }
+
+  function testSingleBar() {
+    assertEquals "▩▩" "$(_bar --width 2 1)"
+  }
+
+  function testTwoBars() {
+    assertEquals "▩▤" "$(_bar --width 2 1 1)"
+  }
+
+  function testPartialBlockAvoided() {
+    assertEquals "▩▤▤" "$(_bar --width 3 1 1)"
+  }
+
+  function testPartialBarMissing() {
+    assertEquals "▤▣" "$(_bar --width 2 1 1 1)"
+  }
+
+  function testUnequalBars() {
+    assertEquals "▩▤▤" "$(_bar --width 3 1 2)"
+  }
+
+  function testPartialTotal() {
+    assertEquals "▩▤" "$(_bar --width 3 --total 3 1 1)"
+  }
+
+  function testBarExceedsTotal() {
+    assertEquals "▩▩▩▩" "$(_bar --width 2 --total 1 2)"
+  }
+
+  # Run tests
+  source shunit2
 }
 
 Main "$@"
