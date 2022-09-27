@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Include homebrew binaries (on M1 arch)
+[ -d "/opt/homebrew/bin" ] && export PATH="/opt/homebrew/bin:$PATH"
+
 # Disable annoying bash shell warning
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
@@ -11,7 +14,7 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Hom
 alias dircolors='gdircolors'
 
 # Enable color support of ls (via LS_COLORS)
-test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+[ -r "~/.dircolors" ] && eval "$(dircolors -b "~/.dircolors")" || eval "$(dircolors -b)"
 
 # Replace OSX ls with GNU coreutils ls (by aliasing over the top of it)
 alias ls='gls --color=auto'
