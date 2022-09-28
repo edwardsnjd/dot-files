@@ -206,13 +206,6 @@ function join_by() {
   echo "$*"
 }
 
-# Web search for given term
-function ws {
-  local -r search_terms="$@"
-  local -r url="https://duckduckgo.com/?q=${search_terms}"
-  /Users/nick/bin/brave-cli "${url}"
-}
-
 # Watch in colour with configurable interval
 function wtch {
   local -r interval="$1"

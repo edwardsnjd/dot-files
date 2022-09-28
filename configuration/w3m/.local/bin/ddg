@@ -1,3 +1,11 @@
 #!/usr/bin/env bash
 
-w3m duckduckgo.com
+# Web search for the given terms
+
+function Main() {
+  local -r search_terms="$@"
+  local -r url="https://duckduckgo.com/?q=${search_terms}"
+  w3m "${url}"
+}
+
+Main "$@"
