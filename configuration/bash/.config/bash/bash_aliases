@@ -235,9 +235,7 @@ alias cl="clear && ruler"
 alias tz="timezones"
 
 # Find current weather forecast
-function wttr {
-  curl wttr.in?pF
-}
+alias wttr="weather-forecast"
 
 # FZF browse of files for git diff
 function gd {

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# NAME
+#   weather-forecast - display current weather forecast
+
+
+# Find current weather forecast
+function Main() {
+  curl wttr.in?pF
+}
+
+Main "$@"
