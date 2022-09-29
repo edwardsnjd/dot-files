@@ -6,15 +6,18 @@
 alias  l='ls --color=auto -AFl --group-directories-first'
 alias ll='ls --color=auto -AFl --group-directories-first'
 alias la='ls --color=auto -AF  --group-directories-first'
+
 # Simpler navigation up
 alias   ..='cd ..'          # Go up one directory
 alias  ...='cd ../..'       # Go up two directories
 alias ....='cd ../../..'    # And for good measure
+
 # Simple tree view
 alias    t='tree -aF -I .git --dirsfirst -L 1'
 alias   tt='tree -aF -I .git --dirsfirst -L 2'
 alias  ttt='tree -aF -I .git --dirsfirst -L 3'
 alias tree='tree -aF -I .git --dirsfirst'
+
 # List shell completions
 alias list_aliases='compgen -A alias | sort -u'
 alias list_commands='compgen -A command | sort -u'
@@ -31,6 +34,46 @@ alias ascii2dec="convert-text --format dec"
 alias dec2ascii="convert-text --format dec --decode"
 alias ascii2bin="convert-text --format bin"
 alias bin2ascii="convert-text --format bin --decode"
+
+# Date
+alias localdate='date +"%Y-%m-%d"'
+alias isodate='date -u +"%Y-%m-%d"'
+alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
+alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
+
+# Tmux
+alias tm='tmux -CC new-session -As'  # iTerm2 (control mode and reuse session)
+alias ta='tmux-attach'
+
+# Default is 5 seconds (in colour)
+alias watch='wtch 5'
+
+# Github CLI aliases
+alias ghw='watch gh'
+
+# Interactive file system browsers
+alias f="file-browser"
+alias d="directory-browser"
+
+# Clear and print ruler
+alias cl="clear && ruler"
+
+# Interactive timezone picker
+alias tz="timezones"
+
+# Find current weather forecast
+alias wttr="weather-forecast"
+
+# FZF + git
+alias gd="git browse-diff"
+alias gc="git browse-branches"
+alias glg="git browse-log"
+alias gl="git browse-log2"
+alias gtt="git browse-file-versions"
+alias gtd="git browse-file-diffs"
+
+# nb shorcuts
+alias nbj="nb-journal"
 
 # Keys
 
@@ -156,23 +199,12 @@ function asciicast2gif {
   docker run --rm -v $PWD:/data asciinema/asciicast2gif "$@"
 }
 
-# Date
-alias localdate='date +"%Y-%m-%d"'
-alias isodate='date -u +"%Y-%m-%d"'
-alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
-alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
-
 # Helper to join args by a separator
 function join_by() {
   local IFS="$1"
   shift
   echo "$*"
 }
-
-# iTerm2 tmux (control mode and reuse session)
-alias tm='tmux -CC new-session -As'
-# Alias for convenient tmux session picker
-alias ta='tmux-attach'
 
 # Web search for given term
 function ws {
@@ -188,33 +220,3 @@ function wtch {
 
   \watch --interval "$interval" --color faketty "$args"
 }
-
-# Default is 5 seconds (in colour)
-alias watch='wtch 5'
-
-# Github CLI aliases
-alias ghw='watch gh'
-
-# FZF file system browsers
-alias f="file-browser"
-alias d="directory-browser"
-
-# Clear and print ruler
-alias cl="clear && ruler"
-
-# FZF timezone picker
-alias tz="timezones"
-
-# Find current weather forecast
-alias wttr="weather-forecast"
-
-# FZF + git
-alias gd="git browse-diff"
-alias gc="git browse-branches"
-alias glg="git browse-log"
-alias gl="git browse-log2"
-alias gtt="git browse-file-versions"
-alias gtd="git browse-file-diffs"
-
-# nb shorcuts
-alias nbj="nb-journal"
