@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-file-versions - fzf browse git history of a file (versions)
+#
+# USAGE
+#   git browse-file-versions <path>
+
+function GitBrowseFileVersions() {
+  local pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show %%:$1 | bat --style=plain --color=always --file-name=$1"
+
+  local sha=$(
+    git log --pretty="$pretty" --color -- $1 \
+      | fzf \
+        --ansi \
+        --layout=reverse-list \
+        --no-sort \
+        --preview="$preview" \
+        --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      | grep -Eo '[a-f0-9]{7,}' \
+      | head -1
+  )
+
+  git show "$sha:$1" \
+    | bat --file-name="$1"
+}
+
+GitBrowseFileVersions "$@"

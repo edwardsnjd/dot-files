@@ -18,10 +18,8 @@ set -o errexit
 set -o pipefail
 #set -o xtrace
 
-git-related-files() {
-  local pretty="tformat:%h"
-
-  git log --pretty="$pretty" "$@" \
+function GitRelatedFiles() {
+  git log --pretty="tformat:%h" "$@" \
     | while read sha; do
         git diff-tree \
           --name-only \
@@ -33,8 +31,8 @@ git-related-files() {
       done \
     | sort \
     | uniq -c \
-    | awk -F $'\t' -v OFS=$'\t' '{print $2, $1}' \
+    | awk -v OFS=$'\t' '{print $2, $1}' \
     | sort
 }
 
-git-related-files "$@"
+GitRelatedFiles "$@"

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-branches - fzf browse branch to checkout
+#
+# USAGE
+#   git-browse-branches [query]
+
+function GitBrowseBranches() {
+  local format="%(color:yellow)%(refname:short)%(color:reset) %(color:red)%(HEAD)%(color:reset) %(upstream:trackshort) %(upstream:short) %(upstream:track)"
+  local preview="git lg -100 {1}"
+
+  git branch --list --color --format="$format" \
+    | fzf \
+      --no-sort \
+      --layout=reverse-list \
+      --ansi \
+      --cycle \
+      --preview="$preview" \
+      --query="$1" \
+    | cut -d" " -f1 \
+    | xargs git checkout
+}
+
+GitBrowseBranches "$@"

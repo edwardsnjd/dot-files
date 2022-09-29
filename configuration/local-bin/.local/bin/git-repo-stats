@@ -19,25 +19,25 @@
 set -o nounset
 set -o errexit
 
-function git_repo_stats {
-  paste <(git_commits "$@") <(git_commits "$@" | cut -f1 | git_stats)
+function GitRepoStats {
+  paste <(GitCommits "$@") <(GitCommits "$@" | cut -f1 | GitStats)
 }
 
 # List core information about all commits
-function git_commits {
+function GitCommits {
   git log --date=short --pretty="tformat:%h	%ad	%an" "$@"
 }
 
 # List stats for all supplied commit hashes
-function git_stats {
+function GitStats {
   while read -r sha
   do
-    git_commit_stats "$sha"
+    GitCommitStats "$sha"
   done
 }
 
 # Print stats for the given commit hash
-function git_commit_stats {
+function GitCommitStats {
   git show --pretty=oneline --numstat "$@" \
     | sed '1d' \
     | grep -v '^$' \
@@ -50,4 +50,4 @@ function git_commit_stats {
       '
 }
 
-git_repo_stats "$@"
+GitRepoStats "$@"

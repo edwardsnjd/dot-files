@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-diff - fzf browse current changes and pick a file to display
+#
+# USAGE
+#   git-browse-diff [git diff args]
+
+function GitBrowseDiff {
+  local details="bat {} --pager='less -c -+F -+X'"
+  local preview="git diff --color=always $@ -- {}"
+
+  git diff --name-only "$@" \
+    | fzf \
+      --multi \
+      --preview "$preview" \
+      --bind="enter:execute($details)"
+}
+
+GitBrowseDiff "$@"

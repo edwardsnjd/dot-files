@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-file-diffs - fzf browse diffs of a file
+#
+# USAGE
+#   git browse-file-diffs <path>
+
+function GitBrowseFileDiffs() {
+  local pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show --color %% -- $1 | less -c -+F -+X"
+
+  local sha=$(
+    git log --pretty="$pretty" --color -- $1 \
+      | fzf \
+        --ansi \
+        --layout=reverse-list \
+        --no-sort \
+        --preview="$preview" \
+        --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      | grep -Eo '[a-f0-9]{7,}' \
+      | head -1
+  )
+
+  git show "$sha:$1" \
+    | bat --file-name="$1"
+}
+
+GitBrowseFileDiffs "$@"
