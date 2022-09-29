@@ -234,11 +234,6 @@ alias cl="clear && ruler"
 # FZF timezone picker
 alias tz="timezones"
 
-# Find current public IP address
-function publicip {
-  curl ifconfig.me && printf "\n"
-}
-
 # Find current weather forecast
 function wttr {
   curl wttr.in?pF

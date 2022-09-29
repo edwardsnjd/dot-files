@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Find current public IP address
+function publicip {
+  curl ifconfig.me && printf "\n"
+}
+
+publicip "$@"
