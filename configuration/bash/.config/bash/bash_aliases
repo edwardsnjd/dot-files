@@ -68,27 +68,23 @@ function bin2ascii() {
 function keys() {
   # Performance: Capture data once to temp file (for multiple use)
   local temp="$(mktemp)"
-  { keys_tmux; keys_readline; keys_fzf; } > $temp
-
-  local cols=$(tput cols)
 
   # HACK: Columnize header with data to match expected columns
-  local headerContent="app	mode	key(s)	command(s)"
-  local header=$(
-    { echo "$headerContent"; cat $temp; } \
-      | sed -E "s/(.{1,$cols}).*/\1/" \
-      | column -s $'\t' -t \
-      | head -1
-  )
+  {
+    echo "app	mode	key(s)	command(s)"
+    keys_tmux
+    keys_readline
+    keys_fzf
+  } | column -s $'\t' -t > "$temp"
 
   # fzf to browse the bindings
-  cat $temp \
-    | sed -E "s/(.{1,$cols}).*/\1/" \
-    | column -s $'\t' -t \
+  local header=$(head -1 "$temp")
+  tail +2 "$temp" \
     | sort \
     | fzf \
       --reverse \
       --no-sort \
+      --ellipsis "⋯" \
       --header "$header"
 
   # Tidy up
