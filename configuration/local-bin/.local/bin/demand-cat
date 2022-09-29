@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# NAME
+#   demand-cat - output a line of stdin pausing for some user input before each line
+#
+# USAGE
+#   demand-cat 3<input.txt
+#   (supply file to output on fd 3, since stdin is used for timing)
+
+function DemandCat(){
+  while read <&3
+  do
+    echo "$REPLY"
+    read  # blocks until input appears on stdin i.e. hit return
+  done
+}
+
+DemandCat "$@"

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# NAME
+#   slow-cat - slow down `cat` with a pause between each line
+#
+# USAGE
+#   cat README.md | slow-cat [seconds]
+
+function SlowCat() {
+  local seconds=${1:-2}
+  while read
+  do
+    sleep $seconds
+    echo "$REPLY"
+  done
+}
+
+SlowCat "$@"
