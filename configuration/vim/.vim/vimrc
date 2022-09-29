@@ -311,9 +311,12 @@ nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
 
-" tmux sending
-nnoremap <leader>er :silent .write ! tmux-send .right<CR>
-xnoremap <leader>er :silent .write ! tmux-send .right<CR>
+" tmux
+nnoremap <leader>ter :silent . write ! tmux-send .right<CR>
+xnoremap <leader>ter :silent . write ! tmux-send .right<CR>
+nnoremap <leader>ty :silent . write ! tmux load-buffer -<CR>:echo 'Copied to tmux'<CR>
+nnoremap <leader>tp :    read ! tmux show-buffer<CR>:echo 'Pasted from tmux'<CR>
+nnoremap <leader>tP :.-1 read ! tmux show-buffer<CR>:echo 'Pasted from tmux'<CR>
 
 " - Execute lines and append output
 " Uses x register.
