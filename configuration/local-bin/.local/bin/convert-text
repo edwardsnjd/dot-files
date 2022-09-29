@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# NAME
+#   convert-text - convert ascii text to and from various encodings
+#
+# USAGE
+#   convert-text [--decode] --format <format>
+#
+# ENCODINGS
+#   By default, encodes to the given format.
+#   With --decode, decodes from the given format.
+#   <format> can be one of the following:
+#   - ascii
+#   - bin
+#   - hex
+#   - base64
+
+function ConvertText() {
+  local decode=0
+  local format="ascii"  # noop by default
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --decode) decode=1 && shift ;;
+      --format) format="$2" && shift && shift ;;
+      -*|--*) echo "Unknown option $1" &&  exit 1 ;;
+      *) shift ;;
+    esac
+  done
+
+  local fn=""
+  if [[ $decode -eq 1 ]]; then
+    case "$format" in
+      ascii) fn="cat" ;;
+      hex) fn="hex2ascii" ;;
+      bin) fn="bin2ascii" ;;
+      base64) fn="base642ascii" ;;
+      *) echo "Unknown format $format" && exit 1 ;;
+    esac
+  else
+    case "$format" in
+      ascii) fn="cat" ;;
+      hex) fn="ascii2hex" ;;
+      bin) fn="ascii2bin" ;;
+      base64) fn="ascii2base64" ;;
+      *) echo "Unknown format $format" && exit 1 ;;
+    esac
+  fi
+
+  [[ -z "$fn" ]] && echo "ERROR" >&2 && exit 1
+
+  "$fn"
+}
+
+function hex2dec() { printf "%d\n" "0x$1"; }
+function dec2hex() { printf "%x\n" "$1"; }
+function dec2oct() { printf "%03o\n" "$1"; }
+function bin2oct() { echo "ibase=2; obase=8; $1" | bc; }
+
+function ascii2base64 { exec base64; }
+function base642ascii { exec base64 -d; }
+
+function ascii2hex { exec xxd -c8 -p; }
+function hex2ascii { exec xxd -p -r; }
+
+function ascii2dec {
+  # Convert every input character (including newlines)
+  xxd -c1 -p | while read hex; do hex2dec "$hex"; done
+}
+function dec2ascii() {
+  # Process each word as decimal, ignore all whitespace
+  while read line; do
+    for dec in $line; do
+      printf "\\$(dec2oct "$dec")"
+    done
+  done
+}
+
+function ascii2bin() {
+  # Convert every input character (including newlines)
+  xxd -c1 -b | cut -d " " -f2
+}
+function bin2ascii() {
+  # Process each word as binary, ignore all whitespace
+  while read line; do
+    for bin in $line; do
+      printf "\\$(bin2oct "$bin")"
+    done
+  done
+}
+
+ConvertText "$@"

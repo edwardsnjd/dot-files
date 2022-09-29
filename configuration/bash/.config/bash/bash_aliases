@@ -23,43 +23,14 @@ alias list_users='compgen -A user | sort -u'
 alias list_variables='compgen -A variable | sort -u'
 
 # Text format conversions
-
-function hex2dec() { printf "%d\n" "0x$1"; }
-function dec2hex() { printf "%x\n" "$1"; }
-function dec2oct() { printf "%03o\n" "$1"; }
-function bin2oct() { echo "ibase=2; obase=8; $1" | bc; }
-
-function ascii2base64 { exec base64; }
-function base642ascii { exec base64 -d; }
-
-function ascii2hex { exec xxd -c8 -p; }
-function hex2ascii { exec xxd -p -r; }
-
-function ascii2dec {
-  # Convert every input character (including newlines)
-  xxd -c1 -p | while read hex; do hex2dec "$hex"; done
-}
-function dec2ascii() {
-  # Process each word as decimal, ignore all whitespace
-  while read line; do
-    for dec in $line; do
-      printf \\$(dec2oct "$dec")
-    done
-  done
-}
-
-function ascii2bin() {
-  # Convert every input character (including newlines)
-  xxd -c1 -b | cut -d " " -f2
-}
-function bin2ascii() {
-  # Process each word as binary, ignore all whitespace
-  while read line; do
-    for bin in $line; do
-      printf \\$(bin2oct "$bin");
-    done
-  done
-}
+alias ascii2base64="convert-text --format base64"
+alias base642ascii="convert-text --format base64 --decode"
+alias ascii2hex="convert-text --format hex"
+alias hex2ascii="convert-text --format hex --decode"
+alias ascii2dec="convert-text --format dec"
+alias dec2ascii="convert-text --format dec --decode"
+alias ascii2bin="convert-text --format bin"
+alias bin2ascii="convert-text --format bin --decode"
 
 # Keys
 
