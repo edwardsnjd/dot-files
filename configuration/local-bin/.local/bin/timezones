@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   timezones [initial query]
+
+# FZF browse of time zone and print current time
+function timezones {
+  local preview="TZ={} date +'%z%t%+'"
+  local display="TZ={} date +'%FT%T%t%z%t{}%t%+'"
+  local query="$(while [[ $# -gt 0 ]]; do printf "$1 | "; shift; done)"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local header="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}A-a${normal} toggle all"
+
+  fd . --type file /usr/share/zoneinfo \
+    | sed 's|.*zoneinfo/||' \
+    | fzf \
+      --multi \
+      --prompt "Timezones> " \
+      --header "$header" \
+      --query "$query" \
+      --reverse \
+      --bind "alt-a:toggle-all" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --preview "$preview" \
+    | xargs -I{} bash -c "$display" \
+    | sort \
+    | cut -d $'\t' -f 2- \
+    | column -s $'\t' -t
+}
+
+timezones "$@"

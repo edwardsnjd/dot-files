@@ -231,19 +231,8 @@ alias d="directory-browser"
 # Clear and print ruler
 alias cl="clear && ruler"
 
-# FZF browse of time zone and print current time
-function tz {
-  local preview="TZ={} date +'%z%t%+'"
-  local display="TZ={} date +'%FT%T%t%z%t{}%t%+'"
-  local query="$(while [[ $# -gt 0 ]]; do printf "$1 | "; shift; done)"
-  fd . --type file /usr/share/zoneinfo \
-    | sed 's|.*zoneinfo/||' \
-    | fzf --multi --query "$query" --bind "alt-a:toggle-all" --preview "$preview" \
-    | xargs -I{} bash -c "$display" \
-    | sort \
-    | cut -d "	" -f 2- \
-    | column -s "	" -t
-}
+# FZF timezone picker
+alias tz="timezones"
 
 # Find current public IP address
 function publicip {
