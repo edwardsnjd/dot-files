@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   laptimer
+
+# Simple lap timer (uses `date` to measure duration in seconds)
+function laptimer() {
+  local total=0
+  local number=0
+
+  # Exit on "s"
+  local key="?"
+  while [[ "$key" != "s" ]]
+  do
+    # Print help first time, or on "?"
+    if [[ "$key" == "?" ]]
+    then
+      echo "# Commands: s=stop, ?=help, anything else=lap " 1>&2
+    fi
+
+    # Wait for a key
+    local before=$(date +%s)
+    read -n 1 -p "> " key 1>&2
+    local after=$(date +%s)
+    echo > /dev/stderr
+
+    # Unless help requested, record a lap
+    if [[ "$key" != "?" ]]
+    then
+      local lap=$(( $after - $before ))
+      number=$(( $number + 1 ))
+      total=$(( $total + $lap ))
+
+      printf "Lap\t$number\t$lap (s)\t$(( $total / $number )) (avg s)\n"
+    fi
+  done
+
+  echo "# Stopped" 1>&2
+  printf "Total\t$number (#)\t$total (s)\t$(( $total / $number )) (avg s)\n"
+}
+
+laptimer "$@"

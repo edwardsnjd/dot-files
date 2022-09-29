@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   stopwatch
+
+function stopwatch() {
+  local start=$(date +%s)
+
+  printf "0 (s)"  # No newline
+
+  while sleep 1
+  do
+    local now=$(date +%s)
+    # NB. '\r' moves cursor to start of line
+    printf "\r$(( $now - $start )) (s)"  # No newline
+  done
+
+  echo # Add missing newline
+}
+
+stopwatch "$@"

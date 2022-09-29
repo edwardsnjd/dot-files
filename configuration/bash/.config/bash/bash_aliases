@@ -198,57 +198,6 @@ function join_by() {
   echo "$*"
 }
 
-# Simple lap timer (uses `date` to measure duration in seconds)
-function laptimer() {
-  local total=0
-  local number=0
-
-  # Exit on "s"
-  local key="?"
-  while [[ "$key" != "s" ]]
-  do
-    # Print help first time, or on "?"
-    if [[ "$key" == "?" ]]
-    then
-      echo "# Commands: s=stop, ?=help, anything else=lap " 1>&2
-    fi
-
-    # Wait for a key
-    local before=$(date +%s)
-    read -n 1 -p "> " key 1>&2
-    local after=$(date +%s)
-    echo > /dev/stderr
-
-    # Unless help requested, record a lap
-    if [[ "$key" != "?" ]]
-    then
-      local lap=$(( $after - $before ))
-      number=$(( $number + 1 ))
-      total=$(( $total + $lap ))
-
-      printf "Lap\t$number\t$lap (s)\t$(( $total / $number )) (avg s)\n"
-    fi
-  done
-
-  echo "# Stopped" 1>&2
-  printf "Total\t$number (#)\t$total (s)\t$(( $total / $number )) (avg s)\n"
-}
-
-function stopwatch() {
-  local start=$(date +%s)
-
-  printf "0 (s)"  # No newline
-
-  while sleep 1
-  do
-    local now=$(date +%s)
-    # NB. '\r' moves cursor to start of line
-    printf "\r$(( $now - $start )) (s)"  # No newline
-  done
-
-  echo # Add missing newline
-}
-
 # iTerm2 tmux (control mode and reuse session)
 alias tm='tmux -CC new-session -As'
 # Alias for convenient tmux session picker
