@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# NAME
+#   nb-journal - Edit journal entry for today
+#
+# USAGE
+#   nb-journal
+
+function NbJournal() {
+  local notebook=journal
+  local today=$(date +"%Y-%m-%d")
+  local path=${today}.md
+
+  # Ensure the notebook exists
+  nb notebooks "${notebook}" \
+    || nb notebooks add "${notebook}"
+
+  # Ensure the note exists
+  nb ls "${notebook}:${path}" \
+    || nb add "${notebook}:${path}" \
+      --title "${today}" \
+      --tags "journal" \
+      --content "$(Template)"
+
+  # Edit the note
+  nb edit "${notebook}:${path}"
+}
+
+function Template() {
+  cat <<-EOF
+	\`\`\`
+	$(emojify-cal cal)
+	\`\`\`
+	
+	## Tasks
+	
+	- [ ] <+ TODO +>
+	
+	## Notes
+	
+	- <+ TODO +>
+	EOF
+}
+
+NbJournal "$@"
