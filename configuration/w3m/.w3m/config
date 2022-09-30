@@ -58,8 +58,6 @@ vi_prec_num 0
 mark_all_pages 0
 wrap_search 0
 ignorecase_search 1
-use_migemo 1
-migemo_command cmigemo -q -d /usr/share/cmigemo/utf-8/migemo-dict
 use_mouse 1
 reverse_mouse 0
 relative_wheel_scroll 0
@@ -72,7 +70,7 @@ preserve_timestamp 1
 keymap_file keymap
 document_root 
 personal_document_root 
-cgi_bin 
+cgi_bin ~/.w3m/cgi-bin
 index_file 
 mime_types ~/.mime.types, /usr/local/Cellar/w3m/0.5.3_7/etc/mime.types
 mailcap ~/.w3m/mailcap, /usr/local/Cellar/w3m/0.5.3_7/etc/w3m/mailcap
@@ -114,7 +112,6 @@ max_news 50
 use_proxy 1
 http_proxy 
 https_proxy 
-gopher_proxy 
 ftp_proxy 
 no_proxy 
 noproxy_netaddr 1
