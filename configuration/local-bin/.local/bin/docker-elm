@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+function DockerElm {
+  docker run \
+    --interactive \
+    --tty \
+    --rm \
+    --volume "$PWD:/code" \
+    --workdir "/code" \
+    --env "HOME=/tmp" \
+    --user "$UID:$GID" \
+    --publish "8000:8000" \
+    codesimple/elm:0.19 \
+    "$@"
+}
+
+DockerElm "$@"

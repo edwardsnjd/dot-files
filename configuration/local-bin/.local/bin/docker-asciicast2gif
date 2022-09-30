@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+function DockerAsciiCast2Gif {
+  docker run \
+    --rm \
+    --volume "$PWD:/data" \
+    asciinema/asciicast2gif \
+    "$@"
+}
+
+DockerAsciiCast2Gif "$@"

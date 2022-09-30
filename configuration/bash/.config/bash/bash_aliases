@@ -79,22 +79,9 @@ alias nbj="nb-journal"
 alias keys="source list-keys"
 
 # Dockerised tools
-function elm {
-  docker run \
-    -it --rm \
-    -v "$(pwd):/code" \
-    -w "/code" \
-    -e "HOME=/tmp" \
-    -u $UID:$GID \
-    -p 8000:8000 \
-    codesimple/elm:0.19 \
-    "$@"
-}
-
-# Convert asciinema casts
-function asciicast2gif {
-  docker run --rm -v $PWD:/data asciinema/asciicast2gif "$@"
-}
+alias elm="docker-elm"
+alias asciinema="docker-asciinema"
+alias asciicast2gif="docker-asciicast2gif"
 
 # Helper to join args by a separator
 function join_by() {
