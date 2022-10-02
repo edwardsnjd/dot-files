@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# NAME
+#   list-w3m-keys - list the current w3m keybindings
+#
+# USAGE
+#   list-w3m-keys
+#
+# OUTPUT
+#   Line per available command or binding:
+#     w3m <tab> root <tab> <key(s)> <tab> <command(s)>
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -o xtrace
+
+W3M_HELP_URL='file:///$LIB/w3mhelp.cgi?version=w3m%2F0.5.3%2Bgit20200502&lang=en'
+
+# List all key bindings for w3m
+# Rows: app	mode	key(s)	command(s)
+ListW3mKeys() {
+  # Parse into expected format
+  PrintW3mHelp \
+    | ExtractKeyBindings \
+    | PrintBindingPerLine \
+    | NormaliseKeys
+}
+
+function PrintW3mHelp() {
+  w3m -dump "$W3M_HELP_URL"
+}
+
+function ExtractKeyBindings() {
+  # Lines with bindings look like:
+  # <keys>[,<keys>]*<spaces><command>
+  sed -E '
+    /^.{30} {6}[^ ]/ ! d
+    s/<NOT ASSIGNED>/<none>/
+    s/^([^ ]+) +(.*)$/\1\t\2/
+  '
+}
+
+function PrintBindingPerLine() {
+  awk '
+    BEGIN { FS = OFS = "\t" }
+
+    # Comma is a valid key to bind
+    $1 ~ /^,$/ {
+      print "w3m", "root", $1, $2
+    }
+
+    # Comma separators between multiple key bindings for same command
+    $1 !~ /^,$/ {
+      split($1, keys, /,/)
+      for (k in keys) {
+        print "w3m", "root", keys[k], $2
+      }
+    }
+  '
+}
+
+function NormaliseKeys() {
+  sed -E '
+    s/ESC-/M-/g
+    s/TAB\t/Tab\t/g
+    s/SPC\t/Space\t/g
+    s/LEFT\t/Left\t/g
+    s/RIGHT\t/Right\t/g
+    s/DOWN\t/Down\t/g
+    s/UP\t/Up\t/g
+    s/RET\t/Enter\t/g
+    s/DEL\t/Delete\t/g
+    s/BS\t/BSpace\t/g
+  '
+}
+
+# Entry point
+ListW3mKeys "$@"
