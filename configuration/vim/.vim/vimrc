@@ -210,8 +210,14 @@ let g:outline_filetype_keywords = {
 nnoremap <leader>sO :call <SID>ShowOutline()<CR>
 function! <SID>ShowOutline()
   let filetype = &ft
-  " TODO: Switch structural keywords according to ft
-  let keywords = ['module', 'class', 'def', 'describe', 'context', 'it']
+
+  " Default to vaguely sensible generic keywords
+  let keywords = ['class', 'function']
+
+  " Try to find language specific keywords
+  if has_key(g:outline_filetype_keywords, &filetype)
+    let keywords = g:outline_filetype_keywords[&filetype]
+  endif
 
   let pattern = join(keywords, '\|')
   execute 'Redir global /\v\C<('.pattern.')>/'
