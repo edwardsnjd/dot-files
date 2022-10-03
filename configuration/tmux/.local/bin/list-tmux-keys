@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# NAME
+#   list-tmux-keys - list the current tmux keybindings
+#
+# USAGE
+#   list-tmux-keys
+#
+# OUTPUT
+#   Line per available command or binding:
+#     tmux <tab> root <tab> <key(s)> <tab> <command(s)>
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -o xtrace
+
+# List all key bindings for Tmux
+# Rows: app	mode	key(s)	command(s)
+function ListTmuxKeys() {
+  local prefix=$(tmux show-options -g prefix | cut -d " " -f2)
+
+  printf "tmux\troot\t${prefix}\t# Main tmux prefix mode\n"
+
+  tmux list-keys \
+    | sed -E 's/bind-key .. -T //' \
+    | sed -E 's/^([^ ]+) +([^ ]+) +(.*)$/tmux\t\1\t\2\t\3/' \
+    | awk -F "\t" -v OFS="\t" '
+        # Strip backslash escape chars
+        $3 ~ /^\\.$/  { $3 = substr($3, 2) }
+        # Strip quoted keys
+        $3 ~ /^".+"$/ { $3 = substr($3, 2, length($3)-2) }
+        # Print all
+        { print }
+      '
+}
+
+# Entry point
+ListTmuxKeys "$@"
