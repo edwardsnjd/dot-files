@@ -478,20 +478,6 @@ command! -nargs=1 -complete=command -bar -range Redir silent call Redir(<q-args>
 " command! -nargs=1 -complete=command -range Redir silent call Redir(<q-args>, <range>, <line1>, <line2>)
 " ----- Redir::End
 
-" Center the given line as a title
-function! <SID>CenterTitle(targetWidth = 80, paddingChar = "-")
-  s/ /␣/ge                             " Protect spaces
-  s/.*/∞&∞/                            " Wrap with sentinel
-  execute "center" a:targetWidth
-  s/\v( *)(.*)/\1\2\1/                 " Add padding on RHS
-  execute "s/ /".a:paddingChar."/ge"
-  s/∞/ /g                              " Replace sentinels with spaces
-  s/␣/ /ge                             " Restore proctected spaces
-endfunction
-
-" Make function available as a command
-command! -nargs=* CenterTitle call <SID>CenterTitle(<f-args>)
-
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
 

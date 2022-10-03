@@ -4,13 +4,22 @@
 #   centre - little helper to centre a line of text in a terminal
 #
 # SYNOPSIS
-#   seq 10 | centre [--help]
+#   seq 10 | centre [--width <width>] [--filler <filler>] [--help]
 #
 # DESCRIPTION
+#   --width <width> = total width to centre across (default = terminal width)
+#   --filler <filler> = character to fill with (default = " ")
 #   --help,-h  = Print this usage
+#
+# EXAMPLE
+#   $ seq 0 5 10 | centre --width 10 --filler "~"
+#   ~~~~ 0 ~~~~
+#   ~~~~ 5 ~~~~
+#   ~~~ 10 ~~~
 #
 # DEPENDENCIES
 #   - tput
+#   - tr, sed
 #   - fmt
 
 set -o nounset
@@ -19,22 +28,34 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local format=plain
+  local width="$(tput cols)"
+  local filler=" "
+
   while [[ $# -gt 0 ]]; do
     case "$1" in
+      --filler) filler="$2" && shift && shift ;;
+      --width) width="$2" && shift && shift ;;
+      -*|--*) Error "Unknown option $1" ;;
       --help|-h) Usage && exit 0 ;;
-      *) Error "Unknown option: $1" ;;
     esac
-    shift
   done
 
-  case "$format" in
-    plain) Plain "$@" ;;
-  esac
+  CenterTitle "$width" "$filler"
 }
 
-function Plain() {
-  fmt -c -w $(tput cols)
+function CenterTitle() {
+  local width="$1"
+  local filler="$2"
+  local spacePreserver="␣"
+  local paddingPreserver="∞"
+
+  sed -E "s/ /${spacePreserver}/g" \
+    | sed -E "s/.*/${paddingPreserver}&${paddingPreserver}/" \
+    | fmt -c -w "$width" \
+    | sed -E 's/^( *)(.*)/\1\2\1/' \
+    | tr " " "$filler" \
+    | sed -E "s/${paddingPreserver}/ /g" \
+    | sed -E "s/${spacePreserver}/ /g"
 }
 
 function Usage() {
@@ -57,10 +78,7 @@ function GetSection() {
 }
 
 # Entry point
-
 Main "$@"
-
-exit 0
 
 # NOTE: The rest of this file is not executed, so can hold scripts for
 # different languages etc.  Use `GetSection xxx` to obtain the text for a
