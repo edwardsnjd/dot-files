@@ -261,8 +261,10 @@ nnoremap <leader>m :PreviewMarkdown<CR><CR>
 xnoremap D y'>pgv
 
 " - Manually manage location list
-nmap <leader>rl <Plug>(LociAdd)
-nmap <leader>rc <Plug>(LociClear)
+nmap <leader>la <Plug>(LociAdd)
+nmap <leader>lc <Plug>(LociClear)
+nmap <leader>lr <Plug>(LociRead)
+nmap <leader>lw <Plug>(LociWrite)
 
 " - Writing presentations
 nnoremap <leader>th :.!toilet -d ~/figlet-fonts -f big -W -w 300<CR>
@@ -376,7 +378,7 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 " - Insert mode completion
 " imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
+" imap <c-x><c-f> <plug>(fzf-complete-path)
 " imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " - Enlarge default fzf popup
@@ -428,16 +430,28 @@ command! -nargs=* SearchDictionary exec "! define ".shellescape(<q-args>)
 command! -nargs=* SearchThesaurus exec "! thesaurus ".shellescape(<q-args>)
 
 " Manually remembering list of locations
-
 nnoremap <Plug>(LociAdd) :caddexpr GetLocation()<CR>
 nnoremap <Plug>(LociClear) :cexpr [] <bar> cclose<CR>
+nnoremap <Plug>(LociRead) :ReadLociFile 
+nnoremap <Plug>(LociWrite) :WriteLociFile 
 
 function! GetLocation()
-  return [GetLocationInfo(), getline('.')]
+  return expand('%') . ':' . line('.') . ':' . col('.') . ':' . '['.input('Label (optional): ').'] '. getline('.')
 endfunction
 
-function! GetLocationInfo()
-  return expand('%') . ':' . line('.') . ':' . col('.') . ':' . input('Label (optional): ')
+" See: https://www.reddit.com/r/vim/comments/9iwr41/store_quickfix_list_as_a_file_and_load_it/
+command! -complete=file -nargs=1 ReadLociFile call <SID>ReadLociFile(<f-args>)
+function! <SID>ReadLociFile(file) abort
+  let l:efm = &l:efm
+  let &l:errorformat = "%-G%f:%l: All of '%#%.depend'%.%#,%f%.%l col %c%. %m"
+  execute 'cfile '.a:file
+  let &l:efm = l:efm
+endfunction
+
+command! -complete=file -nargs=1 WriteLociFile call <SID>WriteLociFile(<f-args>)
+function! <SID>WriteLociFile(file) abort
+  copen
+  execute 'write! '.a:file
 endfunction
 
 " Redirect the output of a Vim or external command into a scratch buffer
