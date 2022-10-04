@@ -72,12 +72,6 @@ export HISTFILESIZE=-1
 # YYYY-MM-DDTHH:MM (see strftime)
 export HISTTIMEFORMAT="$(tput setaf 5)%F$(tput sgr0)T$(tput setaf 4)%H:%M$(tput sgr0) "
 
-# Include private bin if it exists
-[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
-
-# Include private bin if it exists
-[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
-
 # Tone down "other writeable" panic color
 export LS_COLORS="${LS_COLORS}:ow=07;36"
 
@@ -105,13 +99,21 @@ export SQLITE_HISTORY="${XDG_CACHE_HOME}/sqlite_history"
 # Use XDG directories
 alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
 
-# --- Source other files ---
+# --- Manage PATH ---
 
 # Include homebrew binaries if present
 export HOMEBREW_PREFIX="/usr/local"
 [ -d "/opt/homebrew" ] && export HOMEBREW_PREFIX="/opt/homebrew"
 [ -d "/home/linuxbrew/.linuxbrew" ] && export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
 [ -n "${HOMEBREW_PREFIX:-}" ] && eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
+
+# Include private bin if it exists
+[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+
+# Include private bin if it exists
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
+
+# --- Source other files ---
 
 # Include rest of things used for all interactive shell
 [ -f ~/.bashrc ] && source ~/.bashrc

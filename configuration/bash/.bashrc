@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# --- Bash aliases ---
-
 # Alias definitions
 [ -f $XDG_CONFIG_HOME/bash/bash_aliases ] && source $XDG_CONFIG_HOME/bash/bash_aliases
 
@@ -14,7 +12,7 @@
 # Prompt (env)
 [ -f $XDG_CONFIG_HOME/bash/bash_prompt ] && source $XDG_CONFIG_HOME/bash/bash_prompt
 
-# fzf autocompletion
+# gpg agent autocompletion
 [ -f $XDG_CONFIG_HOME/bash/bash_gpg ] && source $XDG_CONFIG_HOME/bash/bash_gpg
 
 # fzf autocompletion
@@ -39,11 +37,11 @@ export NVM_DIR="$HOME/.nvm"
 # Allow broot convenient launch and extra features
 [ -f $XDG_CONFIG_HOME/broot/launcher/bash/br ] && source $XDG_CONFIG_HOME/broot/launcher/bash/br
 
+# Cargo (added by rustup)
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
 # Allow OS overrides
 [ -f $XDG_CONFIG_HOME/bash/bashrc_os ] && source $XDG_CONFIG_HOME/bash/bashrc_os
 
 # Include any local machine things
 [ -f ~/.bash_local ] && source ~/.bash_local
-
-# Cargo (added by rustup)
-[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
