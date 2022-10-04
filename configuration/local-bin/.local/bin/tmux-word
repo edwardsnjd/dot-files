@@ -7,7 +7,14 @@ function Main() {
     | tr " " "\n" \
     | tac \
     | dedup \
-    | fzf --no-sort --query "${1:-}"
+    | fzf \
+      --header ":: Words from this pane" \
+      --multi \
+      --height "40%" \
+      --no-sort \
+      --bind "alt-a:toggle-all" \
+      --query "${1:-}" \
+    | xargs echo
 }
 
 Main "$@"

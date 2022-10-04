@@ -3,11 +3,34 @@
 # Interactive FZF browser of all previous lines in this tmux pane
 
 function Main() {
+  # Use sentinel output line to indicate if we want to merge selection(s)
+  # into a single line
+  local mergeSentinel="§MERGEPLS§"
+
   # NOTE: Start with query to exclude command lines (use Ctrl-R for that)
   tmux capture-pane -p -S - -E - \
     | tac \
     | dedup \
-    | fzf --no-sort --query "!» ${1:-}"
+    | fzf \
+      --header ":: Lines from this pane" \
+      --multi \
+      --height "40%" \
+      --no-sort \
+      --bind "alt-a:toggle-all" \
+      --bind "alt-enter:execute(echo '$mergeSentinel')+accept" \
+      --query "!» ${1:-}" \
+    | {
+      # Merge if first line is the sentinel
+      read first
+      if [[ "$first" == "$mergeSentinel" ]]; then
+        # Consume sentinel and merge rest
+        xargs echo
+      else
+        # Output all lines (including first)
+        echo "$first"
+        cat
+      fi
+    }
 }
 
 Main "$@"
