@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Stub for w3m.
+#
+# Unfortunately w3m does not currently have any options allowing configuration
+# of the paths it reads/writes files.  This is a stub that moves its entire
+# working directory under XDG_CONFIG_HOME.
+
+# Find actual w3m binary path (exclude this one)
+w3mExe=$(which -a w3m | grep -v ".local/bin/w3m$" | head -1)
+
+# Run actual w3m pretending that our HOME directory is where we want it to
+# find/create its `.w3m` working directory
+HOME="$XDG_CONFIG_HOME" "$w3mExe" "$@"

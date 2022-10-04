@@ -23,6 +23,8 @@ speed_up_keys
 
 use_bash
 
+w3m/init.sh
+
 stow --target="${HOME}" \
   alacritty \
   bash \
