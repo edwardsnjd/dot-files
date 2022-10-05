@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# NAME
+#   explore-bash-history - merge split bash history files into one data set
+#
+# USAGE
+#   explore-bash-history
+#
+# DEPENDENCIES
+#   sed, date, printf
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -o xtrace
+
+function Main() {
+  local historyDir="$HOME/.local/state/bash"
+
+  for f in "$historyDir"/history*; do
+    FilterTimestampedEntries "$f"
+  done \
+    | ParseDates
+}
+
+function ParseDates() {
+  local isoFormat="%Y-%m-%dT%H:%M:%S"
+  local hotdFormat="%H"
+  local dotwFormat="%u-%a"
+  local format="$isoFormat%t$hotdFormat%t$dotwFormat"
+
+  while read epoch cmd; do
+    local dt="$(date -j -r "$epoch" +"$format")"
+
+    printf "%s\t%s\n" "$dt" "$cmd"
+  done
+}
+
+function FilterTimestampedEntries() {
+  sed -E -n '
+    /^#([0-9]+)/ {
+      s//\1/
+
+      N
+
+      s/\n/§/g
+
+      :continuations
+      /\\$/ {
+        N
+        b continuations
+      }
+
+      s/\\\n/¶/g
+      s/\t/⇒/g
+
+      s/§/\t/g
+
+      p
+    }
+  ' "$@"
+}
+
+Main "$@"
