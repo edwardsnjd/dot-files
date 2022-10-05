@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Exit if not running interactively ($- = all shell options)
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
 # Alias definitions
 [ -f $XDG_CONFIG_HOME/bash/bash_aliases ] && source $XDG_CONFIG_HOME/bash/bash_aliases
 
@@ -23,6 +29,8 @@ shopt -s autocd     # directory path is treated as a `cd`
 shopt -s cdspell    # correct minor errors in directory names for `cd`
 shopt -s direxpand  # expand directory names
 shopt -s dirspell   # correct minor errors in directory names on expansion
+shopt -s histappend # append to the history file, don't overwrite it
+#shopt -s globstar  # expand "**" in pathname
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
