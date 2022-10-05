@@ -534,7 +534,127 @@ Plug 'https://github.com/wincent/terminus'
 Plug 'https://github.com/psf/black'
 Plug 'https://github.com/editorconfig/editorconfig-vim'
 Plug 'https://github.com/mbbill/undotree.git'
+Plug 'https://github.com/edwardsnjd/vim-lsp', { 'branch': 'before-init' }
 call plug#end()
+
+" Configure vim-lsp
+
+" Show errors inline
+let g:lsp_diagnostics_echo_cursor = 1
+
+" Tweak the initialisation params to null the process id
+" to allow for LSP servers running in a different process
+" namespace to this client
+function! <SID>NullifyProcess(init_params) abort
+  let a:init_params['processId'] = v:null
+  return a:init_params
+endfunction
+
+if executable('lsp-python')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'lsp-python',
+        \   'cmd': { server_info->['lsp-python'] },
+        \   'allowlist': ['python'],
+        \ })
+endif
+
+if executable('lsp-csharp')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'lsp-csharp',
+        \   'cmd': { server_info->['lsp-csharp'] },
+        \   'allowlist': ['cs'],
+        \   'before_init': function('<SID>NullifyProcess'),
+        \ })
+endif
+
+if executable('lsp-json')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'lsp-json',
+        \   'cmd': { server_info->['lsp-json'] },
+        \   'allowlist': ['json'],
+        \   'before_init': function('<SID>NullifyProcess'),
+        \ })
+endif
+
+if executable('lsp-ruby')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'lsp-ruby',
+        \   'cmd': { server_info->['lsp-ruby'] },
+        \   'allowlist': ['ruby'],
+        \   'initialization_options': {
+        \     'completion': 'true',
+        \     'hover': 'true',
+        \     'symbols': 'true',
+        \     'definitions': 'true',
+        \     'rename': 'true',
+        \     'references': 'true',
+        \     'diagnostics': 'true',
+        \     'formatting': 'true',
+        \     'folding': 'true',
+        \     'highlights': 'true',
+        \   },
+        \ })
+endif
+
+if executable('lsp-typescript')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'lsp-typescript',
+        \   'cmd': { server_info->['lsp-typescript'] },
+        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..')) },
+        \   'allowlist': ['javascript', 'typescript'],
+        \   'before_init': function('<SID>NullifyProcess'),
+        \ })
+endif
+
+if executable('lsp-rust')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'lsp-rust',
+        \   'cmd': { server_info->['lsp-rust'] },
+        \   'whitelist': ['rust'],
+        \   'initialization_options': {
+        \     'cargo': {
+        \       'loadOutDirsFromCheck': v:true,
+        \     },
+        \     'procMacro': {
+        \       'enable': v:true,
+        \     },
+        \   },
+        \ })
+endif
+
+function! <SID>ConfigureLsp() abort
+  " Misc
+  setlocal signcolumn=yes
+  let g:lsp_format_sync_timeout = 1000
+
+  " C-X C-O for LSP autocomplete
+  setlocal omnifunc=lsp"complete
+
+  " Use LSP not ctags
+  if exists('+tagfunc')
+    setlocal tagfunc=lsp"tagfunc
+  endif
+
+  " Informational
+  nmap <buffer> K <plug>(lsp-hover)
+  nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+  nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> ge <plug>(lsp-document-diagnostics)
+  nmap <buffer> gp <plug>(lsp-peek-definition)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gs <plug>(lsp-document-symbol-search)
+  " Mutating
+  nmap <buffer> <leader>rf <plug>(lsp-document-format)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nmap <buffer> <leader>rr <plug>(lsp-code-action)
+endfunction
+
+augroup lsp_install
+  autocmd!
+  autocmd User lsp_buffer_enabled call <SID>ConfigureLsp()
+augroup END
 
 " enable 24bit true color
 if (has("termguicolors"))
