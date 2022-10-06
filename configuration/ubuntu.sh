@@ -17,4 +17,5 @@ stow --target=$HOME \
   snippets \
   ctags \
   zsh \
-  subversion
+  subversion \
+  readline

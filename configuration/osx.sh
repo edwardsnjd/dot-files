@@ -46,4 +46,5 @@ stow --target="${HOME}" \
   ctags \
   nb \
   zsh \
-  subversion
+  subversion \
+  readline
