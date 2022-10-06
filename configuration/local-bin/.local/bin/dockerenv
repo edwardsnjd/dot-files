@@ -156,8 +156,8 @@ function binstub() {
   local name="$1"
   shift
 
-  [ -z "$name" ] && echo "Name required, see help" >/dev/stderr && exit 1
-  [ -z "$@" ] && echo "Command required, see help" >/dev/stderr && exit 1
+  [[ -z "$name" ]] && echo "Name required, see help" >/dev/stderr && exit 1
+  [[ -z "$@" ]] && echo "Command required, see help" >/dev/stderr && exit 1
 
   # Use the bash ${variable@operator} "Q" operator to get quoted args
   # (needs bash v4.4+)
