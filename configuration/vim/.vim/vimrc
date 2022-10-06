@@ -576,7 +576,25 @@ if executable('lsp-json')
         \ })
 endif
 
-if executable('lsp-ruby')
+if executable('solargraph')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'solargraph',
+        \   'cmd': { server_info->['solargraph', 'stdio'] },
+        \   'allowlist': ['ruby'],
+        \   'initialization_options': {
+        \     'completion': 'true',
+        \     'hover': 'true',
+        \     'symbols': 'true',
+        \     'definitions': 'true',
+        \     'rename': 'true',
+        \     'references': 'true',
+        \     'diagnostics': 'true',
+        \     'formatting': 'true',
+        \     'folding': 'true',
+        \     'highlights': 'true',
+        \   },
+        \ })
+elseif executable('lsp-ruby')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-ruby',
         \   'cmd': { server_info->['lsp-ruby'] },
