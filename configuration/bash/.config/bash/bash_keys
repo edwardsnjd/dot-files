@@ -56,3 +56,6 @@ bind -m vi-insert -x      '"\C-x\C-p": readline-complete tmux-word'
 
 # CTRL-j - List current directory
 bind -m emacs-standard -x '"\C-j": clear && pwd && l'
+
+# Space - History expansion
+bind -m emacs-standard 'Space: magic-space'
