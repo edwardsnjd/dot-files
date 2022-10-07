@@ -658,7 +658,7 @@ function! <SID>ConfigureLsp() abort
 
   " Use LSP not ctags
   if exists('+tagfunc')
-    setlocal tagfunc=lsp"tagfunc
+    setlocal tagfunc=lsp#tagfunc
   endif
 
   " Informational
