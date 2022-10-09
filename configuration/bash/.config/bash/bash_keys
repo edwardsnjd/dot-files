@@ -59,3 +59,10 @@ bind -m emacs-standard -x '"\C-j": clear && pwd && l'
 
 # Space - History expansion
 bind -m emacs-standard 'Space: magic-space'
+bind -m vi-command     'Space: magic-space'
+bind -m vi-insert      'Space: magic-space'
+
+# CTRL-x Enter - Shell expand line
+bind -m emacs-standard '"\C-x\C-m": shell-expand-line'
+bind -m vi-command     '"\C-x\C-m": shell-expand-line'
+bind -m vi-insert      '"\C-x\C-m": shell-expand-line'
