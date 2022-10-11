@@ -675,6 +675,7 @@ function! <SID>ConfigureLsp() abort
   nmap <buffer> <leader>rf <plug>(lsp-document-format)
   nmap <buffer> <leader>rn <plug>(lsp-rename)
   nmap <buffer> <leader>rr <plug>(lsp-code-action)
+  vmap <buffer> <leader>rr :LspCodeAction<CR>
 endfunction
 
 augroup lsp_install
