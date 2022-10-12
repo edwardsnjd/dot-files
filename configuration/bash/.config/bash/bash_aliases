@@ -13,10 +13,10 @@ alias  ...='cd ../..'       # Go up two directories
 alias ....='cd ../../..'    # And for good measure
 
 # Simple tree view
-alias    t='tree -aF -I .git --dirsfirst -L 1'
-alias   tt='tree -aF -I .git --dirsfirst -L 2'
-alias  ttt='tree -aF -I .git --dirsfirst -L 3'
-alias tree='tree -aF -I .git --dirsfirst'
+alias    t='tree -aFC -I .git --dirsfirst -L 1'
+alias   tt='tree -aFC -I .git --dirsfirst -L 2'
+alias  ttt='tree -aFC -I .git --dirsfirst -L 3'
+alias tree='tree -aFC -I .git --dirsfirst'
 
 # List shell completions
 alias list_aliases='compgen -A alias | sort -u'
@@ -54,6 +54,7 @@ alias ghw='watch gh'
 # Interactive file system browsers
 alias f="file-browser"
 alias d="directory-browser"
+alias p="paginate"
 
 # Clear and print ruler
 alias cl="clear && ruler"
