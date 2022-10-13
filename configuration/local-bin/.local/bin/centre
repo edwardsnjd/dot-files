@@ -55,7 +55,8 @@ function CenterTitle() {
     | sed -E 's/^( *)(.*)/\1\2\1/' \
     | tr " " "$filler" \
     | sed -E "s/${paddingPreserver}/ /g" \
-    | sed -E "s/${spacePreserver}/ /g"
+    | sed -E "s/${spacePreserver}/ /g" \
+    | sed -E "s/^(.{0,$width}).*/\1/"
 }
 
 function Usage() {
