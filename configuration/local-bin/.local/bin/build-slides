@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# NAME
+#   build-slides - Split markdown into slides
+#
+# USAGE
+#   build-slides --target "outDir" < slides.md
+#
+# DEPENDENCIES
+#   - csplit, awk, sed
+#   - toilet
+#   - centre
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function BuildSlides() {
+  local targetDir="."
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -t|--target) targetDir="$2" && shift && shift ;;
+      *) shift ;;
+    esac
+  done
+
+  targetDir="${targetDir:-.}"
+
+  local tmpDir="$(mktemp -d)"
+  local rawPathPrefix="$tmpDir/raw_"
+
+  SplitToRawFiles "$rawPathPrefix"
+
+  for rawPath in "$rawPathPrefix"*; do
+    local slideName="${rawPath/$rawPathPrefix/slide_}"
+    local slidePath="${targetDir}/${slideName}"
+    cat "$rawPath" | FormatSlide > "$slidePath"
+    echo "Created: $slidePath" > /dev/stderr
+  done
+
+  rm -r "$tmpDir"
+}
+
+function SplitToRawFiles() {
+  local prefix="$1"
+  csplit -f "$prefix" -k - '/^#/' '{100}' || true
+}
+
+function FormatSlide() {
+  sed -E '
+    1 { /^$/ d; }
+    $ { /^$/ d; }
+  ' | awk '
+    BEGIN { h1="toilet -f future | centre" }
+    BEGIN { h2="toilet -f pagga | centre" }
+    ! /^#/ { print }
+    /^##/  { sub("^#+ +", ""); print | h2; close(h2); }
+    /^#/   { sub("^#+ +", ""); print | h1; close(h1); }
+  '
+}
+
+BuildSlides "$@"

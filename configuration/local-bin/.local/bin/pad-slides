@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# NAME
+#   pad-slides - Convert markdown to vim friendly slide format.
+#
+# USAGE
+#   pad-slides < slides.md
+#
+# DEPENDENCIES
+#   - awk, sed, tput
+#   - toilet
+#   - centre
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+PadSlides() {
+  local cols="${COLS:-$(tput cols)}"
+  local lines="${LINES:-$(tput lines)}"
+
+  # Vim has a command line
+  local usableLines="$(( $lines - 1 ))"
+
+  awk -v cols="$cols" -v lines="$usableLines" '
+    BEGIN {
+      linesInSection = 0
+      cmd = "sed -E \"s/^#+ +//\" | toilet -f future -W -w " cols " | centre"
+    }
+
+    # Header line
+    /^#/ {
+      # Insert blank lines before heading
+      if (linesInSection > 0) {
+        linesToPad = lines - linesInSection - 1
+        for (i=0; i<linesToPad; i++) print ""
+      }
+
+      # Print the heading
+      print | cmd
+      print ""
+      close(cmd)
+
+      # Account for 4 lines of header from cmd
+      linesInSection = 5
+    }
+
+    # Body line
+    ! /^#/ {
+      print
+
+      # Account for line wrapping
+      linesInSection += int(length($0) / cols) + 1
+    }
+  '
+}
+
+PadSlides "$@"
