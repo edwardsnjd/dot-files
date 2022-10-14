@@ -344,8 +344,8 @@ nnoremap <leader>eep "xyy"xPj!!python3<CR>
 xnoremap <leader>eep "xy"xo<Esc>p!!python3<CR>gv
 
 " - Execute current line (in shell)
-nnoremap <leader>es :!<C-R><C-L><CR>
-nnoremap <leader>eS :!clear;<C-R><C-L><CR>
+nnoremap <leader>es :!<C-R>=escape(getline('.'), '%')<CR><CR>
+nnoremap <leader>eS :!clear;<C-R>=escape(getline('.'), '%')<CR><CR>
 vnoremap <leader>es :w !sh<CR>
 vnoremap <leader>eS :w !sh<CR>
 
