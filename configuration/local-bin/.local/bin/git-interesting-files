@@ -3,10 +3,6 @@
 # Interactive FZF browser of all interesting files to git
 
 function GitInterestingFiles() {
-  # See man terminfo for colors
-  local DELETED="$(tput setaf 1)"
-  local RESET="$(tput sgr0)"
-
   git -c color.status=always \
     status \
     --short \
