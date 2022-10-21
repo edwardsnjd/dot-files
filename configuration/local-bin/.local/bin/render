@@ -107,7 +107,10 @@ function render_svg() {
 }
 
 function render_markdown() {
-  glow --width "${2:-$(tput cols)}" --style "auto" "$1"
+  glow \
+    --width "${2:-$(tput cols)}" \
+    --style "$XDG_CONFIG_HOME/glow/dark-tight.json" \
+    "$1"
 }
 
 function render_html() {
