@@ -50,6 +50,7 @@ export LESS="\
   --line-num-width=3 \
   --color=NK-$ \
   --color=SwK$ \
+  --color=WwK$ \
 "
 # Use bold green for bold in less
 export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
