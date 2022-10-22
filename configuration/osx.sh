@@ -47,4 +47,5 @@ stow --target="${HOME}" \
   nb \
   zsh \
   subversion \
-  readline
+  readline \
+  glow
