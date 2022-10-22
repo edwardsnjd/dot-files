@@ -41,7 +41,7 @@ function Browse {
   local preview="highlight-text {1} {2}"
   local display="paste {f+1} {f+2} | $0 --display"
   local output="paste {f+1} {f+2} | $0 --output"
-  local edit="paste {f+1} {f+2} | $0 --edit"
+  local edit="paste {f+1} {f+2} {f+3} {f+4} | $0 --edit"
 
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
@@ -51,7 +51,7 @@ function Browse {
   local header3="∷ Search: ${magenta}C-R${normal} search (default), ${magenta}C-f${normal} filter current search"
   local header="${header1}${nl}${header2}${nl}${header3}"
 
-  local rgPrefix="rg --line-number --smart-case --hidden --color=always"
+  local rgPrefix="rg --line-number --column --smart-case --hidden --color=always"
 
   local rgPrompt="Text> "
   local fzfPrompt="Text (filter)> "
@@ -64,13 +64,14 @@ function Browse {
       --header "$header" \
       --preview "$preview" \
       --query "$query" \
-      --delimiter=":" \
-      --nth="3.." \
+      --delimiter ":" \
+      --with-nth "1,2,4.." \
+      --nth "3.." \
       --multi \
       --disabled \
       --no-sort \
       --preview-window "~3,+{2}+3-/2" \
-      --bind "change:reload:sleep 0.08; $rgPrefix {q} || true" \
+      --bind "change:reload:sleep 0.1; $rgPrefix {q} || true" \
       --bind "ctrl-r:rebind(change)+disable-search+change-prompt($rgPrompt)+reload:$rgPrefix {q} || true" \
       --bind "ctrl-f:unbind(change)+enable-search+change-prompt($fzfPrompt)" \
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
@@ -85,16 +86,15 @@ function Browse {
   return 0
 }
 
+# Paginate one file at a time so we can jump to the correct line
 function Display() {
-  # Paginate one file at a time so we can jump to the correct line
   while IFS=$'\t' read -r file line; do
     paginate --jump-target=5 --hilite-unread +"$line" "$file"
   done < "${1:-/dev/stdin}"
 }
 
+# Display the selected lines with context for all files
 function Output() {
-  # Display the selected lines with context for all files
-
   local context=4
 
   while IFS=$'\t' read -r file line; do
@@ -111,13 +111,9 @@ function Output() {
   done < "${1:-/dev/stdin}"
 }
 
+# Edit the selected files
 function Edit() {
-  # Edit the selected files (TODO: jump to correct lines)
-  cut -f1 \
-    | sort \
-    | uniq \
-    | tr '\n' '\0' \
-    | xargs -0 vim
+  vim -q <(awk -F $'\t' -v OFS=$':' '{ $1=$1; print }')
 }
 
 Main "$@"
