@@ -2,7 +2,7 @@
 
 # Usage: text-browser
 #
-# fzf browse of rendered text.
+# fzf search of rendered text.
 
 set -o nounset
 #set -o errexit
@@ -10,12 +10,13 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local cmd="browse"
+  local cmd="search"
   local others=()
 
   while [[ $# -gt 0 ]]; do
     case $1 in
-      -b|--browse) cmd="browse" && shift ;;
+      -s|--search) cmd="search" && shift ;;
+      -f|--filter) cmd="filter" && shift ;;
       -d|--display) cmd="display" && shift ;;
       -o|--output) cmd="output" && shift ;;
       -e|--edit) cmd="edit" && shift ;;
@@ -27,7 +28,8 @@ function Main() {
   set -- "${others[@]}" # restore positional parameters
 
   case "$cmd" in
-    browse) Browse "$@" ;;
+    search) Search "$@" ;;
+    filter) Filter "$@" ;;
     output) Output "$@" ;;
     display) Display "$@" ;;
     edit) Edit "$@" ;;
@@ -35,7 +37,54 @@ function Main() {
   esac
 }
 
-function Browse {
+function Search {
+  local query="${1:-}"
+  local tmp="$(mktemp)"
+
+  local rgPrefix="rg --line-number --column --smart-case --hidden --color=always"
+
+  local preview="highlight-text {1} {2}"
+  local filter="$0 --filter {q} < $tmp"
+  local display="paste {f+1} {f+2} | $0 --display"
+  local output="paste {f+1} {f+2} | $0 --output"
+  local edit="paste {f+1} {f+2} {f+3} {f+4} | $0 --edit"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-a${normal} select all, ${magenta}A-d${normal} deselect all"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} edit selected, ${magenta}C-o${normal} output selected, ${magenta}C-f${normal} filter current search"
+  local header="${header1}${nl}${header2}"
+
+  $rgPrefix "$query" | tee "$tmp" \
+    | fzf \
+      --ansi \
+      --reverse \
+      --prompt "Text> " \
+      --header "$header" \
+      --preview "$preview" \
+      --query "$query" \
+      --delimiter ":" \
+      --with-nth "1,2,4.." \
+      --multi \
+      --disabled \
+      --no-sort \
+      --preview-window "~3,+{2}+3-/2" \
+      --bind "change:reload:sleep 0.1; $rgPrefix {q} | tee $tmp || true" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "ctrl-s:toggle-sort" \
+      --bind "alt-a:select-all" \
+      --bind "alt-d:deselect-all" \
+      --bind "ctrl-f:execute($filter)" \
+      --bind "ctrl-o:execute($output)" \
+      --bind "alt-enter:execute($edit)" \
+      --bind "enter:execute($display)"
+
+  # Tidy up
+  rm "$tmp"
+}
+
+function Filter() {
   local query="${1:-}"
 
   local preview="highlight-text {1} {2}"
@@ -47,39 +96,28 @@ function Browse {
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
   local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort, ${magenta}A-a${normal} select all, ${magenta}A-d${normal} deselect all"
-  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} edit selected, ${magenta}C-o${normal} output selected"
-  local header3="∷ Search: ${magenta}C-R${normal} search (default), ${magenta}C-f${normal} filter current search"
-  local header="${header1}${nl}${header2}${nl}${header3}"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} edit selected, ${magenta}C-o${normal} output selected, ${magenta}C-c${normal} back to search"
+  local header="${header1}${nl}${header2}"
 
-  local rgPrefix="rg --line-number --column --smart-case --hidden --color=always"
-
-  local rgPrompt="Text> "
-  local fzfPrompt="Text (filter)> "
-
-  $rgPrefix "$query" \
-    | fzf \
-      --ansi \
-      --reverse \
-      --prompt "$rgPrompt" \
-      --header "$header" \
-      --preview "$preview" \
-      --query "$query" \
-      --delimiter ":" \
-      --with-nth "1,2,4.." \
-      --multi \
-      --disabled \
-      --no-sort \
-      --preview-window "~3,+{2}+3-/2" \
-      --bind "change:reload:sleep 0.1; $rgPrefix {q} || true" \
-      --bind "ctrl-r:rebind(change)+disable-search+change-prompt($rgPrompt)+reload:$rgPrefix {q} || true" \
-      --bind "ctrl-f:unbind(change)+enable-search+change-prompt($fzfPrompt)" \
-      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-      --bind "ctrl-s:toggle-sort" \
-      --bind "alt-a:select-all" \
-      --bind "alt-d:deselect-all" \
-      --bind "ctrl-o:execute($output)" \
-      --bind "alt-enter:execute($edit)" \
-      --bind "enter:execute($display)"
+  fzf \
+    --ansi \
+    --reverse \
+    --prompt "Text> $query (filter)> " \
+    --header "$header" \
+    --preview "$preview" \
+    --delimiter ":" \
+    --with-nth "1,2,4.." \
+    --multi \
+    --sync \
+    --no-sort \
+    --preview-window "~3,+{2}+3-/2" \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --bind "ctrl-s:toggle-sort" \
+    --bind "alt-a:select-all" \
+    --bind "alt-d:deselect-all" \
+    --bind "ctrl-o:execute($output)" \
+    --bind "alt-enter:execute($edit)" \
+    --bind "enter:execute($display)"
 
   # Force happy exit code (expect to quit fzf with Ctrl-C)
   return 0
