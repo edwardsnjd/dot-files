@@ -1,27 +1,118 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Transform specially formatted input line to commands for tmux send-keys
-
+#
 # Usage:
 #  echo "echo Hello" | tmux-convert | xargs tmux send-keys .2
 #  echo "echo <Alt-.>" | tmux-convert | xargs tmux send-keys .3
 
-# Examples:
-#  - foo            => 'foo'
-#  - foo bar        => 'foo bar'
-#  - foo.bar        => 'foo.bar'
-#  - foo "bar"      => 'foo "bar"'
-#  - <Ctrl-a>       => C-a
-#  - <Alt-a>        => M-a
-#  - <Ctrl-Alt-a>   => C-M-a
-#  - <Alt-Ctrl-a>   => M-C-a
-#  - echo <Alt-.>   => 'echo ', M-.
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
 
-sed -E "
-  s/<Alt-Ctrl-/<M-C-/ig;
-  s/<Ctrl-Alt-/<C-M-/ig;
-  s/<Alt-/<M-/ig;
-  s/<Ctrl-/<C-/ig;
-  s/.*/'&'/g;
-  s/<([^>]+)>/'\n\1\n'/g;
-"
+Main() {
+  local cmd="convert"
+
+  POSITIONAL_ARGS=()
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --test) cmd="test" && shift ;;
+      -*|--*) echo "Unknown option $1" && exit 1 ;;
+      *) POSITIONAL_ARGS+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+  case "$cmd" in
+    convert) Convert "$@" ;;
+    test) RunTests "$@" ;;
+    -*|--*) echo "Unknown command $cmd" && exit 1 ;;
+  esac
+}
+
+Convert() {
+  sed -E "
+    s/<Alt-Ctrl-/<M-C-/ig;
+    s/<Ctrl-Alt-/<C-M-/ig;
+    s/<Alt-/<M-/ig;
+    s/<Ctrl-/<C-/ig;
+    s/.*/'&'/g;
+    s/<([^>]+)>/'\n\1\n'/g;
+  "
+}
+
+function RunTests() {
+  local input=""
+  local output=""
+  local expected=""
+
+  function setUp() {
+    input="$SHUNIT_TMPDIR/input.txt"
+    output="$SHUNIT_TMPDIR/output.txt"
+    expected="$SHUNIT_TMPDIR/expected.txt"
+  }
+
+  function _result() {
+    "$0" "$@"
+  }
+
+  function testSimpleDataUnchanged() {
+    cat <<-EOF >"$input"
+			A
+			Abc
+			Abc def
+			Abc def 1234567890-= ~!@#$%^&*()_+ []{}|;':",./<>?
+			Abc "quoted" stuff
+		EOF
+    cat <<-EOF >"$expected"
+			'A'
+			'Abc'
+			'Abc def'
+			'Abc def 1234567890-= ~!@#$%^&*()_+ []{}|;':",./<>?'
+			'Abc "quoted" stuff'
+		EOF
+
+    _result <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  function testSpecialCharactersConverted() {
+    cat <<-EOF >"$input"
+			<Ctrl-a>
+			<Alt-a>
+			<Ctrl-Alt-a>
+			<Alt-Ctrl-a>
+			echo <Alt-.>
+		EOF
+    cat <<-EOF >"$expected"
+			''
+			C-a
+			''
+			''
+			M-a
+			''
+			''
+			C-M-a
+			''
+			''
+			M-C-a
+			''
+			'echo '
+			M-.
+			''
+		EOF
+
+    _result <"$input" >"$output"
+
+    diff "$expected" "$output"
+  }
+
+  # Run tests
+  source shunit2
+}
+
+Main "$@"
