@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Pick and run gradle tasks
+
+./gradlew tasks \
+  | sed -nE '/^([a-zA-Z]+) -.*/ s//\1/p' \
+  | fzf --multi --reverse \
+  | xargs ./gradlew
