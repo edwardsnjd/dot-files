@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Pick and run npm scripts
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local query="$(while [[ $# -gt 0 ]]; do printf "$1 | "; shift; done)"
+
+  {
+    echo "Name	Command"
+    jq ".scripts | to_entries[] | [.key, .value] | @tsv" -r < package.json
+  } \
+    | column -t -s $'\t' \
+    | fzf \
+      --reverse \
+      --header-lines 1 \
+      --multi \
+      --nth 1 \
+      --query "$query" \
+      --bind 'enter:execute(echo {+1})+abort' \
+    | xargs npm run
+}
+
+Main "$@"
+
