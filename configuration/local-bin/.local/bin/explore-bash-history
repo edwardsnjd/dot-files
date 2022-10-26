@@ -18,7 +18,7 @@ function Main() {
   local historyDir="$HOME/.local/state/bash"
 
   for f in "$historyDir"/history*; do
-    FilterTimestampedEntries "$f"
+    FilterTimestampedEntries < "$f"
   done \
     | ParseDates
 }
@@ -58,7 +58,7 @@ function FilterTimestampedEntries() {
 
       p
     }
-  ' "$@"
+  '
 }
 
 Main "$@"
