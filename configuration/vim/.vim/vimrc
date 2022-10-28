@@ -232,20 +232,8 @@ nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":"
 noremap <silent> <F5> <Plug>PresenterPresent
 
 " - Show highlight groups at the cursor
-" See: https://vim.fandom.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
-nmap <silent> <F10> :echo 
-\ 'hi<'    . synIDattr(synID(line("."),col("."),1),"name") . '> ' .
-\ 'trans<' . synIDattr(synID(line("."),col("."),0),"name") . '> ' .
-\ 'lo<'    . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . '>'<CR>
-
-" Show current syntax
-noremap <leader>ss :call <SID>SynStack()<CR>
-function! <SID>SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
+noremap <silent> <F10> <Plug>SyntaxexplorerAtCursor
+noremap <leader>ss <Plug>SyntaxexplorerStackAtCursor
 
 " Fix syntax highlighting it goes wonky
 nnoremap <F12> <Esc>:syntax sync fromstart<CR>
