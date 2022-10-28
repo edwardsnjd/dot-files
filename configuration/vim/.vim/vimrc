@@ -271,18 +271,7 @@ vnoremap <leader>es :w !sh<CR>
 vnoremap <leader>eS :w !sh<CR>
 
 " Snippets
-nnoremap <leader>is :call <SID>Snippet()<cr>
-function! <SID>Snippet() abort
-  let l:tempname = tempname()
-  try
-    execute 'silent ! snippet ' . &filetype . ' > ' . fnameescape(l:tempname)
-    " Insert text returned into file below cursor position
-    execute 'read ' . l:tempname
-    redraw!
-  finally
-    call delete(l:tempname)
-  endtry
-endfunction
+nnoremap <leader>is <Plug>SnippetsInsert
 
 " Insert person from git
 vnoremap <leader>ip <Plug>GitReplaceWithPerson
