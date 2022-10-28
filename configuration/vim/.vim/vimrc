@@ -590,7 +590,7 @@ function! <SID>ConfigureLsp() abort
   let g:lsp_format_sync_timeout = 1000
 
   " C-X C-O for LSP autocomplete
-  setlocal omnifunc=lsp"complete
+  setlocal omnifunc=lsp#complete
 
   " Use LSP not ctags
   if exists('+tagfunc')
