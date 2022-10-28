@@ -337,31 +337,6 @@ command! -nargs=* SearchDevDocs silent exec "! open https://devdocs.io/\\#q=".sh
 command! -nargs=* SearchDictionary exec "! define ".shellescape(<q-args>)
 command! -nargs=* SearchThesaurus exec "! thesaurus ".shellescape(<q-args>)
 
-" Manually remembering list of locations
-nnoremap <Plug>(LociAdd) :caddexpr GetLocation()<CR>
-nnoremap <Plug>(LociClear) :cexpr [] <bar> cclose<CR>
-nnoremap <Plug>(LociRead) :ReadLociFile 
-nnoremap <Plug>(LociWrite) :WriteLociFile 
-
-function! GetLocation()
-  return expand('%') . ':' . line('.') . ':' . col('.') . ':' . '['.input('Label (optional): ').'] '. getline('.')
-endfunction
-
-" See: https://www.reddit.com/r/vim/comments/9iwr41/store_quickfix_list_as_a_file_and_load_it/
-command! -complete=file -nargs=1 ReadLociFile call <SID>ReadLociFile(<f-args>)
-function! <SID>ReadLociFile(file) abort
-  let l:efm = &l:efm
-  let &l:errorformat = "%-G%f:%l: All of '%#%.depend'%.%#,%f%.%l col %c%. %m"
-  execute 'cfile '.a:file
-  let &l:efm = l:efm
-endfunction
-
-command! -complete=file -nargs=1 WriteLociFile call <SID>WriteLociFile(<f-args>)
-function! <SID>WriteLociFile(file) abort
-  copen
-  execute 'write! '.a:file
-endfunction
-
 " Redirect the output of a Vim or external command into a scratch buffer
 " https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
 " Update via:
