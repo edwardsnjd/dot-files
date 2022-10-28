@@ -4,4 +4,4 @@ if exists('g:loaded_snippets')
 endif
 let g:loaded_snippets = 1
 
-nnoremap <Plug>SnippetsInsert :call snippets#Insert()<cr>
+nnoremap <Plug>(SnippetsInsert) :call snippets#Insert()<cr>

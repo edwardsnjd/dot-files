@@ -5,4 +5,4 @@ endif
 let g:loaded_presenter = 1
 
 " Provide commands and mappings calling autoloaded functions
-noremap <Plug>PresenterPresent :call presenter#Present()<CR>
+noremap <Plug>(PresenterPresent) :call presenter#Present()<CR>

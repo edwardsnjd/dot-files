@@ -13,5 +13,5 @@ let g:outline_filetype_keywords = {
       \}
 
 " Provide commands and mappings calling autoloaded functions
-nnoremap <Plug>ShowLocalOutline :call outline#ShowLocalOutline()<CR>
-nnoremap <Plug>ShowOutline :call outline#ShowOutline()<CR>
+nnoremap <Plug>(ShowLocalOutline) :call outline#ShowLocalOutline()<CR>
+nnoremap <Plug>(ShowOutline) :call outline#ShowOutline()<CR>

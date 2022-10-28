@@ -165,10 +165,10 @@ nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
 xnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 
 " - Display navigable file outline in local list
-nnoremap <leader>so <Plug>ShowLocalOutline
+nnoremap <leader>so <Plug>(ShowLocalOutline)
 
 " - Display file outline in new buffer
-nnoremap <leader>sO <Plug>ShowOutline
+nnoremap <leader>sO <Plug>(ShowOutline)
 
 " - Display file git history
 nnoremap <leader>sl :Redir !git log --oneline -n 1000 -- %<CR>
@@ -229,11 +229,11 @@ nnoremap <leader>ti :put ='- [ ] <+ TODO +>'<CR>
 nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":" ")."]"/<CR>
 
 " - Show presentation
-noremap <silent> <F5> <Plug>PresenterPresent
+noremap <silent> <F5> <Plug>(PresenterPresent)
 
 " - Show highlight groups at the cursor
-noremap <silent> <F10> <Plug>SyntaxexplorerAtCursor
-noremap <leader>ss <Plug>SyntaxexplorerStackAtCursor
+noremap <silent> <F10> <Plug>(SyntaxexplorerAtCursor)
+noremap <leader>ss <Plug>(SyntaxexplorerStackAtCursor)
 
 " Fix syntax highlighting it goes wonky
 nnoremap <F12> <Esc>:syntax sync fromstart<CR>
@@ -271,10 +271,10 @@ vnoremap <leader>es :w !sh<CR>
 vnoremap <leader>eS :w !sh<CR>
 
 " Snippets
-nnoremap <leader>is <Plug>SnippetsInsert
+nnoremap <leader>is <Plug>(SnippetsInsert)
 
 " Insert person from git
-vnoremap <leader>ip <Plug>GitReplaceWithPerson
+vnoremap <leader>ip <Plug>(GitReplaceWithPerson)
 
 " fzf mappings:
 

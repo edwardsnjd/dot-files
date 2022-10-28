@@ -4,4 +4,4 @@ if exists('g:loaded_git')
 endif
 let g:loaded_git = 1
 
-vnoremap <Plug>GitReplaceWithPerson :call git#ReplaceWithPerson()<CR>
+vnoremap <Plug>(GitReplaceWithPerson) :call git#ReplaceWithPerson()<CR>
