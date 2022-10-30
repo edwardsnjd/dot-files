@@ -4,6 +4,12 @@ if exists('g:loaded_fzftweaks')
 endif
 let g:loaded_fzftweaks = 1
 
+" Enlarge default fzf popup
+let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.9 } }
+
+" Preview above the list
+let g:fzf_preview_window = ['up:40%:border-bottom', 'ctrl-/']
+
 " Improve :Rg command to include hidden files
 command! -bang -nargs=* RG call fzf#vim#grep(
       \ "rg --column --line-number --no-heading --color=always --smart-case --hidden -- ".shellescape(<q-args>),
