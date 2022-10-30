@@ -206,7 +206,7 @@ nnoremap <leader>cp :! cp % %:h/
 nnoremap <leader>- :GetCurrentBranchLink<CR>
 
 " - Preview markdown
-nnoremap <leader>m :PreviewMarkdown<CR><CR>
+nnoremap <leader>m :! preview-markdown <C-R>=expand('%')<CR><CR>
 
 " - Visual mode quick duplicate
 xnoremap D y'>pgv
@@ -313,11 +313,6 @@ autocmd! User GoyoLeave Limelight!
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --hidden
 endif
-
-" New commands
-
-" Preview markdown (OSX using pandoc)
-command PreviewMarkdown ! NE_MD_OUT_FILE="${TMPDIR}%:t.html" && pandoc -s --mathjax "%" > "$NE_MD_OUT_FILE" && open "$NE_MD_OUT_FILE"
 
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   preview-markdown <PATH>
+#
+# DEPENDENCIES
+#   pandoc
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local path="${1:-unknown-markdown.md}"
+  local stem="${path%.md}"
+  local tmp="${TMPDIR}/${stem}.html"
+  pandoc \
+    --standalone \
+    --mathjax \
+    --output "$tmp" \
+    "$@"
+  open "$tmp"
+}
+
+Main "$@"
