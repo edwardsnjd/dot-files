@@ -57,7 +57,48 @@ set mouse=a
 set splitbelow
 set splitright
 
+" enable 24bit true color
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+" Expect terminal emulator to display things quickly
+if (has("termguicolors"))
+  set ttyfast
+endif
+
+" Correct italics
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+
+" Make netrw (file explorer) look sane
+let g:netrw_liststyle = 3     " Nested view
+let g:netrw_banner = 0        " No banner
+let g:netrw_winsize = 20      " 20% width
+
+" Prefer ripgrep over grep if available
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --hidden
+endif
+
+" General file editing enhancements
+filetype indent plugin on
+
+" Specific file types
+autocmd Filetype gitcommit setlocal textwidth=80
+autocmd Filetype ruby setlocal colorcolumn=120
+autocmd Filetype javascript setlocal colorcolumn=91
+autocmd Filetype typescript setlocal colorcolumn=91
+autocmd Filetype python setlocal colorcolumn=120
+
+" Markdown
+autocmd Filetype markdown noremap j gj
+autocmd Filetype markdown noremap k gk
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
 " Key bindings
+
 let mapleader = " "     " Change default leader from '\'
 
 " Mappings:
@@ -76,35 +117,15 @@ vnoremap > >gv
 " - Save some LH typing
 inoremap jk <Esc>
 
-" - Find and select next placeholder
-nnoremap <C-j> :keeppattern normal! /\v\<\+[^>]*\+\><C-v><CR><CR>vf><C-g>
-smap <C-j> <Esc><C-j>
-imap <C-j> <Esc><C-j>
+" - Visual mode quick duplicate
+xnoremap D y'>pgv
+" - Visual mode quick duplicate
+xnoremap D y'>pgv
 
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 " NOTE: Uses x register
 xnoremap <silent> * "xy:<C-U>let @/ = '\V'.escape(@x, '\') <bar> set hls <cr>
-
-" - Refactor: Inline
-" NOTE: Uses i and j registers, and i and j marks.
-" Implementation deletes the target to @i and copies the variable name to @j
-" then sets up a change to replace the variable with the target before deleting
-" the declaration line(s).  Much of this is to cater for multiline values.
-nmap <silent> <leader>ri viw<leader>ri
-xnoremap <silent> <leader>ri 
-  \:<C-U>'< mark i<CR>
-  \:<C-U>'>+1 mark j<CR>
-  \gv
-  \"id
-  \F=BviW
-  \"jy
-  \gv
-  \:<C-U>let @/ = '\V'.escape(@j, '\') <BAR> set hls <CR>
-  \cgni<Esc>
-  \:'i,'j-1 delete<CR>
-  \n
-  \:echo 'Press . to replace each '.@j.' usage with '.@i<CR>
 
 " - Resize current window with arrow keys
 nnoremap <Right> :vertical resize +2<CR>
@@ -112,7 +133,7 @@ nnoremap <Left> :vertical resize -2<CR>
 nnoremap <Up> :resize +2<CR>
 nnoremap <Down> :resize -2<CR>
 
-" Normal mode leader mappings:
+" Leader mappings:
 
 " - Save buffer
 nnoremap <leader>w :w<CR>
@@ -208,9 +229,6 @@ nnoremap <leader>- :GetCurrentBranchLink<CR>
 " - Preview markdown
 nnoremap <leader>m :! preview-markdown <C-R>=expand('%')<CR><CR>
 
-" - Visual mode quick duplicate
-xnoremap D y'>pgv
-
 " - Manually manage location list
 nmap <leader>la <Plug>(LociAdd)
 nmap <leader>lc <Plug>(LociClear)
@@ -228,16 +246,9 @@ nnoremap <leader>tb :.!toilet -f term -F border -w 300<CR>
 nnoremap <leader>ti :put ='- [ ] <+ TODO +>'<CR>
 nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":" ")."]"/<CR>
 
-" - Show presentation
-noremap <silent> <F5> <Plug>(PresenterPresent)
-
 " - Show highlight groups at the cursor
 noremap <silent> <F10> <Plug>(SyntaxexplorerAtCursor)
 noremap <leader>ss <Plug>(SyntaxexplorerStackAtCursor)
-
-" Fix syntax highlighting it goes wonky
-nnoremap <F12> <Esc>:syntax sync fromstart<CR>
-inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
 " .vimrc shortcuts
 nnoremap <leader>ve :edit $MYVIMRC<CR>
@@ -276,6 +287,26 @@ nnoremap <leader>is <Plug>(SnippetsInsert)
 " Insert person from git
 vnoremap <leader>ip <Plug>(GitReplaceWithPerson)
 
+" - Refactor: Inline
+" NOTE: Uses i and j registers, and i and j marks.
+" Implementation deletes the target to @i and copies the variable name to @j
+" then sets up a change to replace the variable with the target before deleting
+" the declaration line(s).  Much of this is to cater for multiline values.
+nmap <silent> <leader>ri viw<leader>ri
+xnoremap <silent> <leader>ri 
+  \:<C-U>'< mark i<CR>
+  \:<C-U>'>+1 mark j<CR>
+  \gv
+  \"id
+  \F=BviW
+  \"jy
+  \gv
+  \:<C-U>let @/ = '\V'.escape(@j, '\') <BAR> set hls <CR>
+  \cgni<Esc>
+  \:'i,'j-1 delete<CR>
+  \n
+  \:echo 'Press . to replace each '.@j.' usage with '.@i<CR>
+
 " fzf mappings:
 
 " - Display mappings
@@ -288,26 +319,19 @@ omap <leader><tab> <plug>(fzf-maps-o)
 " imap <c-x><c-f> <plug>(fzf-complete-path)
 " imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" General file editing enhancements
-filetype indent plugin on
+" Special non-leader mappings:
 
-" Specific file types
-autocmd Filetype gitcommit setlocal textwidth=80
-autocmd Filetype ruby setlocal colorcolumn=120
-autocmd Filetype javascript setlocal colorcolumn=91
-autocmd Filetype typescript setlocal colorcolumn=91
-autocmd Filetype python setlocal colorcolumn=120
+" - Find and select next placeholder
+nnoremap <C-j> :keeppattern normal! /\v\<\+[^>]*\+\><C-v><CR><CR>vf><C-g>
+smap <C-j> <Esc><C-j>
+imap <C-j> <Esc><C-j>
 
-" Markdown
-autocmd Filetype markdown noremap j gj
-autocmd Filetype markdown noremap k gk
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
+" - Show presentation
+noremap <silent> <F5> <Plug>(PresenterPresent)
 
-" Prefer ripgrep over grep if available
-if executable('rg')
-  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --hidden
-endif
+" Fix syntax highlighting it goes wonky
+nnoremap <F12> <Esc>:syntax sync fromstart<CR>
+inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
@@ -340,7 +364,11 @@ Plug 'https://github.com/mbbill/undotree.git'
 Plug 'https://github.com/edwardsnjd/vim-lsp', { 'branch': 'before-init' }
 call plug#end()
 
-" Configure vim-lsp
+" enable the theme
+colorscheme night-owl
+let g:airline_theme='night_owl'
+
+" LSP
 
 function! <SID>ConfigureLsp() abort
   " Misc
@@ -355,7 +383,7 @@ function! <SID>ConfigureLsp() abort
     setlocal tagfunc=lsp#tagfunc
   endif
 
-  " Informational
+  " Informational mappings
   nmap <buffer> K <plug>(lsp-hover)
   nmap <buffer> [g <plug>(lsp-previous-diagnostic)
   nmap <buffer> ]g <plug>(lsp-next-diagnostic)
@@ -365,7 +393,7 @@ function! <SID>ConfigureLsp() abort
   nmap <buffer> gp <plug>(lsp-peek-definition)
   nmap <buffer> gr <plug>(lsp-references)
   nmap <buffer> gs <plug>(lsp-document-symbol-search)
-  " Mutating
+  " Mutating mappings
   nmap <buffer> <leader>rf <plug>(lsp-document-format)
   nmap <buffer> <leader>rn <plug>(lsp-rename)
   nmap <buffer> <leader>rr <plug>(lsp-code-action)
@@ -376,26 +404,3 @@ augroup lsp_install
   autocmd!
   autocmd User lsp_buffer_enabled call <SID>ConfigureLsp()
 augroup END
-
-" enable 24bit true color
-if (has("termguicolors"))
-  set termguicolors
-endif
-
-" Expect terminal emulator to display things quickly
-if (has("termguicolors"))
-  set ttyfast
-endif
-
-" Correct italics
-let &t_ZH="\e[3m"
-let &t_ZR="\e[23m"
-
-" enable the theme
-colorscheme night-owl
-let g:airline_theme='night_owl'
-
-" Make netrw (file explorer) look sane
-let g:netrw_liststyle = 3     " Nested view
-let g:netrw_banner = 0        " No banner
-let g:netrw_winsize = 20      " 20% width
