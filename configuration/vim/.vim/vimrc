@@ -236,11 +236,11 @@ nmap <leader>lr <Plug>(LociRead)
 nmap <leader>lw <Plug>(LociWrite)
 
 " - Writing presentations
-nnoremap <leader>th :.!toilet -d ~/figlet-fonts -f big -W -w 300<CR>
-nnoremap <leader>tH :.!toilet -d ~/figlet-fonts -f standard -W -w 300<CR>
-nnoremap <leader>tf :.!toilet -f future -W -w 300<CR>
-nnoremap <leader>tF :.!toilet -f pagga -W -w 300<CR>
-nnoremap <leader>tb :.!toilet -f term -F border -w 300<CR>
+nnoremap <leader>th <Plug>(ToiletBig)
+nnoremap <leader>tH <Plug>(ToiletStandard)
+nnoremap <leader>tf <Plug>(ToiletFuture)
+nnoremap <leader>tF <Plug>(ToiletPagga)
+nnoremap <leader>tb <Plug>(ToiletBorder)
 
 " - Managing todo lists
 nnoremap <leader>ti :put ='- [ ] <+ TODO +>'<CR>
