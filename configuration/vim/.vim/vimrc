@@ -136,20 +136,20 @@ nnoremap <Down> :resize -2<CR>
 " Leader mappings:
 
 " - Save buffer
-nnoremap <leader>w :w<CR>
+nnoremap <leader>w :write<CR>
 
 " - Close window
 nnoremap <leader>x :close<CR>
 
 " - Close buffer
-nnoremap <leader>D :bd<CR>
+nnoremap <leader>D :bdelete<CR>
 
 " - Close buffer but keep window
-nnoremap <leader>d :bp \| bd#<CR>
+nnoremap <leader>d :bprevious \| bdelete #<CR>
 
 " - Cycle through buffers
-nnoremap <leader>j :bn<CR>
-nnoremap <leader>k :bp<CR>
+nnoremap <leader>j :bnext<CR>
+nnoremap <leader>k :bprevious<CR>
 
 " - Run the default build command
 nnoremap <leader>b :Make<CR>
@@ -278,8 +278,8 @@ xnoremap <leader>eep "xy"xo<Esc>p!!python3<CR>gv
 " - Execute current line (in shell)
 nnoremap <leader>es :!<C-R>=escape(getline('.'), '%')<CR><CR>
 nnoremap <leader>eS :!clear;<C-R>=escape(getline('.'), '%')<CR><CR>
-vnoremap <leader>es :w !sh<CR>
-vnoremap <leader>eS :w !sh<CR>
+vnoremap <leader>es :write !sh<CR>
+vnoremap <leader>eS :write !sh<CR>
 
 " Snippets
 nnoremap <leader>is <Plug>(SnippetsInsert)
