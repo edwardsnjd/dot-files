@@ -250,21 +250,21 @@ nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":"
 noremap <silent> <F10> <Plug>(SyntaxexplorerAtCursor)
 noremap <leader>ss <Plug>(SyntaxexplorerStackAtCursor)
 
-" .vimrc shortcuts
+" - .vimrc shortcuts
 nnoremap <leader>ve :edit $MYVIMRC<CR>
 nnoremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
 
-" Github cli shortcuts
+" - Github cli shortcuts
 nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
 
-" tmux
-nnoremap <leader>ter :silent . write ! tmux-send .right<CR>
-xnoremap <leader>ter :silent . write ! tmux-send .right<CR>
-nnoremap <leader>ty :silent . write ! tmux load-buffer -<CR>:echo 'Copied to tmux'<CR>
-nnoremap <leader>tp :    read ! tmux show-buffer<CR>:echo 'Pasted from tmux'<CR>
-nnoremap <leader>tP :.-1 read ! tmux show-buffer<CR>:echo 'Pasted from tmux'<CR>
+" - tmux
+nnoremap <leader>ter <Plug>(TmuxSendRight)
+xnoremap <leader>ter <Plug>(TmuxSendRight)
+nnoremap <leader>ty  <Plug>(TmuxCopy)
+nnoremap <leader>tp  <Plug>(TmuxPasteBelow)
+nnoremap <leader>tP  <Plug>(TmuxPasteAbove)
 
 " - Execute lines and append output
 " Uses x register.
