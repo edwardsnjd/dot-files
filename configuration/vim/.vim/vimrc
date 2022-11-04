@@ -176,11 +176,10 @@ nnoremap <leader>st <Plug>(SearchThesaurusCurrentWord)
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
 
-" - Quickly copy current file (leaves you in command mode)
+" - Common FS actions on current file (leaves you in command mode)
 nnoremap <leader>cp :! cp % %:h/
-
-" - Open in Github
-nnoremap <leader>- :GetCurrentBranchLink<CR>
+nnoremap <leader>mv :! mv % %:h/
+nnoremap <leader>rm :! rm %
 
 " - Preview markdown
 nnoremap <leader>m :! preview-markdown <C-R>=expand('%')<CR><CR>
@@ -211,6 +210,7 @@ nnoremap <leader>ve :edit $MYVIMRC<CR>
 nnoremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
 
 " - Github cli shortcuts
+nnoremap <leader>- :GetCurrentBranchLink<CR>
 nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
