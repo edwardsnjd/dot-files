@@ -132,55 +132,27 @@ nnoremap <Down>  :resize -2<CR>
 
 " Leader mappings:
 
-" - Save buffer
+" - Core
 nnoremap <leader>w :write<CR>
-
-" - Close window
 nnoremap <leader>x :close<CR>
-
-" - Close buffer
 nnoremap <leader>D :bdelete<CR>
-
 " - Close buffer but keep window
 nnoremap <leader>d :bprevious \| bdelete #<CR>
-
-" - Cycle through buffers
 nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprevious<CR>
-
-" - Run the default build command
 nnoremap <leader>b :Make<CR>
 
-" - Fuzzy file search in project
-nnoremap <leader>p :Files<CR>
-
-" - Fuzzy file search open buffers
-nnoremap <leader>P :Buffers<CR>
-
-" - Fuzzy file search recent
-nnoremap <leader>H :HISTORY<CR>
-
-" - Fuzzy text search in buffer (in order)
-nnoremap <leader>/ :BSLines<CR>
-
-" - Fuzzy text search in buffer for selected text (in order)
-" NOTE: Uses x register
-xnoremap <leader>/ "xy:<C-U>BSLines =escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
-
-" - Fuzzy tag search in buffer
-nnoremap <leader>? :BTags<CR>
-
-" - Fuzzy text search in project
-nnoremap <leader>f :RG 
-
-" - Fuzzy text search in project for word under cursor
-" NOTE: <C-R><C-W> will not type text that's already there, which will match the
-" "b" from the leading "\b"!
-nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
-
-" - Fuzzy text search in project for selected text
-" NOTE: Uses x register
-xnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
+" - Fuzzy finders
+" NOTE: Current selection ones use x register
+nnoremap <leader>p <Plug>(FzfFiles)
+nnoremap <leader>P <Plug>(FzfBuffers)
+nnoremap <leader>H <Plug>(FzfHistory)
+nnoremap <leader>/ <Plug>(FzfBufferLines)
+xnoremap <leader>/ <Plug>(FzfBufferLinesSelection)
+nnoremap <leader>? <Plug>(FzfBufferTags)
+nnoremap <leader>f <Plug>(FzfText)
+nnoremap <leader>F <Plug>(FzfTextCurrentWord)
+xnoremap <leader>F <Plug>(FzfTextSelection)
 
 " - Display navigable file outline (in local list or scratch buffer)
 nnoremap <leader>so <Plug>(ShowLocalOutline)
@@ -193,7 +165,7 @@ nnoremap <leader>sl :Redir !git log --oneline -n 1000 -- %<CR>
 nnoremap <leader>sb :!git blame -- %<CR>
 
 " - Search www
-" NOTE: Some use x register
+" NOTE: Current selection ones use x register
 nnoremap <leader>sd <Plug>(SearchDevDocsCurrentWord)
 xnoremap <leader>sd <Plug>(SearchDevDocsSelection)
 nnoremap <leader>sg <Plug>(SearchWebCurrentWord)

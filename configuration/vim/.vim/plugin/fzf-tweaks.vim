@@ -4,11 +4,15 @@ if exists('g:loaded_fzftweaks')
 endif
 let g:loaded_fzftweaks = 1
 
+" Configuration:
+
 " Enlarge default fzf popup
 let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.9 } }
 
 " Preview above the list
 let g:fzf_preview_window = ['up:40%:border-bottom', 'ctrl-/']
+
+" Commands:
 
 " Improve :Rg command to include hidden files
 command! -bang -nargs=* RG call fzf#vim#grep(
@@ -27,3 +31,18 @@ command! -bang -nargs=* BSLines call fzf#vim#buffer_lines(
 
 " Alternate :History command with all lines in order
 command! -bang -nargs=* HISTORY call fzf#vim#history({ 'options': ['--no-sort'] }, <bang>0)
+
+" Mappings:
+
+" NOTE: Current selection ones use x register
+" NOTE: Use `expand(<cword>)` because `<C-R><C-W>` will not type text that's already
+" there, which will match the "b" from the leading "\b"!
+nnoremap <Plug>(FzfFiles) :Files<CR>
+nnoremap <Plug>(FzfBuffers) :Buffers<CR>
+nnoremap <Plug>(FzfHistory) :HISTORY<CR>
+nnoremap <Plug>(FzfBufferLines) :BSLines<CR>
+xnoremap <Plug>(FzfBufferLinesSelection) "xy:<C-U>BSLines =escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
+nnoremap <Plug>(FzfBufferTags) :BTags<CR>
+nnoremap <Plug>(FzfText) :RG 
+nnoremap <Plug>(FzfTextCurrentWord) :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
+xnoremap <Plug>(FzfTextSelection) "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
