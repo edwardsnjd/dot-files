@@ -142,6 +142,16 @@ nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprevious<CR>
 nnoremap <leader>b :Make<CR>
 
+" - Display mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" - Insert mode completion
+" imap <c-x><c-k> <plug>(fzf-complete-word)
+" imap <c-x><c-f> <plug>(fzf-complete-path)
+" imap <c-x><c-l> <plug>(fzf-complete-line)
+
 " - Fuzzy finders
 " NOTE: Current selection ones use x register
 nnoremap <leader>p <Plug>(FzfFiles)
@@ -175,14 +185,15 @@ nnoremap <leader>st <Plug>(SearchThesaurusCurrentWord)
 
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
+nnoremap <leader>cg :GetCurrentBranchLink<CR>
 
 " - Common FS actions on current file (leaves you in command mode)
-nnoremap <leader>cp :! cp % %:h/
-nnoremap <leader>mv :! mv % %:h/
-nnoremap <leader>rm :! rm %
-
-" - Preview markdown
-nnoremap <leader>m :! preview-markdown <C-R>=expand('%')<CR><CR>
+nnoremap <leader>acp :! cp % %:h/
+nnoremap <leader>amv :! mv % %:h/
+nnoremap <leader>arm :! rm %
+nnoremap <leader>ach :! chmod +x %<Left><Left>
+nnoremap <leader>apa :! paginate %
+nnoremap <leader>ax  :!  % %:h/<S-Left><S-Left><Left>
 
 " - Manually manage location list
 nmap <leader>la <Plug>(LociAdd)
@@ -201,26 +212,21 @@ nnoremap <leader>tb <Plug>(ToiletBorder)
 nnoremap <leader>ti :put ='- [ ] <+ TODO +>'<CR>
 nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":" ")."]"/<CR>
 
-" - Show highlight groups at the cursor
-noremap <silent> <F10> <Plug>(SyntaxexplorerAtCursor)
-noremap <leader>ss <Plug>(SyntaxexplorerStackAtCursor)
-
 " - .vimrc shortcuts
 nnoremap <leader>ve :edit $MYVIMRC<CR>
 nnoremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
 
 " - Github cli shortcuts
-nnoremap <leader>- :GetCurrentBranchLink<CR>
 nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
 
 " - tmux
-nnoremap <leader>ter <Plug>(TmuxSendRight)
-xnoremap <leader>ter <Plug>(TmuxSendRight)
-nnoremap <leader>ty  <Plug>(TmuxCopy)
-nnoremap <leader>tp  <Plug>(TmuxPasteBelow)
-nnoremap <leader>tP  <Plug>(TmuxPasteAbove)
+nnoremap <leader>ts <Plug>(TmuxSendRight)
+xnoremap <leader>ts <Plug>(TmuxSendRight)
+nnoremap <leader>ty <Plug>(TmuxCopy)
+nnoremap <leader>tp <Plug>(TmuxPasteBelow)
+nnoremap <leader>tP <Plug>(TmuxPasteAbove)
 
 " - Execute lines and append output
 " Uses x register.
@@ -245,20 +251,8 @@ vnoremap <leader>ip <Plug>(GitReplaceWithPerson)
 
 " - Refactor: Inline
 " NOTE: Uses i and j registers, and i and j marks.
-nnoremap <silent> <leader>ri <Plug>(RefactoringInline)
-xnoremap <silent> <leader>ri <Plug>(RefactoringInline)
-
-" fzf mappings:
-
-" - Display mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-" - Insert mode completion
-" imap <c-x><c-k> <plug>(fzf-complete-word)
-" imap <c-x><c-f> <plug>(fzf-complete-path)
-" imap <c-x><c-l> <plug>(fzf-complete-line)
+nnoremap <leader>ri <Plug>(RefactoringInline)
+xnoremap <leader>ri <Plug>(RefactoringInline)
 
 " Special non-leader mappings:
 
@@ -270,9 +264,11 @@ imap <C-j> <Esc><C-j>
 " - Show presentation
 noremap <silent> <F5> <Plug>(PresenterPresent)
 
-" Fix syntax highlighting it goes wonky
-nnoremap <F12> <Esc>:syntax sync fromstart<CR>
-inoremap <F12> <C-o>:syntax sync fromstart<CR>
+" - Syntax explorer
+noremap   <F10> <Plug>(SyntaxexplorerAtCursor)
+noremap <S-F10> <Plug>(SyntaxexplorerStackAtCursor)
+nnoremap  <F12> <Plug>(SyntaxexplorerResync)
+inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 
 " Plugins (managed by `vim-plugin`)
 " See `README.md` for bootstrap
