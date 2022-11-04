@@ -30,7 +30,7 @@
 	# Better log
 	lg = log --color --graph --pretty=format:'%C(yellow)%h %C(green)%ad%C(reset) %s %C(green)(%cr) %C(cyan)<%an>%C(red)%d%C(reset)' --abbrev-commit --decorate --date=short -n20
 	lgt = !git lg --since=12am
-	lgm = !git lg master..
+	lgm = !git lg main..
 	lgd = !git lg develop..
 
 	# Better log (+stats)
@@ -40,7 +40,7 @@
 	# List aliases
 	la = !git config --get-regexp alias | cut -c 7-
 
-	# Go home (requires a branch name as only argument: `git cpp master`)
+	# Go home (requires a branch name as only argument: `git cpp main`)
 	cpp = "![ x$# != x1 ] && echo "commit-ish required" >&2 || git checkout \"$1\" && git pull && git remote prune origin && git submodule update && git branch #"
 
 	# Add a patch at a time
