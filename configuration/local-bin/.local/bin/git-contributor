@@ -9,15 +9,7 @@
 #   git contributor
 
 function GitContributor() {
-  {
-    # Authors
-    git log --pretty=tformat:"%aN <%aE>"
-    # Committers
-    git log --pretty=tformat:"%cN <%cE>"
-  } \
-   | sort \
-   | uniq \
-   | fzf
+  git contributors | fzf
 }
 
 GitContributor "$@"

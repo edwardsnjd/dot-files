@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-contributors - list the name and email of each person who
+#   has contributed to the current git repository.
+#
+# USAGE
+#   git-contributors
+#   git contributors
+
+function GitContributors() {
+  {
+    # Authors
+    git log --pretty=tformat:"%aN <%aE>"
+    # Committers
+    git log --pretty=tformat:"%cN <%cE>"
+  } \
+   | sort \
+   | uniq
+}
+
+GitContributors "$@"
