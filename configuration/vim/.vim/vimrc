@@ -194,25 +194,14 @@ nnoremap <leader>sl :Redir !git log --oneline -n 1000 -- %<CR>
 " - Display file git blame
 nnoremap <leader>sb :!git blame -- %<CR>
 
-" - Search devdocs for word under cursor
-nnoremap <leader>sd :SearchDevDocs <C-R>=expand('<cword>')<CR><CR>
-
-" - Search devdocs for selected text
-" NOTE: Uses x register
-xnoremap <leader>sd "xy:<C-U>SearchDevDocs <C-R>=getreg('x')<CR><CR>
-
-" - Search web for word under cursor
-nnoremap <leader>sg :SearchWeb <C-R>=expand('<cword>')<CR><CR>
-
-" - Search web for selected text
-" NOTE: Uses x register
-xnoremap <leader>sg "xy:<C-U>SearchWeb <C-R>=getreg('x')<CR><CR>
-
-" - Search dictionary for word under cursor
-nnoremap <leader>sw :SearchDictionary <C-R>=expand('<cword>')<CR><CR>
-
-" - Search thesaurus for word under cursor
-nnoremap <leader>st :SearchThesaurus <C-R>=expand('<cword>')<CR><CR>
+" - Search www
+" NOTE: Some use x register
+nnoremap <leader>sd <Plug>(SearchDevDocsCurrentWord)
+xnoremap <leader>sd <Plug>(SearchDevDocsSelection)
+nnoremap <leader>sg <Plug>(SearchWebCurrentWord)
+xnoremap <leader>sg <Plug>(SearchWebSelection)
+nnoremap <leader>sw <Plug>(SearchDictionaryCurrentWord)
+nnoremap <leader>st <Plug>(SearchThesaurusCurrentWord)
 
 " - Copy things about current buffer to clipboard
 nnoremap <leader>cf :let @+ = expand("%") <BAR> redraw <BAR> echo 'Copied path to clipboard'<CR>
