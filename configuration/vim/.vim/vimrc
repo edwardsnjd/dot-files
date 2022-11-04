@@ -171,7 +171,7 @@ xnoremap <leader>/ "xy:<C-U>BSLines =escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 nnoremap <leader>? :BTags<CR>
 
 " - Fuzzy text search in project
-nnoremap <leader>f :RG<CR>
+nnoremap <leader>f :RG 
 
 " - Fuzzy text search in project for word under cursor
 " NOTE: <C-R><C-W> will not type text that's already there, which will match the
@@ -182,10 +182,8 @@ nnoremap <leader>F :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
 " NOTE: Uses x register
 xnoremap <leader>F "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
 
-" - Display navigable file outline in local list
+" - Display navigable file outline (in local list or scratch buffer)
 nnoremap <leader>so <Plug>(ShowLocalOutline)
-
-" - Display file outline in new buffer
 nnoremap <leader>sO <Plug>(ShowOutline)
 
 " - Display file git history
