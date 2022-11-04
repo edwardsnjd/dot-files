@@ -118,8 +118,6 @@ inoremap jk <Esc>
 
 " - Visual mode quick duplicate
 xnoremap D y'>pgv
-" - Visual mode quick duplicate
-xnoremap D y'>pgv
 
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
