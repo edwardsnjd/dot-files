@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   nb-pick-line [query]
+#
+# DEPENDENCIES
+#   nb, tr, sed, fzf, rg, render
+
+set -o nounset
+#set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function PickNbLink() {
+  PickResult "$@" \
+    | FormatAsMarkdownLink
+}
+
+function PickResult() {
+  local query="${1:-}"
+
+  local preview='
+    echo {1} \
+      | tr -d "[]" \
+      | xargs nb show --path \
+      | xargs render \
+      | rg \
+       --passthru \
+       --smart-case \
+       --color=always \
+       --colors "match:fg:yellow" \
+       --colors "match:style:underline" \
+       {q}
+  '
+
+  nb-search "$query" \
+    | fzf \
+      --disabled \
+      --reverse \
+      --prompt "nb search> " \
+      --bind 'change:reload:sleep 0.1; nb-search {q} || true' \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --preview "$preview"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
+}
+
+function FormatAsMarkdownLink() {
+  tr '()' '{}' \
+    | sed -E 's/\[([0-9]+)\] (.*)/[\1](\2)/'
+}
+
+PickNbLink "$@"

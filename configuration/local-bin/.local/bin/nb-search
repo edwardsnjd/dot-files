@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# NAME
+#   nb-search - a safe version of `nb search` that falls back
+#   to listing everything
+#
+# USAGE
+#   nb-search <query>
+#
+# DEPENDENCIES
+#   nb
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function SearchNb() {
+  local query="${1:-}"
+
+  if [[ -n "$query" ]]; then
+    nb search --list "$query" \
+      | grep -Ev '^Not found in'
+  else
+    nb list
+  fi
+}
+
+SearchNb "$@"

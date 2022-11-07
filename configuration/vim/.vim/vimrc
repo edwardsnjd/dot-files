@@ -249,6 +249,9 @@ nnoremap <leader>is <Plug>(SnippetsInsert)
 " Insert person from git
 vnoremap <leader>ip <Plug>(GitReplaceWithPerson)
 
+" - Insert link from nb
+nnoremap <leader>in <Plug>(NbInsertLink)
+
 " - Refactor: Inline
 " NOTE: Uses i and j registers, and i and j marks.
 nnoremap <leader>ri <Plug>(RefactoringInline)
