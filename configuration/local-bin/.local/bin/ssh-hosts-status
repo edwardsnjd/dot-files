@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# NAME
+#   ssh-hosts-status - print status of SSH hosts
+#
+# USAGE
+#   ssh-hosts-status ~/.ssh/config
+#
+# OUTPUT
+#   Line per discovered `Host` with `HostName`:
+#   <Host><tab><HostName><tab><Status>
+#   where Status = 0 if ok, non-zero if not ok
+#
+# DEPENDENCIES
+#   sed, awk, ping
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function PrintHostStatus() {
+  {
+    sed -En '
+      /^Host / { s///; h; }
+      / +HostName +/ { s///; G; s/\n/ /; p; }
+    ' \
+      | awk -v OFS=$'\t' '
+        {
+          status = system("ping -c1 -t1 -q " $1 " &>/dev/null")
+          print $2, $1, status
+        }'
+  } < ${1:-/dev/stdin}
+}
+
+PrintHostStatus "$@"
