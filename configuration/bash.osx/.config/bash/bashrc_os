@@ -18,6 +18,3 @@ alias ls='gls --color=auto'
 alias  l='gls --color=auto -AFl --group-directories-first'
 alias ll='gls --color=auto -AFl --group-directories-first'
 alias la='gls --color=auto -AF  --group-directories-first'
-
-# Bash completion
-[ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"

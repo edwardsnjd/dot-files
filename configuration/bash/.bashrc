@@ -21,9 +21,6 @@ esac
 # gpg agent autocompletion
 [ -f $XDG_CONFIG_HOME/bash/bash_gpg ] && source $XDG_CONFIG_HOME/bash/bash_gpg
 
-# fzf autocompletion
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 # bash config
 shopt -s autocd     # directory path is treated as a `cd`
 shopt -s cdspell    # correct minor errors in directory names for `cd`
@@ -31,6 +28,12 @@ shopt -s direxpand  # expand directory names
 shopt -s dirspell   # correct minor errors in directory names on expansion
 shopt -s histappend # append to the history file, don't overwrite it
 #shopt -s globstar  # expand "**" in pathname
+
+# Bash completion
+[ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
+
+# fzf autocompletion
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
