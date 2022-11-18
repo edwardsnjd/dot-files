@@ -10,6 +10,7 @@ let g:outline_filetype_keywords = {
       \ 'ruby': ['module', 'class', 'def', 'describe', 'context', 'it'],
       \ 'kotlin': ['class', 'object', 'fun'],
       \ 'vim': ['function'],
+      \ 'rust': ['mod', 'fn', 'trait', 'impl'],
       \}
 
 " Provide commands and mappings calling autoloaded functions
