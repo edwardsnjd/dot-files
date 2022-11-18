@@ -97,7 +97,21 @@ elseif executable('lsp-typescript')
         \ })
 endif
 
-if executable('lsp-rust')
+if executable('rust-analyzer')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'rust-analyzer',
+        \   'cmd': { server_info->['rust-analyzer'] },
+        \   'whitelist': ['rust'],
+        \   'initialization_options': {
+        \     'cargo': {
+        \       'loadOutDirsFromCheck': v:true,
+        \     },
+        \     'procMacro': {
+        \       'enable': v:true,
+        \     },
+        \   },
+        \ })
+elseif executable('lsp-rust')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-rust',
         \   'cmd': { server_info->['lsp-rust'] },
