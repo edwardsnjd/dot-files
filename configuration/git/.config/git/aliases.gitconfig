@@ -45,3 +45,6 @@
 
 	# Add a patch at a time
 	patch = add --patch
+
+	# Commit using previous commit message
+	recommit = "!git commit --edit --file=\"$(git rev-parse --git-dir)/COMMIT_EDITMSG\""
