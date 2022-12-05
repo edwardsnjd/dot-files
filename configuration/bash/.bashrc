@@ -31,6 +31,7 @@ shopt -s histappend # append to the history file, don't overwrite it
 
 # Bash completion
 [ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
+[ -f "/usr/local/etc/profile.d/bash_completion.sh" ] && source "/usr/local/etc/profile.d/bash_completion.sh"
 
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
