@@ -4,6 +4,9 @@ if exists('g:loaded_lsp')
 endif
 let g:loaded_lsp = 1
 
+" Log LSP messages
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+
 " Show errors inline
 let g:lsp_diagnostics_echo_cursor = 1
 
