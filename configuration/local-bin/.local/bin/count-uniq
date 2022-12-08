@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# NAME
+#   count-uniq - Like `sort | uniq -c` but with TSV output line format
+#
+# SYNOPSIS
+#   cat info | count-uniq
+#
+# OUTPUT
+#   TSV output of count of repeated values i.e. lines like:
+#     <total><tab><value>
+
+sort | uniq -c | sed -E 's/^ +([0-9]+) +/\1\t/'
