@@ -10,7 +10,7 @@ function GitBrowseDiff {
   local details="bat {} --pager='less -c -+F -+X'"
   local preview="git diff --color=always $@ -- {}"
 
-  git diff --name-only "$@" \
+  git diff --name-only --relative "$@" \
     | fzf \
       --multi \
       --preview "$preview" \
