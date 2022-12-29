@@ -1,0 +1,32 @@
+digraph Q {
+  label = "<+ Graph title +>";
+  labelloc = t;
+  fontname = "Sans-Serif";
+  fontsize="14pt";
+
+  graph [rankdir=<+ direction +>]; // TB LR BT RL
+  node [
+    shape=<+ shape +> // box circle cylinder doublecircle none Mrecord plain plaintext point record square underline
+    style=<+ style +> // dashed dotted solid invis bold tapered filled striped wedged diagonals rounded radial
+    fillcolor="#fefedd"
+    fontname = "Monospace"
+    fontsize="10pt"
+    margin="0.1"
+    // bgcolor color colorscheme fillcolor fontcolor labelfontcolor pencolor truecolor
+  ];
+
+  <+ nodes +>
+  n1 [label="<+ label +>"];
+  n2 [label="<+ label +>"];
+
+  <+ clusters +>
+  subgraph cluster_<+ number +> {
+    rank=same;
+    node [shape=record];
+
+    nd_1;
+  }
+
+  <+ dependencies +>
+  n1 -> n2 -> n1;
+}
