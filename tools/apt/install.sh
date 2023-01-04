@@ -87,6 +87,9 @@ if ! [ -x "$(command -v jira)" ]; then
   mv jira ~/.local/bin/jira
 fi
 
+# Install less from source bundle (to get later version)
+./install-less.sh
+
 # Install docker
 if ! [ -x "$(command -v docker)" ]; then
   sudo apt-get remove docker docker-engine docker.io containerd runc
