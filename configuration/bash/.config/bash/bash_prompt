@@ -39,7 +39,9 @@ function PromptHistoryInfo() {
 }
 
 function GitCurrentBranch() {
-  git branch 2>/dev/null | sed -e '/^[^*]/d; s/^* //'
+  # Once Git >= v2.2:
+  # git branch --show-current 2>/dev/null
+  git rev-parse --abbrev-ref HEAD 2>/dev/null
 }
 
 # Prompt
