@@ -10,6 +10,8 @@ set -o pipefail
 #set -o xtrace
 
 function Main {
+  local query="${1:-}"
+
   local preview="render {} --simple"
   local display="paginate {+}"
   local output="for f in {+}; do render \"\$f\"; echo; done"
@@ -37,6 +39,7 @@ function Main {
       --prompt "Directories(s)> " \
       --header "$header" \
       --preview "$preview" \
+      --query "$query" \
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --bind "ctrl-s:toggle-sort" \
       --bind "alt-a:select-all" \
