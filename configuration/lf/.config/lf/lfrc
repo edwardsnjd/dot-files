@@ -72,3 +72,25 @@ cmd fzf_jump ${{
     lf -remote "send $id $cmd \"$res\""
 }}
 map <c-p> :fzf_jump
+
+# Symlinks
+cmd link %{{
+    # lf `files` file contains lines: <mode>, <paths>+
+    set -- $(cat ~/.local/share/lf/files)
+    mode="$1"
+    shift
+
+    # ...
+    if [ "$#" -lt 1 ]; then
+        lf -remote "send $id echo no files to link"
+        exit 0
+    fi
+
+    # HACK: GNU ln specific flags
+    gln -sr -t . -- "$@"
+
+    # Clean up
+    rm ~/.local/share/lf/files
+    lf -remote "send clear"
+}}
+map P :link
