@@ -92,7 +92,7 @@ function Main() {
         width = totalWidth - maxWidth - 2
         cmd = "xargs pie-bar --total " maxValue " --width " width colorOption
 
-        for (i in raw) {
+        for (i=headerRows+1; i<=NR; i++) {
           printf "%-" maxWidth "s  ", raw[i]
           print colValues[i] | cmd
           close(cmd)
@@ -151,14 +151,16 @@ function RunTests() {
 
   function testPlotsHeaderlessColumn() {
     cat <<-EOF >"$input"
+			4
 			1
 			3
 		EOF
     cat <<-EOF >"$expected"
-			1  ▩▩
-			3  ▩▩▩▩▩▩
+			4  ▩▩▩▩
+			1  ▩
+			3  ▩▩▩
 		EOF
-    local width="$(( 1 + 2 + 6 ))"
+    local width="$(( 1 + 2 + 4 ))"
 
     _result --width "$width" --headers 0 1 <"$input" >"$output"
 
