@@ -59,6 +59,7 @@ function Main() {
 
       BEGIN {
         split(columns, columnIndices, ",| ")
+        totalColumnIndices = length(columnIndices)
         if (color == 1) colorOption=""
         else colorOption=" --no-color"
       }
@@ -77,7 +78,7 @@ function Main() {
         raw[NR] = $0
 
         rowTotal = 0
-        for (i in columnIndices) {
+        for (i=1; i<=totalColumnIndices; i++) {
           value = $columnIndices[i]
           rowTotal += max(0, value)
           colValues[NR] = colValues[NR] " " value
