@@ -5,18 +5,18 @@
 " text.
 
 " Define syntax regions based on start/end tags
-syntax region Annotate_Red         matchgroup=Annotate_Tag concealends start="<r>" end="</r>"
-syntax region Annotate_Green       matchgroup=Annotate_Tag concealends start="<g>" end="</g>"
-syntax region Annotate_Yellow      matchgroup=Annotate_Tag concealends start="<y>" end="</y>"
-syntax region Annotate_Blue        matchgroup=Annotate_Tag concealends start="<b>" end="</b>"
-syntax region Annotate_Magenta     matchgroup=Annotate_Tag concealends start="<m>" end="</m>"
-syntax region Annotate_Cyan        matchgroup=Annotate_Tag concealends start="<c>" end="</c>"
-syntax region Annotate_RedBold     matchgroup=Annotate_Tag concealends start="<R>" end="</R>"
-syntax region Annotate_GreenBold   matchgroup=Annotate_Tag concealends start="<G>" end="</G>"
-syntax region Annotate_YellowBold  matchgroup=Annotate_Tag concealends start="<Y>" end="</Y>"
-syntax region Annotate_BlueBold    matchgroup=Annotate_Tag concealends start="<B>" end="</B>"
-syntax region Annotate_MagentaBold matchgroup=Annotate_Tag concealends start="<M>" end="</M>"
-syntax region Annotate_CyanBold    matchgroup=Annotate_Tag concealends start="<C>" end="</C>"
+syntax region Annotate_Red         matchgroup=Annotate_Tag concealends start="<r>" end="</r>" contains=ALL
+syntax region Annotate_Green       matchgroup=Annotate_Tag concealends start="<g>" end="</g>" contains=ALL
+syntax region Annotate_Yellow      matchgroup=Annotate_Tag concealends start="<y>" end="</y>" contains=ALL
+syntax region Annotate_Blue        matchgroup=Annotate_Tag concealends start="<b>" end="</b>" contains=ALL
+syntax region Annotate_Magenta     matchgroup=Annotate_Tag concealends start="<m>" end="</m>" contains=ALL
+syntax region Annotate_Cyan        matchgroup=Annotate_Tag concealends start="<c>" end="</c>" contains=ALL
+syntax region Annotate_RedBold     matchgroup=Annotate_Tag concealends start="<R>" end="</R>" contains=ALL
+syntax region Annotate_GreenBold   matchgroup=Annotate_Tag concealends start="<G>" end="</G>" contains=ALL
+syntax region Annotate_YellowBold  matchgroup=Annotate_Tag concealends start="<Y>" end="</Y>" contains=ALL
+syntax region Annotate_BlueBold    matchgroup=Annotate_Tag concealends start="<B>" end="</B>" contains=ALL
+syntax region Annotate_MagentaBold matchgroup=Annotate_Tag concealends start="<M>" end="</M>" contains=ALL
+syntax region Annotate_CyanBold    matchgroup=Annotate_Tag concealends start="<C>" end="</C>" contains=ALL
 
 " Associated colours with the syntax groups
 highlight Annotate_Red         ctermbg=NONE        ctermfg=Red
@@ -36,6 +36,8 @@ highlight Annotate_CyanBold    ctermbg=DarkCyan    ctermfg=Black
 set conceallevel=2
 set concealcursor=nv
 set nocursorline
+syntax sync fromstart
+set paste
 
 " Highlight visual selection
 vnoremap gar c<r><c-r>"</r><Esc>
