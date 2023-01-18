@@ -1,0 +1,5 @@
+# See: http://mywiki.wooledge.org/DontReadLinesWithFor
+# NOTE: Will skip blank lines in input
+while IFS= read line; do
+  <+ action +> "$line"
+done
