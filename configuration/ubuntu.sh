@@ -7,6 +7,7 @@ stow --target=$HOME \
   git \
   tmux \
   vim \
+  nvim \
   toilet \
   visidata \
   lf \

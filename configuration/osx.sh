@@ -34,6 +34,7 @@ stow --target="${HOME}" \
   git.osx \
   tmux \
   vim \
+  nvim \
   lf \
   toilet \
   newsboat \
