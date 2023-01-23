@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# NAME
+#   count - Like `wc` but with TSV output line format
+#
+# SYNOPSIS
+#   cat info | count -l
+#
+# OUTPUT
+#   TSV output of count of characters, words, lines, and filename:
+#     <lines> <tab> <words> <tab> <bytes> <tab> <filename>
+
+wc "$@" | sed -E 's/^ +//; s/([0-9]+) +/\1\t/g'

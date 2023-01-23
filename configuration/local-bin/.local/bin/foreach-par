@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# NAME
+#   foreach-par - run the given command in parallel with each line of
+#     input as an argument
+#
+# SYNOPSIS
+#   seq 10 | foreach-par sleep
+#
+# DESCRIPTION
+#   Lots of commands operate on a file line by line but it can be useful to
+#   run a command on each line independently.  `xargs -P0 -n1 ...` is one way
+#   to achieve that, this script aims to make it easier to remember.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  # See: http://mywiki.wooledge.org/DontReadLinesWithFor
+  # NOTE: Will skip blank lines in input
+  while IFS= read -r line; do
+    $* "$line" &
+  done
+  wait
+}
+
+# Entry point
+Main "$@"

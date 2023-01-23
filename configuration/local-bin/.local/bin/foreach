@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# NAME
+#   foreach - run the given command with each line of input as an argument
+#
+# SYNOPSIS
+#   seq 10 | centre [--width <width>] [--filler <filler>] [--help]
+#
+# DESCRIPTION
+#   Lots of commands operate on a file line by line but it can be useful to
+#   run a command on each line independently.  `xargs -n1 ...` is one way
+#   to achieve that, this script aims to make it easier to remember.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  # See: http://mywiki.wooledge.org/DontReadLinesWithFor
+  # NOTE: Will skip blank lines in input
+  while IFS= read -r line; do
+    $* "$line"
+  done
+}
+
+# Entry point
+Main "$@"
