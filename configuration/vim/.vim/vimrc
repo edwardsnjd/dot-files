@@ -36,16 +36,11 @@ set listchars=tab:▸\ ,trail:␣
 " Aesthetics
 set fillchars=vert:│
 
-" Undo
+" Enable persistent undo
 set undolevels=1000     " Number of undo levels
 set undofile            " Persist undo details for all files
 set undodir=$XDG_STATE_HOME/vim/undo
-
-" Ensure undodir exists
-if !isdirectory($XDG_STATE_HOME."/vim/undo")
-  echom "Creating undodir: ".$XDG_STATE_HOME."/vim/undo"
-  call mkdir($XDG_STATE_HOME."/vim/undo", "p")
-endif
+call mkdir(&undodir, "p")
 
 " Enable code folding
 set foldmethod=indent
