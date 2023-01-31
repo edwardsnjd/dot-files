@@ -48,6 +48,7 @@ function render_directory_simple() {
     --git \
     --group-directories-first \
     --all \
+    --git-ignore \
     --ignore-glob ".git" \
     --classify \
     --color always \
@@ -64,6 +65,7 @@ function render_directory_full() {
     --git \
     --group-directories-first \
     --all \
+    --git-ignore \
     --ignore-glob ".android|.cargo|.git|node_modules" \
     --classify \
     --color always \
