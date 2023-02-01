@@ -87,7 +87,7 @@ cmd link %{{
     fi
 
     # HACK: GNU ln specific flags
-    gln -sr -t . -- "$@"
+    gln -s -t . -- "$@"
 
     # Clean up
     rm ~/.local/share/lf/files
