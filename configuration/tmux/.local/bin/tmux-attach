@@ -17,7 +17,11 @@ function ChooseSession() {
 
   tmux ls -F "🟢 #{session_name}" 2> /dev/null \
     | sort --ignore-case \
-    | fzf --query="$query" \
+    | fzf \
+      --reverse \
+      --height "~35" \
+      --prompt "Pick existing session to join> " \
+      --query="$query" \
     | cut -c3-
  }
 

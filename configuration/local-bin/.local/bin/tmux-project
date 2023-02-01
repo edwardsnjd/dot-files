@@ -81,7 +81,11 @@ function SelectProject() {
     -e "$offIndicator" \
     <(ListProject "$baseDir" | sort --ignore-case) \
     <(ListSessions | sed -E "s/^/$onIndicator /" | sort --ignore-case) \
-    | fzf --query="$query" \
+    | fzf \
+      --reverse \
+      --height "~35" \
+      --prompt "Pick project to join> " \
+      --query="$query" \
     | sed -E 's/^.+ +//' # strip off indicator
 
   # Force happy exit code (allow for fzf quit with Ctrl-C)
