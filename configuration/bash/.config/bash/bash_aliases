@@ -44,6 +44,12 @@ alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 # Tmux
 alias tm='tmux -CC new-session -As'  # iTerm2 (control mode and reuse session)
 alias ta='tmux-attach'
+function tp() {
+  ( cd ~/projects && tmux-project )
+}
+[[ -n "${TMUX:-}" ]] && \
+  tmux bind-key -T finders -N "Pick a project" p \
+    display-popup -E -w 80% -h 80% -d ~/projects tmux-project
 
 # Default is 5 seconds (in colour)
 alias watch='wtch 5'
