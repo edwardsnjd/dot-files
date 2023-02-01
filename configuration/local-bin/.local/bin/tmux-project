@@ -42,6 +42,8 @@ function EnsureSession() {
 
     if [[ -x "$initFile" ]]; then
       ( cd "$projectDir" && "$initFile" "$project" )
+    else
+      echo "(No init file)"
     fi
   }
 }
@@ -77,11 +79,11 @@ function SelectProject() {
 function ListProject() {
   local baseDir="$1"
 
-  find "$baseDir" -type d -maxdepth 1 -exec basename {} \;
+  find -L "$baseDir" -type d -maxdepth 1 -depth 1 -exec basename {} \;
 }
 
 function ListSessions() {
-  tmux ls -F '#{session_name}'
+  tmux ls -F '#{session_name}' 2> /dev/null
 }
 
 Main "$@"
