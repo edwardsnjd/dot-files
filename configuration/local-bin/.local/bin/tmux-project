@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tmux-project - easily manage tmux sessions for child directories
+#
+# SYNOPSIS
+#   tmux-project [query]
+#
+# DESCRIPTION
+#   Fuzzy selects directories then attach or switch to a corresponding session.
+#
+# DEPENDENCIES
+#   - tmux - manage sessions
+#   - fzf - interactively select projects
+#   - POSIX utils: sed, cut, join, find
+
+set -o nounset
+set -o errexit
+
+function Main() {
+  local baseDir="$PWD"
+
+  local project="$(SelectProject "$baseDir" "$@")"
+
+  [[ -n "${project}" ]] && {
+    EnsureSession "$baseDir" "$project"
+    AttachSession "$project"
+  }
+}
+
+function EnsureSession() {
+  local baseDir="$1"
+  local project="$2"
+
+  tmux has-session -t "=$project" &> /dev/null \
+    || tmux new-session -d \
+      -s "$project" \
+      -c "$baseDir/$project" \
+      -e TMUX_PROJECT_KEY="$project"
+}
+
+function AttachSession() {
+  local project="$1"
+
+  [[ -z "${TMUX:-}" ]] \
+    && tmux attach-session -t "${project}" \
+    || tmux switch-client -t "${project}"
+}
+
+function SelectProject() {
+  local baseDir="$1"
+  local query="${2:-}"
+
+  local onIndicator="🟢"
+  local offIndicator="⚪️"
+
+  # Left outer join list of projects to prepend indicator
+  join -a1 -22 \
+    -o '2.1 0' \
+    -e "$offIndicator" \
+    <(ListProject "$baseDir" | sort) \
+    <(ListSessions | sed -E "s/^/$onIndicator /" | sort) \
+    | fzf --query="$query" \
+    | sed -E 's/^.+ +//' # strip off indicator
+
+  # Force happy exit code (allow for fzf quit with Ctrl-C)
+  return 0
+}
+
+function ListProject() {
+  local baseDir="$1"
+
+  find "$baseDir" -type d -maxdepth 1 -exec basename {} \;
+}
+
+function ListSessions() {
+  tmux ls -F '#{session_name}'
+}
+
+Main "$@"
