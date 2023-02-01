@@ -4,10 +4,13 @@
 #   tmux-project - easily manage tmux sessions for child directories
 #
 # SYNOPSIS
-#   tmux-project [query]
+#   tmux-project [--dir <dir>] [query]
 #
 # DESCRIPTION
 #   Fuzzy selects directories then attach or switch to a corresponding session.
+#
+#   --dir <dir> - specify the directory to look in (defaults to $PWD)
+#   query - optionally specify the starting query for project names
 #
 # DEPENDENCIES
 #   - tmux - manage sessions
@@ -19,6 +22,15 @@ set -o errexit
 
 function Main() {
   local baseDir="$PWD"
+
+  local POSITIONAL_ARGS=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dir) baseDir="$2" && shift && shift ;;
+      *) POSITIONAL_ARGS+=("$1") && shift ;;
+    esac
+  done
+  set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
   local project="$(SelectProject "$baseDir" "$@")"
 
@@ -67,8 +79,8 @@ function SelectProject() {
   join -a1 -22 \
     -o '2.1 0' \
     -e "$offIndicator" \
-    <(ListProject "$baseDir" | sort) \
-    <(ListSessions | sed -E "s/^/$onIndicator /" | sort) \
+    <(ListProject "$baseDir" | sort --ignore-case) \
+    <(ListSessions | sed -E "s/^/$onIndicator /" | sort --ignore-case) \
     | fzf --query="$query" \
     | sed -E 's/^.+ +//' # strip off indicator
 
@@ -77,9 +89,12 @@ function SelectProject() {
 }
 
 function ListProject() {
-  local baseDir="$1"
-
-  find -L "$baseDir" -type d -maxdepth 1 -depth 1 -exec basename {} \;
+  # Using both maxdepth and depth allows find to be fast
+  find -L "$1" \
+    -type d \
+    -maxdepth 1 \
+    -depth 1 \
+    -exec basename {} \;
 }
 
 function ListSessions() {

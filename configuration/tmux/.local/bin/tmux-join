@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tmux-join - Attach or switch to selected session.
+#
+# SYNOPSIS
+#   tmux-join <session>
+
+set -o nounset
+set -o errexit
+
+function JoinSession() {
+  local session="${1:-}"
+
+  if [[ -n "${session}" ]]
+  then
+    [[ -z "${TMUX:-}" ]] \
+      && tmux attach-session -t "${session}" \
+      || tmux switch-client -t "${session}"
+  fi
+}
+
+JoinSession "$@"
