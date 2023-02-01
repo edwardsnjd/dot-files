@@ -54,8 +54,6 @@ function EnsureSession() {
 
     if [[ -x "$initFile" ]]; then
       ( cd "$projectDir" && "$initFile" "$project" )
-    else
-      echo "(No init file)"
     fi
   }
 }
