@@ -42,6 +42,9 @@ set undofile            " Persist undo details for all files
 set undodir=$XDG_STATE_HOME/vim/undo
 call mkdir(&undodir, "p")
 
+" Session management
+set sessionoptions-=options " Don't store maps or options
+
 " Enable code folding
 set foldmethod=indent
 set nofoldenable        " Do not fold on opening
