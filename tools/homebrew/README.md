@@ -1,20 +1,17 @@
 Install homebrew: https://brew.sh/
 
 Install all packages:
-
 ```sh
-$ brew bundle install
+./install.sh
 ```
 
-Add a formula:
+Install a new package manually, then record it:
 ```sh
-$ cat 'brew "foo"' >> Brewfile
-$ brew bundle install
+brew install foo
+./capture.sh
 ```
 
-Rebuild the dump file:
+Upgrade all packages:
 ```sh
-$ rm Brewfile*
-$ brew bundle dump
-$ brew bundle install
+./upgrade.sh
 ```
