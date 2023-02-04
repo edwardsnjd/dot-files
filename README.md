@@ -32,7 +32,7 @@ Tools:
 
 **Bootstrapping a new system**
 
-1. Pick an install script for the tools:
+1. Pick an `install` script for the tools:
 
     ```
     tools/
@@ -71,7 +71,7 @@ Tools:
         └── upgrade.sh
     ```
 
-2. Run the install script again:
+2. Run the appropriate install script again:
 
     ```
     configuration/
