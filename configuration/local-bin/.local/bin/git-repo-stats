@@ -25,7 +25,7 @@ function GitRepoStats {
 
 # List core information about all commits
 function GitCommits {
-  git log --date=short --pretty="tformat:%h	%ad	%an" "$@"
+  git log --pretty="tformat:%h	%aI	%an" "$@"
 }
 
 # List stats for all supplied commit hashes
