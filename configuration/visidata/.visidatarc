@@ -30,3 +30,6 @@ def show_heatmap(sheet):
     sheet.addColorizer(c)
 
 TableSheet.addCommand(None, 'show-heatmap', 'show_heatmap()', 'colour numeric columns as a heatmap')
+
+options.disp_date_fmt = "%Y-%m-%d %H:%M:%S"
+options.numeric_binning = True
