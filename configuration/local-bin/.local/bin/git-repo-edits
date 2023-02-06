@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+git log --pretty="tformat:%h	%aI	%an"   \
+  | while read hash date rest
+    do
+      git diff-tree --numstat --no-renames --no-commit-id "$hash" \
+        | while read line
+          do
+            printf "$hash	$date	$rest	$line\n"
+          done
+    done \
+  | sed -E 's/-	/0	/g'
