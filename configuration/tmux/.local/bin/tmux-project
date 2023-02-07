@@ -77,8 +77,9 @@ function SelectProject() {
   join -a1 -22 \
     -o '2.1 0' \
     -e "$offIndicator" \
-    <(ListProject "$baseDir" | sort --ignore-case) \
-    <(ListSessions | sed -E "s/^/$onIndicator /" | sort --ignore-case) \
+    <(ListProject "$baseDir" | sort --ignore-leading-blanks) \
+    <(ListSessions | sed -E "s/^/$onIndicator /" | sort --ignore-leading-blanks) \
+    | sort --ignore-case -k2 \
     | fzf \
       --reverse \
       --height "~35" \
