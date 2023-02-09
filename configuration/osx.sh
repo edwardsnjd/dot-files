@@ -49,4 +49,5 @@ stow --target="${HOME}" \
   zsh \
   subversion \
   readline \
-  glow
+  glow \
+  emacs
