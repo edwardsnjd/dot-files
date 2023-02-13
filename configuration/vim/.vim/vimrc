@@ -175,7 +175,8 @@ nnoremap <leader>F <Plug>(FzfTextCurrentWord)
 xnoremap <leader>F <Plug>(FzfTextSelection)
 
 " - Session management
-nnoremap <leader>O :mksession! <C-r>=v:this_session<CR>
+nnoremap <leader>Os :mksession! <C-r>=v:this_session<CR>
+nnoremap <leader>Od :! rm <C-r>=v:this_session<CR>
 
 " - Display navigable file outline (in local list or scratch buffer)
 nnoremap <leader>so <Plug>(ShowLocalOutline)
