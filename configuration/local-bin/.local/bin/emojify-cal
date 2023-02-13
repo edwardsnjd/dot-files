@@ -35,6 +35,7 @@ function Main() {
   faketty "$@" \
     | sed -E "
         s/${startStandoutRegex}.*${stopStandoutRegex}/${currentDateMarker}/
+        s/ *$//
       "
 }
 
