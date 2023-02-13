@@ -1,12 +1,122 @@
 #!/usr/bin/env bash
 
-# Create and access a docker environment for the current directory.
+# NAME
+#   dockerenv - Create and access a docker environment for the current directory
 #
-# Usage:
-#  dockerenv <command> [args...]
-#  dockerenv help
+# SYNOPSIS
+#   dockerenv <command> [args...]
+#   dockerenv help
 #
-# Dependencies:
+# USAGE
+#   The assumption is that your project does not have a special Dockerfile
+#   but you have a particular docker image available containing some cli
+#   tools that you'd like access to.  This script has a few commands that
+#   can start, use, and destroy a companion container for a particular
+#   directory.
+#
+#   The container and associated tools will work from that particular
+#   directory and its descendants.
+#
+#   Changing directory to descendants is respected when running commands
+#   inside the container i.e. commands for the container should use relative
+#   paths from the current working directory, not the original mounted
+#   directory.
+#
+#   If the current working directory is under the mount directories of
+#   multiple dockerenv containers then the closest one is used.
+#
+#   Creating a custom Dockerfile is not at all a bad idea but if you have a
+#   large number of projects with identical development environment
+#   requirements then it can be conveninent to make those available without
+#   maintaining identical Dockerfiles.
+#
+#   This script just provides some sugar for the underlying docker commands
+#   you'd use.  The mechanism for identifying the associated container for
+#   the current working directory is the path of the directory that the
+#   associated container was started from.  That has obvious drawbacks but
+#   is often enough.
+#
+#   Example - Local ruby project but no ruby installed:
+#     $ cd /code/project1           # cd to root of project
+#     $ type ruby                   # confirm no ruby on host
+#     -bash: type: ruby: not found
+#     $ dockerenv up ruby:alpine     # start ruby container
+#     ...
+#     $ dockerenv exec ruby foo.rb   # run some ruby
+#     ...
+#     $ dockerenv exec irb           # drop into ruby REPL
+#     ...
+#     $ dockerenv down
+#     dockerenv-project1
+#
+#   Example - Using binstub for easier access to container commands:
+#     $ cd /code/project1           # cd to root of project
+#     $ dockerenv up ruby:alpine     # start ruby container
+#     ...
+#     $ dockerenv binstubs ruby irb  # add aliases for ruby and irb
+#     ...
+#     $ ruby foo.rb                 # run some ruby
+#     ...
+#     $ irb                         # drop into ruby REPL
+#     ...
+#     $ unalias ruby irb            # remove aliases
+#     $ dockerenv down
+#     dockerenv-project1
+#
+#   Example - Listing dockerenv containers:
+#     $ dockerenv ls                 # list containers
+#     CONTAINER ID   IMAGE         STATUS          mount
+#     $ dockerenv up ruby:alpine     # start ruby container
+#     ...
+#     $ dockerenv ls                 # list containers
+#     CONTAINER ID   IMAGE         STATUS          mount
+#     c2d002896add   ruby:alpine   Up 10 seconds   /code/project1   (*)
+#     ddddddddeeee   ruby:alpine   Up 10 minutes   /code/project2
+#
+# COMMANDS
+#   up|start|run [image] [options]
+#     Start a devenv container in the background.
+#
+#     If supplied, image is the docker image to run.  If no image is
+#     supplied the environment variable DOCKERENV_IMAGE is used.
+#
+#     If supplied, options are passed to docker run.  In order to supply
+#     any run options, the image is required.  To use the default:
+#     dockerenv up \$DOCKERENV_IMAGE [options]
+#
+#   list|ls [options]
+#     List all devenv containers, indicating if one is active for this
+#     directory.
+#
+#     If supplied, options are passed to docker ls.
+#
+#   shell|exec [command]
+#     Run a command inside a devenv container.
+#
+#     If supplied [command] is the command to run in the container.  If
+#     not supplied, bash will be used instead.
+#
+#   down|stop|kill|rm [options]
+#     Stop a devenv container.
+#
+#     If supplied, options are passed to docker rm.
+#
+#   binstub name cmd [args...]
+#     Output the text of a bash script to setup an alias suitable for use
+#     as a bin stub in the current directory.  To create the alias, eval
+#     the raw text:
+#       $ eval \$(dockerenv binstub foo foo)  # create temporary alias
+#       $ foo somefile.foo                    # use alias as if local
+#       $ unalias foo                         # remove the alias
+#
+#     name is the name of the alias created.
+#
+#     cmd is the command to run for that alias.
+#
+#     If supplied args are additional arguments supplied to the command
+#     program via the alias.
+#
+# DEPENDENCIES
 #  - bash (v4.4+ for ${var@Q} support)
 #  - docker
 #  - awk
@@ -14,6 +124,11 @@
 #  - cut
 #  - head
 #  - sort
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
 
 # Constants
 
@@ -172,129 +287,42 @@ function binstub() {
 }
 
 function unknown() {
-  echo "Sorry, unknown command: \"$1\""
+  echo "Sorry, unknown command: \"$1\"" >&2
+  echo >&2
+  hlp >&2
   exit 1
 }
 
 function hlp() {
-  cat <<-END
-		NAME
-		    dockerenv - docker dev environments
+  sed -E -f <(getSection "UsageSedScript") $0
+}
 
-		SYNOPSIS
-		    dockerenv [command] [options]
-
-		USAGE
-		    The assumption is that your project does not have a special Dockerfile
-		    but you have a particular docker image available containing some cli
-		    tools that you'd like access to.  This script has a few commands that
-		    can start, use, and destroy a companion container for a particular
-		    directory.
-
-		    The container and associated tools will work from that particular
-		    directory and its descendants.
-
-		    Changing directory to descendants is respected when running commands
-		    inside the container i.e. commands for the container should use relative
-		    paths from the current working directory, not the original mounted
-		    directory.
-
-		    If the current working directory is under the mount directories of
-		    multiple dockerenv containers then the closest one is used.
-
-		    Creating a custom Dockerfile is not at all a bad idea but if you have a
-		    large number of projects with identical development environment
-		    requirements then it can be conveninent to make those available without
-		    maintaining identical Dockerfiles.
-
-		    This script just provides some sugar for the underlying docker commands
-		    you'd use.  The mechanism for identifying the associated container for
-		    the current working directory is the path of the directory that the
-		    associated container was started from.  That has obvious drawbacks but
-		    is often enough.
-
-		    Example - Local ruby project but no ruby installed:
-		        $ cd /code/project1           # cd to root of project
-		        $ type ruby                   # confirm no ruby on host
-		        -bash: type: ruby: not found
-		        $ dockerenv up ruby:alpine     # start ruby container
-		        ...
-		        $ dockerenv exec ruby foo.rb   # run some ruby
-		        ...
-		        $ dockerenv exec irb           # drop into ruby REPL
-		        ...
-		        $ dockerenv down
-		        dockerenv-project1
-
-		    Example - Using binstub for easier access to container commands:
-		        $ cd /code/project1           # cd to root of project
-		        $ dockerenv up ruby:alpine     # start ruby container
-		        ...
-		        $ dockerenv binstubs ruby irb  # add aliases for ruby and irb
-		        ...
-		        $ ruby foo.rb                 # run some ruby
-		        ...
-		        $ irb                         # drop into ruby REPL
-		        ...
-		        $ unalias ruby irb            # remove aliases
-		        $ dockerenv down
-		        dockerenv-project1
-
-		    Example - Listing dockerenv containers:
-		        $ dockerenv ls                 # list containers
-		        CONTAINER ID   IMAGE         STATUS          mount
-		        $ dockerenv up ruby:alpine     # start ruby container
-		        ...
-		        $ dockerenv ls                 # list containers
-		        CONTAINER ID   IMAGE         STATUS          mount
-		        c2d002896add   ruby:alpine   Up 10 seconds   /code/project1   (*)
-		        ddddddddeeee   ruby:alpine   Up 10 minutes   /code/project2
-
-		COMMANDS
-		    up|start|run [image] [options]
-		      Start a devenv container in the background.
-		
-		      If supplied, image is the docker image to run.  If no image is
-		      supplied the environment variable DOCKERENV_IMAGE is used.
-		
-		      If supplied, options are passed to docker run.  In order to supply
-		      any run options, the image is required.  To use the default:
-		      dockerenv up \$DOCKERENV_IMAGE [options]
-		
-		    list|ls [options]
-		      List all devenv containers, indicating if one is active for this
-		      directory.
-		
-		      If supplied, options are passed to docker ls.
-		
-		    shell|exec [command]
-		      Run a command inside a devenv container.
-		
-		      If supplied [command] is the command to run in the container.  If
-		      not supplied, bash will be used instead.
-		
-		    down|stop|kill|rm [options]
-		      Stop a devenv container.
-		
-		      If supplied, options are passed to docker rm.
-		
-		    binstub name cmd [args...]
-		      Output the text of a bash script to setup an alias suitable for use
-		      as a bin stub in the current directory.  To create the alias, eval
-		      the raw text:
-		        $ eval \$(dockerenv binstub foo foo)  # create temporary alias
-		        $ foo somefile.foo                    # use alias as if local
-		        $ unalias foo                         # remove the alias
-		
-		      name is the name of the alias created.
-		
-		      cmd is the command to run for that alias.
-		
-		      If supplied args are additional arguments supplied to the command
-		      program via the alias.
-		END
+# Get a delimited section of this file
+function getSection() {
+  local section="$1"
+  sed -En "/^#.*${section}:Start/,/^#.*${section}:End/ { s/^# ?//; p; }" $0 \
+    | sed '1d; $d'
 }
 
 # Entry point
 
 main "$@"
+
+# NOTE: The rest of this file is not executed, so can hold scripts for
+# different languages etc.  Use `getSection xxx` to obtain the text for a
+# particular section.
+
+#~~~~~~~~~~~~~~~~~~~~UsageSedScript:Start~~~~~~~~~~~~~~~~~~~~
+# #n
+# /^#!/ n
+# /^#/ {
+#   :heading
+#   /^#/ {
+#     s/^# ?//
+#     p
+#     n
+#     b heading
+#   }
+#   q
+# }
+#~~~~~~~~~~~~~~~~~~~~~UsageSedScript:End~~~~~~~~~~~~~~~~~~~~~
