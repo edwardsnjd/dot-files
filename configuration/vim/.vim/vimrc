@@ -265,6 +265,9 @@ nnoremap <leader>in <Plug>(NbInsertLink)
 " NOTE: Uses i and j registers, and i and j marks.
 nnoremap <leader>ri <Plug>(RefactoringInline)
 xnoremap <leader>ri <Plug>(RefactoringInline)
+" NOTE: Assumes search register is target and selection value. Uses default
+" register, and j mark.
+xnoremap <leader>rI y:'> mark j<Cr>N"_cgn<C-r>0<Esc>:'[,'j d<Cr>
 
 " Special non-leader mappings:
 
