@@ -163,6 +163,7 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 " - Fuzzy finders
 " NOTE: Current selection ones use x register
+nnoremap <leader>o <Plug>(FzfSessions)
 nnoremap <leader>p <Plug>(FzfFiles)
 nnoremap <leader>P <Plug>(FzfBuffers)
 nnoremap <leader>H <Plug>(FzfHistory)
@@ -172,6 +173,9 @@ nnoremap <leader>? <Plug>(FzfBufferTags)
 nnoremap <leader>f <Plug>(FzfText)
 nnoremap <leader>F <Plug>(FzfTextCurrentWord)
 xnoremap <leader>F <Plug>(FzfTextSelection)
+
+" - Session management
+nnoremap <leader>O :mksession! <C-r>=v:this_session<CR>
 
 " - Display navigable file outline (in local list or scratch buffer)
 nnoremap <leader>so <Plug>(ShowLocalOutline)

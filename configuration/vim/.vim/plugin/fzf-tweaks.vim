@@ -32,11 +32,29 @@ command! -bang -nargs=* BSLines call fzf#vim#buffer_lines(
 " Alternate :History command with all lines in order
 command! -bang -nargs=* HISTORY call fzf#vim#history({ 'options': ['--no-sort'] }, <bang>0)
 
+" Custom :Session command
+command! -bang -nargs=? Sessions call fzf#run(fzf#wrap(
+      \ {
+            \ 'dir': '~/sessions',
+            \ 'source': 'ls *.vim',
+            \ 'sink': function('<sid>LoadSession'),
+            \ 'options': ['--prompt=Session> ', '--query', <q-args>]
+      \ },
+      \ <bang>0
+      \))
+function! s:LoadSession(session)
+  let session_file = '~/sessions/'.a:session
+  echom 'Restoring session: <'.session_file.'>'
+  bufdo bd
+  execute 'source '.session_file
+endfunction
+
 " Mappings:
 
 " NOTE: Current selection ones use x register
 " NOTE: Use `expand(<cword>)` because `<C-R><C-W>` will not type text that's already
 " there, which will match the "b" from the leading "\b"!
+nnoremap <Plug>(FzfSessions) :Sessions<CR>
 nnoremap <Plug>(FzfFiles) :Files<CR>
 nnoremap <Plug>(FzfBuffers) :Buffers<CR>
 nnoremap <Plug>(FzfHistory) :HISTORY<CR>
