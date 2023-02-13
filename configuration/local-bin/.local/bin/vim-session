@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+# NAME
+#   vim-session - Pick a saved vim session
+#
+# SYNOPSIS
+#   vim-session [--dir <dir>] [query] [command]
+#
+# DESCRIPTION
+#   List, browse, or activate a saved vim session.
+#   See vim online help:
+#     :help sessions
+#     :help mksession
+#
+# COMMANDS
+#   list = Print list of session files on stdout
+#   select = Interactively pick from list of session files
+#   start (default) = Interactively pick and start session
+#
+# OPTIONS
+#   --dir <dir> - specify the directory to look in (defaults to $PWD)
+#   query - optionally specify the starting query for project names
+#
+# DEPENDENCIES
+#   - fzf - interactively pick a session
+#   - POSIX utils: find
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local baseDir="$PWD"
+  local cmd="start"
+
+  local POSITIONAL_ARGS=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --dir) baseDir="$2" && shift && shift ;;
+      start) cmd="start" && shift ;;
+      select) cmd="select" && shift ;;
+      list) cmd="list" && shift ;;
+      *) POSITIONAL_ARGS+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+  case "$cmd" in
+    list) ListSessions "$baseDir" "$@" ;;
+    select) SelectSession "$baseDir" "$@" ;;
+    start) StartSession "$baseDir" "$@"
+  esac
+}
+
+function StartSession() {
+  local session="$(SelectSession "$@")"
+
+  if [[ -n "$session" ]]; then
+    vim -S "${baseDir}/${session}"
+  fi
+}
+
+function SelectSession() {
+  local baseDir="$1"
+  local query="${2:-}"
+
+  ListSessions "$baseDir" \
+    | fzf \
+      --prompt "Session> " \
+      --query "$query" \
+      --sync
+}
+
+function ListSessions() {
+  local baseDir="$1"
+
+  # Using both maxdepth and depth allows find to be fast
+  find "$baseDir" \
+    -type f \
+    -name "*.vim" \
+    -maxdepth 1 \
+    -depth 1 \
+    -exec basename {} \;
+}
+
+Main "$@"
