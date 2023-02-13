@@ -68,9 +68,10 @@ function SelectSession() {
 
   ListSessions "$baseDir" \
     | fzf \
-      --prompt "Session> " \
-      --query "$query" \
-      --sync
+      --reverse \
+      --height "~35" \
+      --prompt "Pick vim session to start> " \
+      --query="$query"
 }
 
 function ListSessions() {
