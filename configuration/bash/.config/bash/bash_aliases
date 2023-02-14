@@ -45,9 +45,6 @@ alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 alias tm='tmux -CC new-session -As'  # iTerm2 (control mode and reuse session)
 alias ta='tmux-attach'
 alias tp='tmux-project --dir ~/projects'
-[[ -n "${TMUX:-}" ]] && \
-  tmux bind-key -T finders -N "Pick a project" p \
-    display-popup -E -w 80% -h 80% -d ~/projects tmux-project
 
 # Vim
 alias v='vim'

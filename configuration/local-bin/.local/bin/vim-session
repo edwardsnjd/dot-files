@@ -29,7 +29,7 @@ set -o pipefail
 function Main() {
   local baseDir="$PWD"
   local positionalArgs=()
-  
+
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --dir) baseDir="$2" && shift && shift ;;
@@ -56,7 +56,8 @@ function SelectSession() {
   local query="${2:-}"
 
   ListSessions "$baseDir" \
-    | fzf \
+    | fzf-tmux \
+      -p \
       --reverse \
       --height "~35" \
       --prompt "Pick vim session to start> " \
