@@ -1,21 +1,16 @@
 #!/usr/bin/env bash
 
 # NAME
-#   vim-session - Pick a saved vim session
+#   vim-session - Start a saved vim session
 #
 # SYNOPSIS
-#   vim-session [--dir <dir>] [query] [command]
+#   vim-session [--dir <dir>] [query]
 #
 # DESCRIPTION
-#   List, browse, or activate a saved vim session.
+#   Interactively start a saved vim session.
 #   See vim online help:
 #     :help sessions
 #     :help mksession
-#
-# COMMANDS
-#   list = Print list of session files on stdout
-#   select = Interactively pick from list of session files
-#   start (default) = Interactively pick and start session
 #
 # OPTIONS
 #   --dir <dir> - specify the directory to look in (defaults to $PWD)
@@ -23,7 +18,8 @@
 #
 # DEPENDENCIES
 #   - fzf - interactively pick a session
-#   - POSIX utils: find
+#   - vim - start the session
+#   - POSIX utils: find, basename
 
 set -o nounset
 set -o errexit
@@ -32,29 +28,22 @@ set -o pipefail
 
 function Main() {
   local baseDir="$PWD"
-  local cmd="start"
-
-  local POSITIONAL_ARGS=()
+  local positionalArgs=()
+  
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --dir) baseDir="$2" && shift && shift ;;
-      start) cmd="start" && shift ;;
-      select) cmd="select" && shift ;;
-      list) cmd="list" && shift ;;
-      *) POSITIONAL_ARGS+=("$1") && shift ;;
+      *) positionalArgs+=("$1") && shift ;;
     esac
   done
 
-  set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+  set -- "${positionalArgs[@]}" # restore positional parameters
 
-  case "$cmd" in
-    list) ListSessions "$baseDir" "$@" ;;
-    select) SelectSession "$baseDir" "$@" ;;
-    start) StartSession "$baseDir" "$@"
-  esac
+  StartSession "$baseDir" "$@"
 }
 
 function StartSession() {
+  local baseDir="$1"
   local session="$(SelectSession "$@")"
 
   if [[ -n "$session" ]]; then
@@ -75,10 +64,8 @@ function SelectSession() {
 }
 
 function ListSessions() {
-  local baseDir="$1"
-
   # Using both maxdepth and depth allows find to be fast
-  find "$baseDir" \
+  find "$1" \
     -type f \
     -name "*.vim" \
     -maxdepth 1 \
