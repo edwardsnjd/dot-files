@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-commits - Opinionated git log
+#
+# SYNOPSIS
+#   git-commits [--xdate <format>] [git log args...]
+#   git commits [--xdate <format>] [git log args...]
+#
+# OUTPUT
+#   Print stats about every commit in a Git repository:
+#   <sha>	<authored-at>	<author-name>	<author-email>	<committed-at>	<committer-name>	<committer-email>
+#
+#   The supplied extra date format `--xdate` is also provided as another column(s) for each date:
+#   <sha>	<authored-at>	<authored-extra>	<author-name>	<author-email>	<committed-at>	<committed-extra>	<committer-name>	<committer-email>
+#        	             	^^^^^^^^^^^^^^^^	             	              	              	^^^^^^^^^^^^^^^^^
+#
+# EXAMPLE
+#   $ git commits --xdate "%u-%a" | head -3 | column -s$'\t' -t
+#   2116a66  2023-02-14T16:45:20+0800  2-Tue  Nicholas Edwards  foo@bar.com  2023-02-15T13:04:59+0800  3-Wed  Nicholas Edwards  foo@bar.com
+#   6039889  2023-02-15T07:56:48+0800  3-Wed  Nicholas Edwards  bar@foo.com  2023-02-15T07:56:48+0800  3-Wed  Nicholas Edwards  bar@foo.com
+#   724ca4c  2023-02-14T08:44:52+0800  2-Tue  edwardsnjd        bar@foo.com  2023-02-14T08:44:52+0800  2-Tue  GitHub            noreply@github.com
+#
+# DEPENDENCIES
+#   bash, git, and GNU utils
+
+set -o nounset
+set -o errexit
+#set -o xtrace
+
+# List core information about all commits
+function GitCommits {
+  local extraDateFormat=""
+
+  rest=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --xdate) extraDateFormat="	$2" && shift && shift ;;
+      *) rest+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${rest[@]}" # restore positional parameters
+
+  git log \
+    --pretty="tformat:%h	%ad	%aN	%aE	%cd	%cN	%cE" \
+    --date="format:%FT%T%z${extraDateFormat}" \
+    "$@"
+}
+
+GitCommits "$@"
