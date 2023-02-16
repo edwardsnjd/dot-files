@@ -49,7 +49,7 @@ set sessionoptions-=options " Don't store maps or options
 set foldmethod=indent
 set nofoldenable        " Do not fold on opening
 set foldnestmax=10
-set foldlevel=0         " Start folding at this level
+set foldlevel=1         " Start folding at this level
 set foldminlines=0      " Fold single line regions
 let g:markdown_folding = 1
 let g:markdown_fenced_languages = ['bash=sh', 'dot', 'js=javascript', 'kt=kotlin']
