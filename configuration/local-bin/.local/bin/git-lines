@@ -8,12 +8,12 @@
 #   git lines [--xdate <format>] [git blame args...]
 #
 # OUTPUT
-#   Print stats about every line in a repo:
-#   <sha>	<authored-at>	<author-name>	<author-email>
+#   Print stats about every line in a repo (tsv):
+#   <sha> <authored-at> <author-name> <author-email>
 #
 #   The supplied extra date format `--xdate` is also provided as another column(s) for each date:
-#   <sha>	<authored-at>	<authored-extra>	<author-name>	<author-email>
-#        	             	^^^^^^^^^^^^^^^^
+#   <sha> <authored-at> <authored-extra> <author-name> <author-email>
+#                       ^^^^^^^^^^^^^^^^
 #
 # EXAMPLE
 #   $ git lines README.md | head -3

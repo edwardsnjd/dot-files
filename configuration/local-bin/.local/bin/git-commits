@@ -9,11 +9,11 @@
 #
 # OUTPUT
 #   Print stats about every commit in a Git repository:
-#   <sha>	<authored-at>	<author-name>	<author-email>	<committed-at>	<committer-name>	<committer-email>
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email>
 #
 #   The supplied extra date format `--xdate` is also provided as another column(s) for each date:
-#   <sha>	<authored-at>	<authored-extra>	<author-name>	<author-email>	<committed-at>	<committed-extra>	<committer-name>	<committer-email>
-#        	             	^^^^^^^^^^^^^^^^	             	              	              	^^^^^^^^^^^^^^^^^
+#   <sha> <authored-at> <authored-extra> <author-name> <author-email> <committed-at> <committed-extra> <committer-name> <committer-email>
+#                       ^^^^^^^^^^^^^^^^                                             ^^^^^^^^^^^^^^^^^
 #
 # EXAMPLE
 #   $ git commits --xdate "%u-%a" | head -3 | column -s$'\t' -t
