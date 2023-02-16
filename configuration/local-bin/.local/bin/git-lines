@@ -4,25 +4,39 @@
 #   git-lines - Opinionated git blame
 #
 # SYNOPSIS
-#   git-lines [--xdate <format>] [git blame args...]
-#   git lines [--xdate <format>] [git blame args...]
+#   git-lines [--xdate <format>] [<args...>] [-- <paths...>]
+#   git lines [--xdate <format>] [<args...>] [-- <paths...>]
+#
+# DESCRIPTION
+#   Print stats about the current version of every line in the mentioned files
+#   and directories.
+#
+# OPTIONS
+#   --xdate <format>
+#       An optional strftime format string, inserts another column after the default date one.
+#   <args...>
+#       Any arguments to supply to the underlying git blame.
+#   -- <paths...>
+#       Optionally specify the file/directory path(s) to include (defaults to current dir).
+#       The `--` prefix is not optional because git blame only supports a single file
+#       at at time, so we handle this specially.
 #
 # OUTPUT
-#   Print stats about every line in a repo (tsv):
-#   <sha> <authored-at> <author-name> <author-email>
+#   A TSV output line for every line in the file(s):
+#   <sha> <authored-at> <author-name> <author-email> <path>
 #
 #   The supplied extra date format `--xdate` is also provided as another column(s) for each date:
-#   <sha> <authored-at> <authored-extra> <author-name> <author-email>
+#   <sha> <authored-at> <authored-extra> <author-name> <author-email> <path>
 #                       ^^^^^^^^^^^^^^^^
 #
 # EXAMPLE
-#   $ git lines README.md | head -3
-#   6150a32b	2020-06-19T23:05:09+0800	Nicholas Edwards	foo@bar.com
-#   6150a32b	2020-06-19T23:05:09+0800	Nicholas Edwards	foo@bar.com
-#   96c08d92	2022-03-14T21:14:49+0800	Nicholas Edwards	foo@bar.com
+#   $ git lines -- README.md | head -3
+#   6150a32b	2020-06-19T23:05:09+0800	Nicholas Edwards	foo@bar.com	README.md
+#   6150a32b	2020-06-19T23:05:09+0800	Nicholas Edwards	foo@bar.com	README.md
+#   96c08d92	2022-03-14T21:14:49+0800	Nicholas Edwards	foo@bar.com	README.md
 #
 # DEPENDENCIES
-#   bash, git, and gawk
+#   bash, git, and gawk, fd
 
 set -o nounset
 set -o errexit
@@ -31,51 +45,87 @@ set -o errexit
 # List core information about all lines in the given file
 function GitLines {
   local extraDateFormat=""
+  local args=()
+  local paths=()
 
-  rest=()
   while [[ $# -gt 0 ]]; do
     case $1 in
       --xdate) extraDateFormat="	$2" && shift && shift ;;
-      *) rest+=("$1") && shift ;;
+      --)
+        shift
+        while [[ $# -gt 0 ]]; do
+          paths+=("$1") && shift
+        done
+        ;;
+      *) args+=("$1") && shift ;;
     esac
   done
 
-  set -- "${rest[@]}" # restore positional parameters
+  # Default to pwd
+  if [[ ${#paths[@]} -eq 0 ]]; then
+    paths+=(".")
+  fi
 
-  git blame --porcelain "$@" \
-    | gawk -v dateFormat="%FT%T%z${extraDateFormat}" '
-      BEGIN {
-        OFS = "	"
-        hashPattern          = @/^([0-9a-z]{8})[0-9a-z]+ [0-9]+ [0-9]+.*$/
-        authorPattern        = @/^author (.*)$/
-        authorMailPattern    = @/^author-mail <(.*)>$/
-        authorTimePattern    = @/^author-time (.*)$/
-        authorTzPattern      = @/^author-tz (.*)$/
-        committerPattern     = @/^committer (.*)$/
-        committerMailPattern = @/^committer-mail <(.*)>$/
-        committerTimePattern = @/^committer-time (.*)$/
-        committerTzPattern   = @/^committer-tz (.*)$/
-        summaryPattern       = @/^summary (.*)$/
-        filenamePattern      = @/^filename (.*)$/
-        textPattern          = @/^	(.*)$/
-      }
-
-      $0 ~ hashPattern          { hash          = gensub(hashPattern          , "\\1", "g") }
-      $0 ~ authorPattern        { author        = gensub(authorPattern        , "\\1", "g") }
-      $0 ~ authorMailPattern    { authorMail    = gensub(authorMailPattern    , "\\1", "g") }
-      $0 ~ authorTimePattern    { authorTime    = gensub(authorTimePattern    , "\\1", "g") }
-      $0 ~ authorTzPattern      { authorTz      = gensub(authorTzPattern      , "\\1", "g") }
-      $0 ~ committerPattern     { committer     = gensub(committerPattern     , "\\1", "g") }
-      $0 ~ committerMailPattern { commtterMail  = gensub(commtterMailPattern  , "\\1", "g") }
-      $0 ~ committerTimePattern { committerTime = gensub(committerTimePattern , "\\1", "g") }
-      $0 ~ committerTzPattern   { committerTz   = gensub(committerTzPattern   , "\\1", "g") }
-      $0 ~ summaryPattern       { summary       = gensub(summaryPattern       , "\\1", "g") }
-      $0 ~ filenamePattern      { filename      = gensub(filenamePattern      , "\\1", "g") }
-      $0 ~ textPattern          { text          = gensub(textPattern          , "\\1", "g") }
-
-      # Output
-      $0 ~ textPattern { print hash, strftime(dateFormat, authorTime), author, authorMail }
-    '
+  for path in "${paths[@]}"; do
+    blameItem "$path" "${args[@]}"
+  done \
+    | formatBlame "%FT%T%z${extraDateFormat}"
 }
+
+function blameItem() {
+  local path="$1"
+  shift
+
+  if [[ -d "$path" ]]; then
+    # Use fd because it respects .gitignore
+    fd . --hidden "$path" --type file \
+      | while read p; do blameFile "$@" -- "$p" ; done
+  else
+    blameFile "$@" -- "$path"
+  fi
+}
+
+function blameFile() {
+  git blame --porcelain "$@"
+}
+
+function formatBlame() {
+  local extraDateFormat="$1"
+
+  gawk -v dateFormat="%FT%T%z${extraDateFormat}" '
+    BEGIN {
+      OFS = "	"
+      hashPattern          = @/^([0-9a-z]{8})[0-9a-z]+ [0-9]+ [0-9]+.*$/
+      authorPattern        = @/^author (.*)$/
+      authorMailPattern    = @/^author-mail <(.*)>$/
+      authorTimePattern    = @/^author-time (.*)$/
+      authorTzPattern      = @/^author-tz (.*)$/
+      committerPattern     = @/^committer (.*)$/
+      committerMailPattern = @/^committer-mail <(.*)>$/
+      committerTimePattern = @/^committer-time (.*)$/
+      committerTzPattern   = @/^committer-tz (.*)$/
+      summaryPattern       = @/^summary (.*)$/
+      filenamePattern      = @/^filename (.*)$/
+      textPattern          = @/^	(.*)$/
+    }
+
+    $0 ~ hashPattern          { hash          = gensub(hashPattern          , "\\1", "g") }
+    $0 ~ authorPattern        { author        = gensub(authorPattern        , "\\1", "g") }
+    $0 ~ authorMailPattern    { authorMail    = gensub(authorMailPattern    , "\\1", "g") }
+    $0 ~ authorTimePattern    { authorTime    = gensub(authorTimePattern    , "\\1", "g") }
+    $0 ~ authorTzPattern      { authorTz      = gensub(authorTzPattern      , "\\1", "g") }
+    $0 ~ committerPattern     { committer     = gensub(committerPattern     , "\\1", "g") }
+    $0 ~ committerMailPattern { commtterMail  = gensub(commtterMailPattern  , "\\1", "g") }
+    $0 ~ committerTimePattern { committerTime = gensub(committerTimePattern , "\\1", "g") }
+    $0 ~ committerTzPattern   { committerTz   = gensub(committerTzPattern   , "\\1", "g") }
+    $0 ~ summaryPattern       { summary       = gensub(summaryPattern       , "\\1", "g") }
+    $0 ~ filenamePattern      { filename      = gensub(filenamePattern      , "\\1", "g") }
+    $0 ~ textPattern          { text          = gensub(textPattern          , "\\1", "g") }
+
+    # Output
+    $0 ~ textPattern { print hash, strftime(dateFormat, authorTime), author, authorMail, filename }
+  '
+}
+
 
 GitLines "$@"
