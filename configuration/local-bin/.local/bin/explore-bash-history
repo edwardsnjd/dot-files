@@ -52,6 +52,7 @@ function FilterTimestampedEntries() {
       }
 
       s/\\\n/¶/g
+      s//¶/g
       s/\t/⇒/g
 
       s/§/\t/g
