@@ -13,7 +13,9 @@ function GitBrowseDiff {
   git diff --name-only --relative "$@" \
     | fzf \
       --multi \
+      --layout=reverse \
       --preview "$preview" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --bind="enter:execute($details)"
 }
 

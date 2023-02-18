@@ -7,23 +7,29 @@
 #   git browse-file-versions <path>
 
 function GitBrowseFileVersions() {
+  local path="${1:?Must supply the path to browse}"
+
+  local sha="$(SelectGitCommit "$path")"
+
+  git show "$sha:$path" \
+    | bat --file-name="$path"
+}
+
+function SelectGitCommit() {
+  local path="$1"
+
   local pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
-  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show %%:$1 | bat --style=plain --color=always --file-name=$1"
+  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show %%:$path | bat --style=plain --color=always --file-name=$path"
 
-  local sha=$(
-    git log --pretty="$pretty" --color -- $1 \
-      | fzf \
-        --ansi \
-        --layout=reverse-list \
-        --no-sort \
-        --preview="$preview" \
-        --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-      | grep -Eo '[a-f0-9]{7,}' \
-      | head -1
-  )
-
-  git show "$sha:$1" \
-    | bat --file-name="$1"
+  git log --pretty="$pretty" --color -- $path \
+    | fzf \
+      --ansi \
+      --layout=reverse \
+      --no-sort \
+      --preview="$preview" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    | grep -Eo '[a-f0-9]{7,}' \
+    | head -1
 }
 
 GitBrowseFileVersions "$@"

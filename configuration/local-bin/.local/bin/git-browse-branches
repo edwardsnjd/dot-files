@@ -13,10 +13,11 @@ function GitBrowseBranches() {
   git branch --list --color --format="$format" \
     | fzf \
       --no-sort \
-      --layout=reverse-list \
+      --layout=reverse \
       --ansi \
       --cycle \
       --preview="$preview" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --query="$1" \
     | cut -d" " -f1 \
     | xargs git checkout
