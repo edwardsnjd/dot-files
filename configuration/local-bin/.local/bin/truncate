@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# SYNOPSIS
+#   truncate [width]
+#
+# DESCRIPTION
+#   Truncate each line at max width.
+#
+# OPTIONS
+#   width - optionally supply width to truncate at (defaults to width of terminal)
+#
+# DEPENDENCIES
+#   - tput - to find terminal width if not supplied as the arg
+#   - cut - truncate each line
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Truncate() {
+  local width="${1:-$(tput cols)}"
+
+  cut -c "1-$width"
+}
+
+Truncate "$@"
