@@ -47,7 +47,7 @@ function GitCommitFiles() {
               printf "$hash	$rest	$line\n"
             done
       done \
-    | sed -E 's/	-	/	0	/g'
+    | sed -E 's/-	/0	/g'
 }
 
 GitCommitFiles "$@"
