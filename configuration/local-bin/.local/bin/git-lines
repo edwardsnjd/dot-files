@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
 # NAME
-#   git-lines - Opinionated git blame
+#   git-lines - Opinionated git blame suitable for further processing
 #
 # SYNOPSIS
-#   git-lines [--xdate <format>] [<args...>] [-- <paths...>]
-#   git lines [--xdate <format>] [<args...>] [-- <paths...>]
+#   git-lines [--date <format>] [<args...>] -- [<paths...>]
+#   git lines [--date <format>] [<args...>] -- [<paths...>]
 #
 # DESCRIPTION
-#   Print stats about the current version of every line in the mentioned files
+#   Print stats about the commit that last modified each line in the mentioned files
 #   and directories.
 #
 # OPTIONS
-#   --xdate <format>
-#       An optional strftime format string, inserts another column after the default date one.
+#   --date <format>
+#       Optionally override the strftime format string (defaults to ISO8601-ish via `%FT%T%z`)
 #   <args...>
-#       Any arguments to supply to the underlying git blame.
+#       Any arguments to supply to the underlying `git blame`.
 #   -- <paths...>
 #       Optionally specify the file/directory path(s) to include (defaults to current dir).
 #       The `--` prefix is not optional because git blame only supports a single file
@@ -23,11 +23,11 @@
 #
 # OUTPUT
 #   A TSV output line for every line in the file(s):
-#   <sha> <authored-at> <author-name> <author-email> <path>
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <path> <contents>
 #
-#   The supplied extra date format `--xdate` is also provided as another column(s) for each date:
-#   <sha> <authored-at> <authored-extra> <author-name> <author-email> <path>
-#                       ^^^^^^^^^^^^^^^^
+#   If provided, the `strftime` date format `--date` is used to format the date columns:
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <path> <contents>
+#         ^^^^^^^^^^^^^                             ^^^^^^^^^^^^^^^
 #
 # EXAMPLE
 #   $ git lines -- README.md | head -3
@@ -36,7 +36,7 @@
 #   96c08d92	2022-03-14T21:14:49+0800	Nicholas Edwards	foo@bar.com	README.md
 #
 # DEPENDENCIES
-#   bash, git, and gawk, fd
+#   bash, git, and gawk (with strftime and gensub)
 
 set -o nounset
 set -o errexit
@@ -44,13 +44,13 @@ set -o errexit
 
 # List core information about all lines in the given file
 function GitLines {
-  local extraDateFormat=""
+  local dateFormat="%FT%T%z"
   local args=()
   local paths=()
 
   while [[ $# -gt 0 ]]; do
     case $1 in
-      --xdate) extraDateFormat="	$2" && shift && shift ;;
+      --date) dateFormat="$2" && shift && shift ;;
       --)
         shift
         while [[ $# -gt 0 ]]; do
@@ -67,34 +67,26 @@ function GitLines {
   fi
 
   for path in "${paths[@]}"; do
-    blameItem "$path" "${args[@]}"
+    git ls-files -- "$path" | while read file; do
+      if [[ -f "$file" ]]; then
+        # Output blame info for each line individually so it's possible to process
+        # each line independently
+        git blame --line-porcelain "${args[@]}" -- "$file"
+      fi
+    done
   done \
-    | formatBlame "%FT%T%z${extraDateFormat}"
+    | FormatBlame "${dateFormat}"
 }
 
-function blameItem() {
-  local path="$1"
-  shift
-
-  if [[ -d "$path" ]]; then
-    # Use fd because it respects .gitignore
-    fd . --hidden "$path" --type file \
-      | while read p; do blameFile "$@" -- "$p" ; done
-  else
-    blameFile "$@" -- "$path"
-  fi
-}
-
-function blameFile() {
-  git blame --porcelain "$@"
-}
-
-function formatBlame() {
+# Reformat the `git blame --line-porcelain` multiline format into a single line
+function FormatBlame() {
   local dateFormat="$1"
 
   gawk -v dateFormat="${dateFormat}" '
     BEGIN {
       OFS = "	"
+
+      # Each line of the porcelain output holds one field
       hashPattern          = @/^([0-9a-z]{8})[0-9a-z]+ [0-9]+ [0-9]+.*$/
       authorPattern        = @/^author (.*)$/
       authorMailPattern    = @/^author-mail <(.*)>$/
@@ -109,23 +101,29 @@ function formatBlame() {
       textPattern          = @/^	(.*)$/
     }
 
+    # Remember the fields as we go
     $0 ~ hashPattern          { hash          = gensub(hashPattern          , "\\1", "g") }
     $0 ~ authorPattern        { author        = gensub(authorPattern        , "\\1", "g") }
     $0 ~ authorMailPattern    { authorMail    = gensub(authorMailPattern    , "\\1", "g") }
     $0 ~ authorTimePattern    { authorTime    = gensub(authorTimePattern    , "\\1", "g") }
     $0 ~ authorTzPattern      { authorTz      = gensub(authorTzPattern      , "\\1", "g") }
     $0 ~ committerPattern     { committer     = gensub(committerPattern     , "\\1", "g") }
-    $0 ~ committerMailPattern { commtterMail  = gensub(commtterMailPattern  , "\\1", "g") }
+    $0 ~ committerMailPattern { committerMail = gensub(committerMailPattern  , "\\1", "g") }
     $0 ~ committerTimePattern { committerTime = gensub(committerTimePattern , "\\1", "g") }
     $0 ~ committerTzPattern   { committerTz   = gensub(committerTzPattern   , "\\1", "g") }
     $0 ~ summaryPattern       { summary       = gensub(summaryPattern       , "\\1", "g") }
     $0 ~ filenamePattern      { filename      = gensub(filenamePattern      , "\\1", "g") }
     $0 ~ textPattern          { text          = gensub(textPattern          , "\\1", "g") }
 
-    # Output
-    $0 ~ textPattern { print hash, strftime(dateFormat, authorTime), author, authorMail, filename }
+    # Output only on text lines (which is last line of each block)
+    $0 ~ textPattern {
+      pAuthorDate = strftime(dateFormat, authorTime)
+      pCommitDate = strftime(dateFormat, committerTime)
+      pText = gensub(@/	/, "⇒", "g", text)
+      pText = gensub(@//, "¶", "g", pText)
+      print hash, pAuthorDate, author, authorMail, pCommitDate, committer, committerMail, filename, pText
+    }
   '
 }
-
 
 GitLines "$@"

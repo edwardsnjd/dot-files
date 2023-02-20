@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-commit-files - Opinionated git log with stats, suitable for further processing
+#
+# SYNOPSIS
+#   git-commit-files [<args...>]
+#   git commit-files [<args...>]
+#
+# OPTIONS
+#   <args...>
+#       Any arguments to supply to the underlying `git log`.
+#
+# OUTPUT
+#   Print stats about every file changed in every commit in a Git repository:
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <lines-added> <lines-deleted> <path>
+#
+#   Use the `--date` arg to set the format of the date columns to any supported `git log` date format:
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <lines-added> <lines-deleted> <path>
+#         ^^^^^^^^^^^^^                              ^^^^^^^^^^^^^^
+#
+# OUTPUT
+#   Print stats about files touched in every commit in a Git repository:
+#   <sha>	<author-date>	<author>	<files>	<lines added>	<lines deleted>
+#
+# EXAMPLE
+#   $ git commit-files | head -3
+#   2cfb86f	2022-09-24	Nicholas Edwards	2	5	2
+#   d6bba4e	2022-09-23	Nicholas Edwards	2	0	124
+#   a5d0b8c	2022-09-23	Nicholas Edwards	2	3	3
+#
+# Dependencies: bash, git, and GNU utils
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function GitCommitFiles() {
+  git log \
+    --pretty="tformat:%h	%ad	%aN	%aE	%cd	%cN	%cE" \
+    --date="iso-strict" \
+    "$@" \
+    | while read hash rest; do
+        git diff-tree --numstat --no-renames --no-commit-id "$hash" \
+          | while read line; do
+              printf "$hash	$rest	$line\n"
+            done
+      done \
+    | sed -E 's/	-	/	0	/g'
+}
+
+GitCommitFiles "$@"
