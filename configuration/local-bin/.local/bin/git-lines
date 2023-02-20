@@ -90,9 +90,9 @@ function blameFile() {
 }
 
 function formatBlame() {
-  local extraDateFormat="$1"
+  local dateFormat="$1"
 
-  gawk -v dateFormat="%FT%T%z${extraDateFormat}" '
+  gawk -v dateFormat="${dateFormat}" '
     BEGIN {
       OFS = "	"
       hashPattern          = @/^([0-9a-z]{8})[0-9a-z]+ [0-9]+ [0-9]+.*$/
