@@ -19,10 +19,6 @@
 #   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <lines-added> <lines-deleted> <path>
 #         ^^^^^^^^^^^^^                              ^^^^^^^^^^^^^^
 #
-# OUTPUT
-#   Print stats about files touched in every commit in a Git repository:
-#   <sha>	<author-date>	<author>	<files>	<lines added>	<lines deleted>
-#
 # EXAMPLE
 #   $ git commit-files | head -3
 #   2cfb86f	2022-09-24	Nicholas Edwards	2	5	2
