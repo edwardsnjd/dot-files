@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+
+# NAME
+#   docker-mmdc - dockerised mermaid cli (mmdc)
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function DockerMmdc() {
+  docker run \
+    --rm \
+    -ti \
+    -v "$PWD":/data \
+    minlag/mermaid-cli \
+    "$@"
+}
+
+DockerMmdc "$@"
