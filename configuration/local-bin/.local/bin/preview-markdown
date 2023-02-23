@@ -13,13 +13,17 @@ set -o pipefail
 
 Main() {
   local path="${1:-unknown-markdown.md}"
+
   local stem="${path%.md}"
   local tmp="${TMPDIR}/${stem}.html"
+
   pandoc \
     --standalone \
+    --embed-resources \
     --mathjax \
     --output "$tmp" \
     "$@"
+
   open "$tmp"
 }
 
