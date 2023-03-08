@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   save-to-pocket URL
+#
+# DEPENDENCIES
+#   curl
+
+function save() {
+  local url="https://getpocket.com/save?url=$1"
+  open "$url"
+}
+
+save "$@"
