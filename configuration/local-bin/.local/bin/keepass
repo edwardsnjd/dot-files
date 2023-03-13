@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# NAME
+#   keepass-wrapper - opinionated wrapper around the KeepassXC CLI tool
+#
+# USAGE
+#   keepass-wrapper <file>
+#
+# DEPENDENCIES
+#   keepassxc-cli
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local file="$1"
+
+  read -sp "Password: " password
+  echo ""
+
+  local mgnt="$(tput setaf 5)"
+  local nrml="$(tput sgr0)"
+  local header="Actions∷ ${mgnt}Enter${nrml} Show, ${mgnt}Alt-Enter${nrml} Copy"
+
+  List "$password" "$file" \
+    | fzf \
+      --reverse \
+      --prompt "Select entry> " \
+      --header "$header" \
+      --bind "enter:execute(Show $password $file {})" \
+      --bind "alt-enter:execute(Copy $password $file {})" \
+    || true  # allow for fzf
+}
+
+function List() {
+  RunInDb "$1" ls -Rf "$2"
+}
+
+function Show() {
+  {
+    echo "Path: $3"
+    RunInDb "$1" show "$2" "$3"
+  } | less -+F -+X --tilde +g
+}
+
+function Copy() {
+  echo "Path: $3"
+  RunInDb "$1" clip "$2" "$3"
+}
+
+function RunInDb() {
+  local password="$1" && shift
+  { sleep 1; echo "$password"; } \
+    | keepassxc-cli "$@" 2>/dev/null
+}
+
+# Export functions so fzf can call them
+export -f Show
+export -f Copy
+export -f RunInDb
+
+# Entry point
+Main "$@"
