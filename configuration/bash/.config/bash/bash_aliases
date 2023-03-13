@@ -36,10 +36,9 @@ alias ascii2bin="convert-text --format bin"
 alias bin2ascii="convert-text --format bin --decode"
 
 # Date
-alias localdate='date +"%Y-%m-%d"'
-alias isodate='date -u +"%Y-%m-%d"'
-alias isotime='date -u +"%Y-%m-%dT%H:%MZ"'
-alias isostamp='date -u +"%Y-%m-%dT%H:%M:%SZ"'
+alias localdate='datetime localdate'
+alias isodate='datetime isodate'
+alias isostamp='datetime isostamp'
 
 # Tmux
 alias tm='tmux -CC new-session -As'  # iTerm2 (control mode and reuse session)

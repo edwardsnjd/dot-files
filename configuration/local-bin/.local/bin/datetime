@@ -1,0 +1,43 @@
+#! /usr/bin/env bash
+
+# USAGE
+#   datetime <format>
+#
+# OPTIONS
+#   <format> is one of the following:
+#   - localdate  e.g. 2023-03-13
+#   - localtime  e.g. 2023-03-13T08:47+0800
+#   - localstamp e.g. 2023-03-13T08:47:13+0800
+#   - isodate    e.g. 2023-03-13
+#   - isotime    e.g. 2023-03-13T00:47+0000
+#   - isostamp   e.g. 2023-03-13T00:47:13+0000
+#
+# DEPENDENCIES
+#   date
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function FormatDate() {
+  local format="localdate"
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      *) format="$1" && shift ;;
+    esac
+  done
+
+  case "$format" in
+    localdate|date)  date +"%Y-%m-%d" ;;
+    localtime|time)  date +"%H:%M:%S" ;;
+    localstamp|ts|timestamp) date +"%Y-%m-%dT%H:%M:%S%z" ;;
+    isodate)  date -u +"%Y-%m-%d" ;;
+    isotime)  date -u +"%H:%M:%S" ;;
+    isostamp) date -u +"%Y-%m-%dT%H:%M:%S%z" ;;
+    *) echo "Unknown format: $format" >&2 && exit 1 ;;
+  esac
+}
+
+FormatDate "$@"
