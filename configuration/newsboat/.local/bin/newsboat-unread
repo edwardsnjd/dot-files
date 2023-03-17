@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+newsboatdb="/Users/nick/.local/share/newsboat/cache.db"
+
+itemsquery="
+  select
+    date(i.pubDate, 'unixepoch'),
+    f.title,
+    i.title,
+    i.url
+  from rss_item i inner join rss_feed f on i.feedurl = f.rssurl
+  where deleted != 1
+  order by pubDate
+"
+
+newsboat --execute="reload" --execute="print-unread"
+sqlite3 -readonly "${newsboatdb}" "${itemsquery}" \
+  | fzf --delimiter='\|' --with-nth=2,3 --bind="enter:execute(w3m {4})"
+
