@@ -50,4 +50,7 @@ stow --target="${HOME}" \
   subversion \
   readline \
   glow \
-  emacs
+  emacs \
+  kak \
+  helix \
+  less
