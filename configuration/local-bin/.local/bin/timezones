@@ -1,33 +1,93 @@
 #!/usr/bin/env bash
 
-# USAGE
-#   timezones [initial query]
+# NAME
+#   timezones - print info about timezones
+#
+# SYNOPSIS
+#   timezones [--list | --filter | --browse] [query...]
+#
+# OPTIONS
+#   --list    - list timezones
+#   --browse  - interactively pick timezones
+#   --pretty  - optionally pretty print (default is TSV)
+#   query     - optionally filter timezones by one or more names eg. "London NZ"
+#
+# DEPENDENCIES
+#  - /usr/share/zoneinfo/** = data files
+#  - bash + POSIX
+#  - fd = find files
+#  - fzf = interactively select timezones
 
-# FZF browse of time zone and print current time
-function timezones {
-  local preview="TZ={} date +'%z%t%+'"
-  local display="TZ={} date +'%FT%T%t%z%t{}%t%+'"
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local cmd="list"
+  local pretty=""
+  local otherArgs=()
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --list) cmd="list" && shift ;;
+      --browse) cmd="browse" && shift ;;
+      --pretty) pretty="pretty" && shift ;;
+      -*|--*) echo "Unknown option $1" >&2 && exit 1 ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${otherArgs[@]}" # restore positional parameters
+
+  case "$cmd" in
+    list) List | Filter "$@" ;;
+    browse) List | Select "$@" ;;
+  esac | Print "$pretty"
+}
+
+function List() {
+  find -L /usr/share/zoneinfo -type f \
+    | sed 's|.*zoneinfo/||'
+}
+
+function Filter() {
+  # Convert all positional args to regex options: "$1|$2|$3|..."
+  local IFS="|"
+  local query="$*"
+
+  grep -E "$query"
+}
+
+function Select() {
+  # Convert all positional args to fzf options: "$1 | $2 | $3 | "
   local query="$(while [[ $# -gt 0 ]]; do printf "$1 | "; shift; done)"
+
+  local preview="TZ={} date +'%z%t%+'"
 
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local header="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}A-a${normal} toggle all"
 
-  fd . --type file /usr/share/zoneinfo \
-    | sed 's|.*zoneinfo/||' \
-    | fzf \
-      --multi \
-      --prompt "Timezones> " \
-      --header "$header" \
-      --query "$query" \
-      --reverse \
-      --bind "alt-a:toggle-all" \
-      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-      --preview "$preview" \
-    | xargs -I{} bash -c "$display" \
-    | sort \
-    | cut -d $'\t' -f 2- \
-    | column -s $'\t' -t
+  fzf \
+    --multi \
+    --prompt "Timezones> " \
+    --header "$header" \
+    --query "$query" \
+    --reverse \
+    --bind "alt-a:toggle-all" \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --preview "$preview"
 }
 
-timezones "$@"
+function Print() {
+  local pretty="${1:-}"
+  local display="TZ={} date +'%FT%T%t%z%t{}%t%+'"
+
+  xargs -P0 -n1 -I{} bash -c "$display" \
+    | sort \
+    | cut -d $'\t' -f 2- \
+    | if [ "$pretty" ]; then column -s $'\t' -t; else cat; fi
+}
+
+Main "$@"
