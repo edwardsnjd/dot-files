@@ -12,16 +12,22 @@ set -o pipefail
 #set -o xtrace
 
 Main() {
-  local path="${1:-unknown-markdown.md}"
+  local path="${1:?Must supply the path of the markdown file}"
 
-  local stem="${path%.md}"
-  local tmp="${TMPDIR}/${stem}.html"
+  local dir="$(dirname $path)"
+  local file="$(basename $path '.md')"
+
+  local tmpdir="${TMPDIR}${dir}"
+  local tmp="${tmpdir}/${file}.html"
+
+  mkdir -p "$tmpdir"
 
   pandoc \
     --standalone \
     --embed-resources \
     --mathjax \
     --output "$tmp" \
+    --resource-path "$dir" \
     "$@"
 
   open "$tmp"
