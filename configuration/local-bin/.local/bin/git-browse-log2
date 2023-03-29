@@ -7,7 +7,7 @@
 #   git browse-log2 [git lg options]
 
 function GitBrowseLog2 {
-  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs git show --color | less -c -+F -+X"
+  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs git show --color --stat | less -c -+F -+X"
 
   git lg -n5000 "$@" \
     | fzf \
