@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   sad <message>
+#
+# DEPENDENCIES
+#   networksetup
+#   airport
+#   fzf
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -o xtrace
+
+function Main() {
+  local subcommand="${1}"
+  shift
+
+  case ${subcommand} in
+    browse) Browse "$@" ;;
+    list) List "$@" ;;
+    join) Join "$@" ;;
+    show) Show "$@" ;;
+    off) PowerOff ;;
+    on) PowerOn ;;
+    *) Error "Unknown command: $subcommand (browse|list|join|off|on)" ;;
+  esac
+}
+
+function Error() {
+  echo "ERROR: $@" >&2
+  exit 1
+}
+
+function Browse() {
+  List \
+    | fzf --exit-0 \
+    | sed -E 's/^ *([^ ]+).*/\1/' \
+    | xargs wifi join
+}
+
+function List() {
+  airport scan
+}
+
+function Show() {
+  networksetup -getairportnetwork en0
+}
+
+function Join() {
+  networksetup -setairportnetwork en0 "$@"
+}
+
+function PowerOn() {
+  Power "on"
+}
+
+function PowerOff() {
+  Power "off"
+}
+
+function Power() {
+  local value="$1"
+  networksetup -setairportpower en0 "$value"
+}
+
+Main "$@"

@@ -8,6 +8,18 @@ function speed_up_keys() {
   defaults write -g KeyRepeat -int 2
 }
 
+function link_os_bins() {
+  local target=~/.local/bin/airport
+  if [[ ! -s "$target" ]]; then
+    echo "Linking airport to $target"
+    ln -s \
+      /System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport \
+      ~/.local/bin/
+  else
+    echo "(airport already linked)"
+  fi
+}
+
 function use_bash() {
   # Default shell is now zsh
   local current_shell=$SHELL
@@ -22,6 +34,8 @@ function use_bash() {
 speed_up_keys
 
 use_bash
+
+link_os_bins
 
 w3m/init.sh
 
