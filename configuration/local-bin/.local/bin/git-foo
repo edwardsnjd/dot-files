@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-foo - ???
+#
+# SYNOPSIS
+#   git-lines [--date <format>] [<args...>] -- [<paths...>]
+#   git lines [--date <format>] [<args...>] -- [<paths...>]
+#
+# DESCRIPTION
+#   Print stats about the commit that last modified each line in the mentioned files
+#   and directories.
+#
+# OPTIONS
+#   --date <format>
+#       Optionally override the strftime format string (defaults to ISO8601-ish via `%FT%T%z`)
+#   <args...>
+#       Any arguments to supply to the underlying `git blame`.
+#   -- <paths...>
+#       Optionally specify the file/directory path(s) to include (defaults to current dir).
+#       The `--` prefix is not optional because git blame only supports a single file
+#       at at time, so we handle this specially.
+#
+# OUTPUT
+#   A TSV output line for every line in the file(s):
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <path> <contents>
+#
+#   If provided, the `strftime` date format `--date` is used to format the date columns:
+#   <sha> <authored-at> <author-name> <author-email> <committed-at> <committer-name> <committer-email> <path> <contents>
+#         ^^^^^^^^^^^^^                             ^^^^^^^^^^^^^^^
+#
+# EXAMPLE
+#   $ git lines -- README.md | head -3
+#   6150a32b	2020-06-19T23:05:09+0800	Nicholas Edwards	foo@bar.com	README.md
+#   6150a32b	2020-06-19T23:05:09+0800	Nicholas Edwards	foo@bar.com	README.md
+#   96c08d92	2022-03-14T21:14:49+0800	Nicholas Edwards	foo@bar.com	README.md
+#
+# DEPENDENCIES
+#   bash, git, and POSIX tools
+
+set -o nounset
+set -o errexit
+#set -o xtrace
+#
+
+function FindMerge() {
+  local commit="$0"
+  local branch="${1:-HEAD}"
+
+  (
+    git rev-list $commit..$branch --ancestry-path | cat -n
+    git rev-list $commit..$branch --first-parent  | cat -n
+  ) | sort -k2 -s | uniq -f1 -d | sort -n | tail -1 | cut -f2
+}
+
+function ShowMerge() {
+  local merge="$(git find-merge $0 $1)"
+  [ -n \"$merge\" ] && git show $merge
+}
+
+GitLines "$@"
