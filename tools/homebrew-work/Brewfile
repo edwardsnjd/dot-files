@@ -74,7 +74,7 @@ brew "shunit2"
 brew "sl"
 brew "slides"
 brew "stow"
-brew "syncthing"
+brew "syncthing", restart_service: true
 brew "tmux"
 brew "toilet"
 brew "tokei"
