@@ -11,9 +11,9 @@ let g:outline_filetype_keywords = {
       \ 'kotlin': ['class', 'object', 'fun'],
       \ 'vim': ['function'],
       \ 'rust': ['mod', 'fn', 'trait', 'impl'],
-      \ 'javascript': ['function', 'class', 'export', 'describe', 'context', 'it'],
-      \ 'typescript': ['function', 'class', 'type', 'enum', 'export', 'describe', 'context', 'it'],
-      \ 'typescriptreact': ['function', 'class', 'type', 'enum', 'export', 'describe', 'context', 'it'],
+      \ 'javascript': ['function', 'class', 'export', 'describe', 'context', 'test', 'it'],
+      \ 'typescript': ['function', 'class', 'type', 'enum', 'export', 'describe', 'context', 'test', 'it'],
+      \ 'typescriptreact': ['function', 'class', 'type', 'enum', 'export', 'describe', 'context', 'test', 'it'],
       \}
 
 " Provide commands and mappings calling autoloaded functions
