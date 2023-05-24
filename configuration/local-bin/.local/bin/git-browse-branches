@@ -10,7 +10,7 @@ function GitBrowseBranches() {
   local format="%(color:yellow)%(refname:short)%(color:reset) %(color:red)%(HEAD)%(color:reset) %(upstream:trackshort) %(upstream:short) %(upstream:track)"
   local preview="git lg -100 {1}"
 
-  git branch --list --color --format="$format" \
+  git branch --all --list --color --format="$format" \
     | fzf \
       --no-sort \
       --layout=reverse \
