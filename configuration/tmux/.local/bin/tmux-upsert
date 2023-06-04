@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tmux-upsert - Attach or create selected session.
+#
+# SYNOPSIS
+#   tmux-upsert <session>
+
+set -o nounset
+set -o errexit
+
+function EnsureSession() {
+  local session="${1:-}"
+
+  tmux attach-session -t "${session}" \
+    || tmux new-session -s "${session}"
+}
+
+EnsureSession "$@"

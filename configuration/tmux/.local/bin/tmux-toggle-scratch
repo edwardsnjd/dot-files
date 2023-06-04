@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tmux-toggle-scratch - Toggle persistent scratch session
+#
+# SYNOPSIS
+#   tmux-toggle-scratch
+
+set -o nounset
+set -o errexit
+
+
+function ToggleScratch() {
+  local SESSION="scratch"
+
+  if [[ "$(SessionName)" = "$SESSION" ]];then
+    tmux detach-client
+  else
+    tmux display-popup \
+      -d '#{pane_current_path}' \
+      -E \
+      -y 0 \
+      -w "95%" -h "75%" \
+      "tmux-upsert $SESSION"
+  fi
+}
+
+function SessionName() {
+  tmux display-message -p -F "#{session_name}"
+}
+
+ToggleScratch "$@"
