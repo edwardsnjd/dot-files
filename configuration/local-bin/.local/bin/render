@@ -84,6 +84,8 @@ function render_file() {
       render_markdown "$@";;
     *.html)
       render_html "$@";;
+    *.pdf)
+      render_pdf "$@";;
     *)
       render_textual "$@";;
   esac
@@ -123,6 +125,10 @@ function render_html() {
     shift
     render_markdown <(pandoc --to markdown "$file") "$@"
   fi
+}
+
+function render_pdf() {
+  pdftotext -layout "$1" -
 }
 
 function render_textual() {
