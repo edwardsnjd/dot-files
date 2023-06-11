@@ -48,7 +48,7 @@ function PickResult() {
 
 function FormatAsMarkdownLink() {
   tr '()' '{}' \
-    | sed -E 's/\[([0-9]+)\] (.*)/[\1](\2)/'
+    | sed -E 's/\[([0-9]+)\] (.*)/[\2](\1)/'
 }
 
 PickNbLink "$@"
