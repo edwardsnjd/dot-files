@@ -78,6 +78,8 @@ function render_file() {
   case ${1,,} in
     *.png|*.gif|*.jpg|*.jpeg|*.mov|*.mp4|*.3gp)
       render_visual "$@";;
+    *.zip)
+      render_zip "$@";;
     *.svg)
       render_svg "$@";;
     *.md)
@@ -98,6 +100,10 @@ function render_visual() {
     --work=1 \
     --size "${2:-$(tput cols)}x${3:-$(tput lines)}" \
     "$1"
+}
+
+function render_zip() {
+  zipinfo "$1"
 }
 
 function render_svg() {
