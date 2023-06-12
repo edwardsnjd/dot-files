@@ -82,6 +82,9 @@ let &t_ZR="\e[23m"
 let g:netrw_liststyle = 3     " Nested view
 let g:netrw_banner = 0        " No banner
 let g:netrw_winsize = 20      " 20% width
+let g:netrw_preview = 1       " Preview in vertsplit
+let g:netrw_altv = 0          " Preview to right (if vert)
+let g:netrw_alto = 0          " Preview below (if horiz)
 
 " Prefer ripgrep over grep if available
 if executable('rg')
