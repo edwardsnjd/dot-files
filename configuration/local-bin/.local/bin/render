@@ -88,6 +88,8 @@ function render_file() {
       render_html "$@";;
     *.pdf)
       render_pdf "$@";;
+    *.json)
+      render_json "$@";;
     *)
       render_textual "$@";;
   esac
@@ -135,6 +137,10 @@ function render_html() {
 
 function render_pdf() {
   pdftotext -layout "$1" -
+}
+
+function render_json() {
+  jq --color-output '.' "$1"
 }
 
 function render_textual() {
