@@ -41,7 +41,7 @@ function Search {
   local query="${1:-}"
   local tmp="$(mktemp)"
 
-  local rgPrefix="rg --line-number --column --smart-case --hidden --color=always"
+  local rgPrefix="rg --line-number --column --smart-case --hidden --color=always --sort=path"
 
   local preview="highlight-text {1} {2}"
   local filter="$0 --filter {q} < $tmp"
