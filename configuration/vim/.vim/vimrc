@@ -228,6 +228,7 @@ nnoremap <leader>tb <Plug>(ToiletBorder)
 " - Managing todo lists
 nnoremap <leader>ti :put ='- [ ] <+ TODO +>'<CR>
 nnoremap <leader>tt :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"x":" ")."]"/<CR>
+nnoremap <leader>tc :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"-":" ")."]"/<CR>
 
 " - .vimrc shortcuts
 nnoremap <leader>ve :edit $MYVIMRC<CR>
