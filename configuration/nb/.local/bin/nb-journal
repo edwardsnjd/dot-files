@@ -20,7 +20,7 @@ function NbJournal() {
     || nb add "${notebook}:${path}" \
       --title "${today}" \
       --tags "journal" \
-      --content "$(Template)"
+      --content "$(Template "$notebook")"
 
   # Edit the note
   nb edit "${notebook}:${path}"
@@ -34,12 +34,21 @@ function Template() {
 	
 	## Tasks
 	
+	$(IncompleteTasks "$@")
 	- [ ] <+ TODO +>
 	
 	## Notes
 	
 	- <+ TODO +>
 	EOF
+}
+
+function IncompleteTasks() {
+  local notebook="$1"
+  nb "${notebook}:run" rg \
+    --sort path \
+    --no-filename \
+    '^- \[ \]'
 }
 
 NbJournal "$@"
