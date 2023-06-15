@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   dated <path>
+#
+# DEPENDENCIES
+#   
+
+function main() {
+  ListFiles \
+    | rg          '\b([0-9]{4}(-?[0-9]{2}(-?[0-9]{2})?)?)\b' \
+    | gsed -E 's/.*\b([12][0-9]{3}(-?[0-9]{2}(-?[0-9]{2})?)?)\b/\1\t&/' \
+    | sort --dictionary-order -k1,1
+}
+
+function ListFiles() {
+  fd --type file
+}
+
+function TestFiles() {
+cat <<EOF
+# Bad
+a.pdf
+1.pdf
+19991.pdf
+2000a.pdf
+f1999.pdf
+
+# Good
+1999.pdf
+2000.pdf
+1999-01.pdf
+2000-01.pdf
+1999-01-01.pdf
+2000-01-01.pdf
+
+# Good, later number date
+1999.1900.pdf
+2000.1900.pdf
+1999-01.1900.pdf
+2000-01.1900.pdf
+1999-01-01.1900.pdf
+2000-01-01.1900.pdf
+
+# Good, later number non-date
+1999.3000.pdf
+2000.3000.pdf
+1999-01.3000.pdf
+2000-01.3000.pdf
+1999-01-01.3000.pdf
+2000-01-01.3000.pdf
+
+# Good, nested
+foo/1999.pdf
+foo/2000.pdf
+foo/1999-01.pdf
+foo/2000-01.pdf
+foo/1999-01-01.pdf
+foo/2000-01-01.pdf
+
+# Good, more nested
+foo/bar/1999.pdf
+foo/bar/2000.pdf
+foo/bar/1999-01.pdf
+foo/bar/2000-01.pdf
+foo/bar/1999-01-01.pdf
+foo/bar/2000-01-01.pdf
+
+# Good, nested not date
+123/1999.pdf
+123/2000.pdf
+123/1999-01.pdf
+123/2000-01.pdf
+123/1999-01-01.pdf
+123/2000-01-01.pdf
+
+# Good, nested date
+1900/1999.pdf
+1900/2000.pdf
+1900/1999-01.pdf
+1900/2000-01.pdf
+1900/1999-01-01.pdf
+1900/2000-01-01.pdf
+
+# Good, more specific date
+1999/1999-01.pdf
+2000/2000-01.pdf
+1999/1999-01-01.pdf
+2000/2000-01-01.pdf
+EOF
+}
+
+main "$@"
