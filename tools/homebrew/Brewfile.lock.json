@@ -14,7 +14,7 @@
         "revision": "1c8d86596716937e1ae5166a28cd180d0856c15d"
       },
       "homebrew/cask-versions": {
-        "revision": "3a49cfd6cf07d7350757223a2e0078920f22561f"
+        "revision": "c66c9e2fb5515e884e347946121f0dc8e4e74b7c"
       },
       "homebrew/core": {
         "revision": "01c9ef11804758fdbbbb58ff16511b51dde9b34b"
@@ -975,6 +975,50 @@
               "cellar": ":any_skip_relocation",
               "url": "https://ghcr.io/v2/homebrew/core/boost/blobs/sha256:46d98aec29a17fa19c9a7f1de855ab2754d2beacd62e64f39ead42659803db25",
               "sha256": "46d98aec29a17fa19c9a7f1de855ab2754d2beacd62e64f39ead42659803db25"
+            }
+          }
+        }
+      },
+      "bore-cli": {
+        "version": "0.5.0",
+        "bottle": {
+          "rebuild": 0,
+          "root_url": "https://ghcr.io/v2/homebrew/core",
+          "files": {
+            "arm64_ventura": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:cb47ecce95ccc9be42a41eda84b836c24d51e3f0f03d7bc2f9f58930d44f1926",
+              "sha256": "cb47ecce95ccc9be42a41eda84b836c24d51e3f0f03d7bc2f9f58930d44f1926"
+            },
+            "arm64_monterey": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:0df2603bf726d38c1bb460314d7aab187fde1c27da34317cbff46747ec84089e",
+              "sha256": "0df2603bf726d38c1bb460314d7aab187fde1c27da34317cbff46747ec84089e"
+            },
+            "arm64_big_sur": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:a3141c449ac083c080e231209c7bafb116e976dfec7e928be33fc8c2fb2e4218",
+              "sha256": "a3141c449ac083c080e231209c7bafb116e976dfec7e928be33fc8c2fb2e4218"
+            },
+            "ventura": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:d3f94ffbd3c2d3f8aa5759ca3067bf0720de74e30245f919713e3d11a9359076",
+              "sha256": "d3f94ffbd3c2d3f8aa5759ca3067bf0720de74e30245f919713e3d11a9359076"
+            },
+            "monterey": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:a5b791059a772c80e99672c0b74cec175ca92e6d491dde57b4706e9725bf7d58",
+              "sha256": "a5b791059a772c80e99672c0b74cec175ca92e6d491dde57b4706e9725bf7d58"
+            },
+            "big_sur": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:f0d502b5d29f2ac526f860d30df22672a3e4da6ad95a528e9fa57227914ff3b4",
+              "sha256": "f0d502b5d29f2ac526f860d30df22672a3e4da6ad95a528e9fa57227914ff3b4"
+            },
+            "x86_64_linux": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/bore-cli/blobs/sha256:a2e09d9b492e58b1953a5c04e5bc6e4b62d396fba96c92ecb6612b0c26fe5df1",
+              "sha256": "a2e09d9b492e58b1953a5c04e5bc6e4b62d396fba96c92ecb6612b0c26fe5df1"
             }
           }
         }
@@ -6365,7 +6409,7 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "4.0.22-10-gab20a6e",
+        "HOMEBREW_VERSION": "4.0.23-2-g0606b63",
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.2.0.0.1.1668646533",
