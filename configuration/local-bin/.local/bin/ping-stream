@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# NAME
+#   ping-stream - stream unbuffered ping info
+#
+# SYNOPSIS
+#   ping-stream <ping args>
+#   ping-stream <ping args> | ...
+#
+# DESCRIPTION
+#   Some gentle processing over the top of vanilla `ping` to
+#   extract the most useful fields as TSV.  Output is not buffered
+#   so this can be used in live streaming anlysis e.g. `feedgnuplot`.
+#
+# OUTPUT
+#   TSV: timestamp, IP, icmp_seq, time (ms):
+#     2023-06-1814:15:47T+0800	142.250.70.238	0	49.936
+#     2023-06-1814:15:48T+0800	142.250.70.238	1	53.438
+
+ping "$@" \
+  | sed -Enu '/.* from ([^ ]+): icmp_seq=([^ ]+) .* time=([^ ]+) .*/ s//\1\t\2\t\3/p' \
+  | ts "%F%TT%z" \
+  | tr -u ' ' $'\t'
