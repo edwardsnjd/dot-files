@@ -1,28 +1,31 @@
 #! /usr/bin/env bash
 
 # NAME
-#   ping-plot - terminal plot of ping times
+#   ping-plot - streaming plot of ping-stream output
 #
 # SYNOPSIS
-#   ping-plot <ping-stream args>
+#   ping-stream "$@" | ping-plot [extra feedgnuplot args...] --terminal "dumb ansi"
 #
 # DEPENDENCIES
 #   - ping-stream - generate a stream of ping times as TSV
+#   - awk - trim ping-stream columns
 #   - feedgnuplot - plot in the terminal
-#   - tput - discover current size of terminal
 
-ping-stream "$@" \
-  | feedgnuplot \
+    # --xlen "$(( $(tput cols) - 15 ))" \
+    # --terminal "dumb ansi $(tput cols),$(( $(tput lines) - 3 ))" \
+
+awk -v OFS=$'\t' '{print $2, $3, $5; fflush()}' \
+ | feedgnuplot \
     --stream \
-    --xlen "$(( $(tput cols) - 15 ))" \
-    --rangesizeall "4" \
-    --terminal "dumb ansi $(tput cols),$(( $(tput lines) - 3 ))" \
-    --usingall "4:5" \
-    --with "points" \
+    --domain \
+    --timefmt "%s" \
+    --dataid \
+    --autolegend \
     --unset "grid"  \
-    --unset "key" \
     --unset "xtics" \
+    --set "key width 2 height 1 box opaque" \
     --ymin "0" \
     --set 'title "Ping times" offset 0,2 textcolor "blue"' \
     --set "border 2 linecolor 'black'"  \
     --set "ytics nomirror textcolor 'cyan'" \
+    "$@"

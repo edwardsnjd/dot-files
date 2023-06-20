@@ -13,11 +13,11 @@
 #   so this can be used in live streaming anlysis e.g. `feedgnuplot`.
 #
 # OUTPUT
-#   TSV: timestamp, IP, icmp_seq, time (ms):
-#     2023-06-1814:15:47T+0800	142.250.70.238	0	49.936
-#     2023-06-1814:15:48T+0800	142.250.70.238	1	53.438
+#   TSV: ts_iso, ts_epoch_secs, IP, icmp_seq, time (ms):
+#     2023-06-2015:40:40T+0800	1687246840	8.8.8.8	0	71.662
+#     2023-06-2015:40:41T+0800	1687246841	8.8.8.8	1	70.342
 
 ping "$@" \
   | sed -Enu '/.* from ([^ ]+): icmp_seq=([^ ]+) .* time=([^ ]+) .*/ s//\1\t\2\t\3/p' \
-  | ts "%F%TT%z" \
+  | ts "%F%TT%z%t%s" \
   | tr -u ' ' $'\t'
