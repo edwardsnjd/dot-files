@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# NAME
+#   imap-session - Try to open interactive IMAP session
+#
+# USAGE
+#   imap-session <SERVER> <PORT>
+#
+# EXAMPLE IMAP SESSION
+#   imap-session localhost 1143
+#   > l login user@server password
+#   > l list "" *
+#   > l select "Inbox"
+#   > f fetch 1 FULL
+#   > f fetch 1 BODY[]
+#   > f fetch 1 (BODY[HEADER.FIELDS (DATE FROM SUBJECT)] BODY[TEXT])
+#   > l logout
+
+openssl \
+  s_client \
+  -connect "${1:?Missing IMAP server}:${2:?Missing IMAP port}" \
+  -crlf \
+  -quiet \
+  -starttls \
+  imap
