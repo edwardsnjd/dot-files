@@ -48,3 +48,6 @@
 
 	# Commit using previous commit message
 	recommit = "!git commit --edit --file=\"$(git rev-parse --git-dir)/COMMIT_EDITMSG\""
+
+	# List interesting files
+	li = ls-files --other --deleted --modified --exclude-standard --dedup
