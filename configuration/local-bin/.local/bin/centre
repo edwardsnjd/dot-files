@@ -28,7 +28,7 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local width="$(tput cols)"
+  local width="${COLS:-$(tput cols)}"
   local filler=" "
 
   while [[ $# -gt 0 ]]; do
