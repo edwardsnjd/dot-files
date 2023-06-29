@@ -39,6 +39,7 @@ function Main() {
       --headers) shift && headerRows="$1" ;;
       --width) shift && totalWidth="$1" ;;
       --no-color) color=0 ;;
+      --color) color=1 ;;
       --test) RunTests; exit ;;
       *) break ;;
     esac
