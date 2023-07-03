@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-plot-commits - count and plot git commits
+#
+# SYNOPSIS
+#   git-plot-commits [git log args...]
+#
+# EXAMPLES
+#   git-plot-commits
+#   git-plot-commits --author="edwards"
+#   git-plot-commits --date="format:%Y-%V"
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+    # NOTE: Supplied args can override date and pretty
+  join -t $'\t' -e '0' -a 1 \
+    <(CountCommits "$@") \
+    <(CountCommits --merges "$@") \
+    | feedgnuplot \
+      --domain \
+      --autolegend \
+      --usingall "2:xtic(1)" \
+      --points \
+      --lines \
+      --set "style data histogram" \
+      --set "style histogram clustered" \
+      --set "key box width 2 height 1 textcolor variable" \
+      --set "border 3" \
+      --set "tic out nomirror" \
+      --unset "grid" \
+      --legend 0 "Commits" \
+      --legend 1 "Merges"
+}
+
+function CountCommits() {
+  # NOTE: Supplied args can override date and pretty
+  git log --date="format:%Y-%m" --pretty="tformat:%ad" "$@" \
+   | sort \
+   | uniq -c \
+   | awk -v OFS=$'\t' '{print $2, $1}'
+}
+
+Main "$@"
