@@ -20,7 +20,7 @@ function ToggleScratch() {
       -d '#{pane_current_path}' \
       -E \
       -y 0 \
-      -w "95%" -h "75%" \
+      -w "90%" -h "85%" \
       "tmux-upsert $SESSION"
   fi
 }
