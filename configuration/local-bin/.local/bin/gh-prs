@@ -1,0 +1,88 @@
+#! /usr/bin/env bash
+
+# NAME
+#   gh-prs - opinionated listing of Github PRs
+#
+# SYNOPSIS
+#   gh-prs [...gh pr args]
+#
+# OUTPUT
+#   TSV with the columns:
+#    - id = PR ID
+#    - title = title
+#    - state = OPEN | CLOSED | MERGED
+#    - author = PR author
+#    - createdAt = ISO8601
+#    - createdAt_s = seconds since epoch
+#    - createdAt_Y = YYYY
+#    - createdAt_Ym = YYYY-mm
+#    - createdAt_YV = YYYY-wWW
+#    - createdAt_u = DOTW
+#    - closedAt... = (as createdAt)
+#    - duration = duration in seconds | null
+#    - reviews_count = total reviews
+#    - reviews_authors = review authors
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+gh pr list \
+  --json "id,author,state,title,createdAt,closedAt,reviews,comments" \
+  --jq '
+def parseTs: .[0:19] + "Z" | fromdate;
+def formatTs($f): parseTs | strftime($f);
+def safeFormatTs($f): if . then parseTs | strftime($f) else null end;
+def duration: (.closedAt | parseTs) - (.createdAt | parseTs);
+def safeDuration: if .closedAt then duration else null end;
+
+( [ "id"
+  , "state"
+  , "title"
+  , "author"
+  , "createdAt"
+  , "createdAt_s"
+  , "createdAt_Y"
+  , "createdAt_Ym"
+  , "createdAt_YV"
+  , "createdAt_u"
+  , "closedAt"
+  , "closedAt_s"
+  , "closedAt_Y"
+  , "closedAt_Ym"
+  , "closedAt_YV"
+  , "closedAt_u"
+  , "duration"
+  , "reviews_count"
+  , "reviews_authors"
+  , "comments_count"
+  , "comments_authors"
+  ]
+, ( map(
+    [ .id
+    , .state
+    , .title
+    , .author.login
+    , .createdAt
+    , (.createdAt | formatTs("%s"))
+    , (.createdAt | formatTs("%Y"))
+    , (.createdAt | formatTs("%Y-%m"))
+    , (.createdAt | formatTs("%Y-w%V"))
+    , (.createdAt | formatTs("%u"))
+    , .closedAt
+    , (.closedAt | safeFormatTs("%s"))
+    , (.closedAt | safeFormatTs("%Y"))
+    , (.closedAt | safeFormatTs("%Y-%m"))
+    , (.closedAt | safeFormatTs("%Y-w%V"))
+    , (.closedAt | safeFormatTs("%u"))
+    , safeDuration
+    , (.reviews | length)
+    , (.reviews | map(.author.login) | join(","))
+    , (.comments | length)
+    , (.comments | map(.author.login) | join(","))
+    ]
+    ) | .[] )
+) | @tsv
+  ' \
+  "$@"
