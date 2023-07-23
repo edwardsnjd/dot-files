@@ -13,8 +13,7 @@ alias  ...='cd ../..'       # Go up two directories
 alias ....='cd ../../..'    # And for good measure
 
 # Safer rm
-alias rm='echo "Avoid rm, use del instead" >&2 && false'
-alias del='\rm -i'
+alias rm='rm -I'
 
 # Simple tree view
 alias    t='tree -aFC -I .git --dirsfirst -L 1'
