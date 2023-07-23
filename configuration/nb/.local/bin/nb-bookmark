@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# NAME
+#   nb-bookmark - Bookmark the given URL
+#
+# USAGE
+#   nb-bookmark <url>
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function NbBookmark() {
+  local url="$1"
+  local notebook="bookmarks"
+
+  # Ensure the notebook exists
+  nb notebooks "${notebook}" \
+    || nb notebooks add "${notebook}"
+
+  # Add the bookmark
+  nb "${notebook}:bookmark" "$url" --tags "from_bash" --edit
+}
+
+NbBookmark "$@"
