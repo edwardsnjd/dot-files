@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-log-files - interactively explore files touched by commits
+#
+# SYNOPSIS
+#   git-browse-log-files [<git log args>...]
+#
+# DEPENDENCIES
+#   - git: to generate the commit change info
+#   - jc: to convert that to JSON
+#   - jq: to reduce the JSON
+#   - datamash: to pivot the changes
+#   - visidata: to visualise the changes
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function GitBrowseLogFiles() {
+  git log --stat=1000 "$@" \
+    | jc --git-log \
+    | jq -C -r \
+      ' .[]
+      | { commit, files: .stats.files }
+      | .commit as $commit
+      | .files[]
+      | [., $commit ]
+      | @tsv ' \
+    | datamash -s --filler "0" crosstab 1,2 \
+    | vd
+}
+
+GitBrowseLogFiles "$@"
