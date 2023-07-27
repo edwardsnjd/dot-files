@@ -71,11 +71,24 @@ export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # Use custom pager (but not really)
-export PAGER=pager
+export PAGER="pager"
 
 # Specify command lines that should not appear in `history`
-export HISTIGNORE=history:clear
-export HISTCONTROL=ignorespace
+export HISTIGNORE="$(cat <<-EOF | tr '\n' ':' | rev | tail -c +2 | rev
+		history
+		clear:c
+		ls:l:ll
+		tree:t:tt
+		exa
+		cd:cd -:cd ..:..:...
+		pwd
+		git status:git st:g
+		exit
+		date
+		* --help
+	EOF
+)"
+export HISTCONTROL="ignorespace"
 
 # Remember all history and write it all to the history file
 export HISTSIZE=-1
