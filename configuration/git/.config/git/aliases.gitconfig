@@ -28,7 +28,7 @@
 	st = status --short --branch
 
 	# Better log
-	lg = log --color --graph --pretty=format:'%C(yellow)%h %C(green)%ad%C(reset) %s %C(green)(%cr) %C(cyan)<%an>%C(red)%d%C(reset)' --abbrev-commit --decorate --date=short -n20
+	lg = log --color --graph --pretty=tformat:'%C(yellow)%h %C(green)%ad%C(reset) %s %C(green)(%cr) %C(cyan)<%an>%C(red)%d%C(reset)' --abbrev-commit --decorate --date=short -n20
 	lgt = !git lg --since=12am
 	lgm = !git lg main..
 	lgd = !git lg develop..
