@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-graphviz - Output a graph of the given commit log
+#
+# SYNOPSIS
+#   git-graphviz [git log args...]
+
+set -o nounset
+set -o errexit
+#set -o xtrace
+
+function GitGraphviz() {
+  git log \
+    --pretty='format:  "%h" -> { "%p" }' \
+    "$@" \
+    | Template
+}
+
+function Template() {
+  cat <<-EOF
+		digraph git {
+			$(cat)
+		}
+	EOF
+}
+
+GitGraphviz "$@"
