@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# chat-send <ncat args>
+# cat foo | chat-send <ncat args>
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function ChatSend() {
+  while true; do
+    read -e line || exit 0
+    echo "$(date -I "seconds") $(id -unr)> $line" \
+      | ncat "$@"
+  done
+}
+
+ChatSend "$@"
