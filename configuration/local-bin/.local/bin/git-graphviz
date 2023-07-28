@@ -5,6 +5,9 @@
 #
 # SYNOPSIS
 #   git-graphviz [git log args...]
+#
+# USAGE
+#   git-graphviz -n 20 | dot -Tpng > commits.png
 
 set -o nounset
 set -o errexit
@@ -12,8 +15,19 @@ set -o errexit
 
 function GitGraphviz() {
   git log \
-    --pretty='format:  "%h" -> { "%p" }' \
+    --pretty='tformat:info:%h -> { %p }%nlabel:"%h" [label="%h\n(%D)"]' \
     "$@" \
+     | sed -E '
+      /^info:/ {
+        s///
+        s/([0-9a-z]{9})/"&"/g
+      }
+      /^label:/ {
+        s///
+        s/\\n\(\)//
+      }
+      s/^/  /
+     ' \
     | Template
 }
 
