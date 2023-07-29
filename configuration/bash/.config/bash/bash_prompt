@@ -20,8 +20,9 @@ LOLIGHT="\[$(tput bold)\]\[$(tput setaf 0)\]"
 
 function PromptPS1() {
   local exit="$(PromptExitInfo)"
-  PS1="${BLUE}»${RESET} $(PromptHistoryInfo)\W $(PromptGitInfo)${exit}\$ "
+  PS1="${BLUE}»${RESET} $(PromptHistoryInfo)\W $(PromptGitInfo)$(PromptLfInfo)${exit}\$ "
 }
+
 
 function PromptGitInfo() {
   local branch="$(GitCurrentBranch)"
@@ -36,6 +37,10 @@ function PromptExitInfo() {
 
 function PromptHistoryInfo() {
   printf "${LOLIGHT}!\!${RESET} "
+}
+
+function PromptLfInfo() {
+  [[ -n "$LF_LEVEL" ]] && printf "${LOLIGHT}(lf$LF_LEVEL)${RESET} "
 }
 
 function GitCurrentBranch() {
