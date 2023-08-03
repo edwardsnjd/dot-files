@@ -1,3 +1,17 @@
 #!/usr/bin/env bash
 
-osascript -e 'display notification "Ping" with title "Notification"'
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function ShowNotification() {
+  local message="${1:-Ping}"
+  local title="${2:-Notification}"
+
+  cat <<-EOF | osascript -
+		display notification "$message" with title "$title"
+	EOF
+}
+
+ShowNotification "$@"
