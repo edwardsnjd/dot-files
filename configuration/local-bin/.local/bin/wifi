@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
 # USAGE
-#   sad <message>
+#   wifi <subcommand> [<args>...]
+#
+# SUBCOMMANDS
+#   browse
+#   list
+#   join <SSID>
+#   show
+#   off
+#   on
 #
 # DEPENDENCIES
 #   networksetup
@@ -14,10 +22,24 @@ set -o pipefail
 # set -o xtrace
 
 function Main() {
-  local subcommand="${1}"
-  shift
+  local subcommand="${1:-list}"
+  local otherArgs=()
 
-  case ${subcommand} in
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      browse) subcommand="browse" && shift ;;
+      list) subcommand="list" && shift ;;
+      join) subcommand="join" && shift ;;
+      show) subcommand="show" && shift ;;
+      off) subcommand="off" && shift ;;
+      on) subcommand="on" && shift ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${otherArgs[@]}"
+
+  case "${subcommand}" in
     browse) Browse "$@" ;;
     list) List "$@" ;;
     join) Join "$@" ;;
