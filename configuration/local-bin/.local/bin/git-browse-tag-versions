@@ -26,7 +26,7 @@ function SelectTag() {
   | fzf \
     --delimiter "\t" \
     --reverse \
-    --bind "ctrl-/:toggle-preview" \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
     --preview 'highlight-text {2} {6}' \
     --preview-window "~3,+{6}+3-/2" \
     --query "$query" \
