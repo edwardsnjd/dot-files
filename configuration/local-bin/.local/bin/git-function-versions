@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-function-versions - list git history of a function (versions)
+#
+# USAGE
+#   git function-versions <path> <function>
+
+function GitFunctionVersions() {
+  local path="${1:?Must supply the path to browse}"
+  local function="${2:?Must supply the function to browse}"
+
+  git log -E -L:"\b$function\b":"$path" --color-moved=dimmed-zebra
+}
+
+GitFunctionVersions "$@"

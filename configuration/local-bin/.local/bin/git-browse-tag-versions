@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-tag-versions - fzf browse git history of a tag (versions)
+#
+# USAGE
+#   git browse-tag-versions [query]
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function GitBrowseTagVersions() {
+  SelectTag "$@" | while read tag path rest ; do
+    git function-versions "$path" "$tag"
+  done
+}
+
+function SelectTag() {
+  local query="${1-}"
+
+  # Extract the line number as field 6 for ease of use in fzf, then remove
+  # after
+  sed -E "s/\tline:([0-9]+)/&\t\1/" tags \
+  | fzf \
+    --delimiter "\t" \
+    --reverse \
+    --bind "ctrl-/:toggle-preview" \
+    --preview 'highlight-text {2} {6}' \
+    --preview-window "~3,+{6}+3-/2" \
+    --query "$query" \
+  | cut -d $'\t' -f1-5
+}
+
+GitBrowseTagVersions "$@"
