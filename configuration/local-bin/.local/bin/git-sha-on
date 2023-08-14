@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-sha-on - Find the commit that was current at a particular moment.
+#
+# SYNOPSIS
+#   git-sha-on <date> [<log args...>]
+#   git sha-on <date> [<log args...>]
+#
+# OPTIONS
+#   <date> - the specific moment to find the commit for in any supported
+#     `git log` date format.
+#   <log args...> - optionally any other args for `git log`
+#
+# OUTPUT
+#   The "oneline" format of the commit at the given moment.  Override that
+#   using `--pretty` if you'd prefer something easier to script.
+#
+# EXIT CODE
+#   0 - commit was found
+#   1 - no commit was found
+
+set -o nounset
+set -o pipefail
+set -o errexit
+#set -o xtrace
+
+function GitShaOn {
+  local moment="${1:?Must supply moment}"
+  shift
+
+  git log \
+    --until="$moment" \
+    --max-count=1 \
+    --pretty="oneline" \
+    "$@" \
+    | awk '1; END { if (NR==0) exit(1) }'
+}
+
+GitShaOn "$@"
