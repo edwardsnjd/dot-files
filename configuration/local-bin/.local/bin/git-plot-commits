@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # NAME
-#   git-plot-commits - count and plot git commits
+#   git-plot-commits - plot count of git commits
 #
 # SYNOPSIS
 #   git-plot-commits [git log args...]
@@ -12,6 +12,10 @@
 #   git-plot-commits --date="format:%Y-%V"
 #   git-plot-commits -- foo.js
 #   git-plot-commits -G 'ClassFoo'
+#
+# DEPENDENCIES
+#   git-count-commits - to generate counts per date bucket
+#   feedgnuplot - to plot a histogram
 
 set -o nounset
 set -o errexit
@@ -19,10 +23,8 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-    # NOTE: Supplied args can override date and pretty
-  join -t $'\t' -e '0' -a 1 \
-    <(CountCommits "$@") \
-    <(CountCommits --first-parent "$@") \
+  # NOTE: Supplied args can override date and pretty
+  git count-commits "$@" \
     | feedgnuplot \
       --domain \
       --autolegend \
@@ -35,16 +37,7 @@ function Main() {
       --set "border 3" \
       --set "tic out nomirror" \
       --unset "grid" \
-      --legend 0 "Commits" \
-      --legend 1 "First-parents"
-}
-
-function CountCommits() {
-  # NOTE: Supplied args can override date and pretty
-  git log --date="format:%Y-%m" --pretty="tformat:%ad" "$@" \
-   | sort \
-   | uniq -c \
-   | awk -v OFS=$'\t' '{print $2, $1}'
+      --legend 0 "Commits"
 }
 
 Main "$@"

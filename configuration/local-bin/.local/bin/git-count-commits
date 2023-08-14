@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-count-commits - count git commits
+#
+# SYNOPSIS
+#   git-count-commits [git log args...]
+#
+# OUTPUT
+#   TSV row per date division
+#   <date> <tab> <count>
+#
+#   By default, date division is YYYY-MM for authored date but `--date`
+#   and `--pretty` can be used to change those.
+#
+# EXAMPLES
+#   git-count-commits
+#   git-count-commits --author="edwards"
+#   git-count-commits --date="format:%Y-%V"
+#   git-count-commits -- foo.js
+#   git-count-commits -G 'ClassFoo'
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  # NOTE: Supplied args can override date and pretty
+  git log --date="format:%Y-%m" --pretty="tformat:%ad" "$@" \
+   | sort \
+   | uniq -c \
+   | awk -v OFS=$'\t' '{print $2, $1}'
+}
+
+Main "$@"
