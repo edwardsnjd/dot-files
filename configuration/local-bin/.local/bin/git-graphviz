@@ -20,7 +20,7 @@ function GitGraphviz() {
      | sed -E '
       /^info:/ {
         s///
-        s/([0-9a-z]{9})/"&"/g
+        s/([0-9a-z]{7,})/"&"/g
       }
       /^label:/ {
         s///
