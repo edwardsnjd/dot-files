@@ -41,7 +41,10 @@
 	la = !git config --get-regexp alias | cut -c 7-
 
 	# Go home (requires a branch name as only argument: `git cpp main`)
-	cpp = "![ x$# != x1 ] && echo "commit-ish required" >&2 || git checkout \"$1\" && git pull && git remote prune origin && git submodule update && git branch #"
+	cpp = "!git checkout ${1:-HEAD} && git pp && git branch #"
+
+	# Opinionated pull
+	pp = "!git pull && git remote prune origin && git submodule update"
 
 	# Add a patch at a time
 	patch = add --patch
