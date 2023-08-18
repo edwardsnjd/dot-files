@@ -5,11 +5,11 @@
 #   has contributed to the current git repository.
 #
 # USAGE
-#   git-contributor
-#   git contributor
+#   git-contributor [query]
 
 function GitContributor() {
-  git contributors | fzf
+  local query="${1:-}"
+  git contributors | fzf --query "$query"
 }
 
 GitContributor "$@"
