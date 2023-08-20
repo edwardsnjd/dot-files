@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# SYNOPSIS
+#   transform [--embed | --strip] [<path>]
+#
+# USAGE
+#   transform <path>
+#   transform --embed <path>
+#     Execute the embedded scripts and embed the result
+#
+#   transform --strip <path>
+#     Remove any embedded results.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local mode="embed"
+  local otherArgs=()
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --embed) mode="embed" && shift ;;
+      --strip) mode="strip" && shift ;;
+      -*|--*) echo "Unknown option $1" && exit 1 ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${otherArgs[@]}"
+
+  case "$mode" in
+    embed) Embed "$@" ;;
+    strip) Strip "$@" ;;
+    *) echo "Unknown mode $mode" && exit 1 ;;
+  esac
+}
+
+function Embed() {
+  cat "$@" | while IFS= read -r line; do
+    echo "$line"
+
+    if [[ "$line" == "<!--embed:"*"-->" ]]; then
+      local cmd="${line#<!--embed:}"
+      cmd="${cmd%-->}"
+
+      echo "$line"
+      eval "$cmd"
+      echo "<!--embed-end-->"
+    fi
+  done
+}
+
+function Strip() {
+  awk '
+    !dropping            { print }
+    /^<!--embed:/        { dropping=1 }
+    /^<!--embed-end-->$/ { dropping=0 }
+  ' "$@"
+}
+
+Main "$@"
