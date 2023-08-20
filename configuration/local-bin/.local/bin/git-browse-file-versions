@@ -11,6 +11,7 @@ function GitBrowseFileVersions() {
 
   local sha="$(SelectGitCommit "$path")"
 
+  echo "# git show $sha:$path"
   git show "$sha:$path" \
     | bat --file-name="$path"
 }
