@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# NAME
+#   inflate - Uncompress zlib compressed content
+#
+# USAGE
+#   inflate foo
+#   inflate < foo
+#   echo blah | inflate
+#
+# EXAMPLES
+#   Git compresses objects using zlib so you can inflate
+#   any object file:
+#     inflate $(find .git/objects -type f | head -1)
+#
+# DEPENDENCIES
+#   gzip - to perform the decompression
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+# HACK: Prepend a gzip header to the supplied content
+# so that gzip can process it
+{
+  printf "\x1f\x8b\x08\x00\x00\x00\x00\x00"
+  cat "$@"
+} | gunzip -q
