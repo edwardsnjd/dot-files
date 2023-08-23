@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# SYNOPSIS
+#   git-graphviz-all [<revlist args...>]
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function GitObjectGraph() {
+  cat <<-EOF
+		digraph gitObjects {
+		  label = "Git object graph";
+		  labelloc = t;
+		  fontname = "Sans-Serif";
+		  fontsize="14pt";
+		
+		  graph [rankdir=LR]; // TB LR BT RL
+		  node [
+		    shape=box // box circle cylinder doublecircle none Mrecord plain plaintext point record square underline
+		    style=solid // dashed dotted solid invis bold tapered filled striped wedged diagonals rounded radial
+		    fillcolor="#fefedd"
+		    fontname = "Monospace"
+		    fontsize="10pt"
+		    margin="0.1"
+		    // bgcolor color colorscheme fillcolor fontcolor labelfontcolor pencolor truecolor
+		  ];
+	EOF
+
+  for sha in $(git rev-list --objects --all --no-object-names "$@"); do
+      local type=$(git cat-file -t "$sha")
+      local name=$(git rev-parse --short "$sha" 2>/dev/null || echo "$sha")
+
+      # Object node
+      case "$type" in
+          commit) echo "\"$sha\" [label=\"$name\", shape=box,     color=blue]  // COMMIT" ;;
+          tag)    echo "\"$sha\" [label=\"$name\", shape=ellipse, color=green] // TAG" ;;
+          tree)   echo "\"$sha\" [label=\"$name\", shape=ellipse, color=black] // TREE" ;;
+          blob)   echo "\"$sha\" [label=\"$name\", shape=ellipse, color=red]   // BLOB" ;;
+          *)      echo "// IGNORED: $type: $sha ($name)" ;;
+      esac
+
+      # Object links
+      Associations "$sha" "$type"
+  done
+
+  echo "}"
+}
+
+function Associations() {
+  local sha="$1"
+  local type="$2"
+
+  case "$type" in
+    commit)
+      local parents=$(git log --pretty=format:%P -n 1 "$sha")
+      for parentSha in $parents; do
+        echo "\"$sha\" -> \"$parentSha\""
+      done
+      local treeSha=$(git log --pretty=format:%T -n 1 "$sha")
+      echo "\"$sha\" -> \"$treeSha\""
+      ;;
+    tree)
+      git ls-tree "$sha" | while read -r childMode childType childSha childName; do
+      case "$childType" in
+        tree) echo "\"$sha\" -> \"$childSha\" [label=\"$childName/\"]" ;;
+        *)    echo "\"$sha\" -> \"$childSha\" [label=\"$childName\" ]" ;;
+      esac
+    done
+    ;;
+  tag) echo "// TODO: Find tag associations" ;;
+  *) ;;
+esac
+}
+
+GitObjectGraph "$@"
