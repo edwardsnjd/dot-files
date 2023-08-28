@@ -7,9 +7,6 @@ let g:loaded_lsp = 1
 " Log LSP messages
 " let g:lsp_log_file = expand('~/vim-lsp.log')
 
-" Show errors inline
-let g:lsp_diagnostics_echo_cursor = 1
-
 " Tweak the initialisation params to null the process id
 " to allow for LSP servers running in a different process
 " namespace to this client
@@ -85,17 +82,16 @@ endif
 if executable('typescript-language-server')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'typescript-language-server',
-        \   'cmd': { server_info->['typescript-language-server', '--stdio'] },
-        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json')) },
-        \   'allowlist': ['javascript', 'typescript', 'typescript.tsx', 'typescriptreact'],
-        \   'before_init': function('<SID>NullifyProcess'),
+        \   'cmd': { server_info->['typescript-language-server', '--stdio']},
+        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git/..')) },
+        \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \ })
 elseif executable('lsp-typescript')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-typescript',
         \   'cmd': { server_info->['lsp-typescript'] },
-        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json')) },
-        \   'allowlist': ['javascript', 'typescript', 'typescript.tsx', 'typescriptreact'],
+        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git/..')) },
+        \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \   'before_init': function('<SID>NullifyProcess'),
         \ })
 endif
