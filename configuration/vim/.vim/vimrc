@@ -191,6 +191,10 @@ nnoremap <leader>sl :Redir !git log --oneline -n 1000 -- %<CR>
 " - Display file git blame
 nnoremap <leader>sb :!git blame -- %<CR>
 
+" - Display git tag versions
+nnoremap <leader>sv :!clear; git browse-tag-versions<Space>
+nnoremap <leader>sV :!clear; git browse-tag-versions <C-R><C-W><CR>
+
 " - Search www
 " NOTE: Current selection ones use x register
 nnoremap <leader>sd <Plug>(SearchDevDocsCurrentWord)
@@ -238,6 +242,7 @@ nnoremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<C
 nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
+nnoremap <leader>gC :! gh pr checks --watch<CR>
 
 " - tmux
 nnoremap <leader>ts <Plug>(TmuxSendRight)
