@@ -4,6 +4,10 @@ if exists('g:loaded_lsp')
 endif
 let g:loaded_lsp = 1
 
+" Do not start LSP by default, only on demand (can be slow)
+" Manually enable with :call lsp#enable()
+let g:lsp_auto_enable = 0
+
 " Log LSP messages
 " let g:lsp_log_file = expand('~/vim-lsp.log')
 

@@ -284,6 +284,10 @@ xnoremap <leader>ri <Plug>(RefactoringInline)
 " register, and j mark.
 xnoremap <leader>rI y:'> mark j<Cr>N"_cgn<C-r>0<Esc>:'[,'j d<Cr>
 
+" - LSP
+nnoremap <leader>re :call lsp#enable()<CR>
+nnoremap <leader>rd :call lsp#disable()<CR>
+
 " Special non-leader mappings:
 
 " - Find and select next placeholder
@@ -346,7 +350,9 @@ function! <SID>ConfigureLsp() abort
   " Show errors inline
   let g:lsp_diagnostics_echo_cursor = 1
   let g:lsp_diagnostics_float_cursor = 1
-  let g:lsp_diagnostics_virtual_text_enabled = 0
+  let g:lsp_diagnostics_virtual_text_enabled = 1
+  let g:lsp_diagnostics_virtual_text_align = "right"
+  let g:lsp_inlay_hints_enabled = 1
 
   " C-X C-O for LSP autocomplete
   setlocal omnifunc=lsp#complete
