@@ -69,8 +69,5 @@ export NVM_DIR="$HOME/.nvm"
 # Allow OS overrides
 [ -f $XDG_CONFIG_HOME/bash/bashrc_os ] && source $XDG_CONFIG_HOME/bash/bashrc_os
 
-# Display any local motd
-[ -x "$(command -v motd)" ] && motd
-
 # Include any local machine things
 [ -f ~/.bash_local ] && source ~/.bash_local
