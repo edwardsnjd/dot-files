@@ -4,11 +4,11 @@
 #   daterange - print the dates in a given range
 #
 # SYNOPSIS
-#   daterange from to
+#   daterange [from [to]]
 #
 # DESCRIPTION
-#   from = inclusive start date in ISO8601 format
-#   to   = inclusive end date in ISO8601 format
+#   from = inclusive start date in ISO8601 format (default = today)
+#   to   = inclusive end date in ISO8601 format (default = 1 week later)
 #
 # EXAMPLES
 #   $ daterange 2000-01-01 2000-01-09
@@ -24,12 +24,12 @@
 
 require "date"
 
-from = ARGV[0]
-to = ARGV[1]
+from_iso = ARGV[0] || Date.today.iso8601
+from = Date.iso8601(from_iso)
 
-date1 = Date.iso8601(from)
-date2 = Date.iso8601(to)
+to_iso = ARGV[1] || (from + 14).iso8601
+to = Date.iso8601(to_iso)
 
-(date1..date2)
+(from..to)
   .map { |date| date.strftime("%Y-%m-%d%tW%V%t%a") }
   .each { |d| puts(d) }
