@@ -29,10 +29,23 @@ shopt -s dirspell   # correct minor errors in directory names on expansion
 shopt -s histappend # append to the history file, don't overwrite it
 #shopt -s globstar  # expand "**" in pathname
 
-# Bash completion
-[ -x "$(command -v brew)" ] && \
-[ -f "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
-[ -f "/usr/local/etc/profile.d/bash_completion.sh" ] && source "/usr/local/etc/profile.d/bash_completion.sh"
+# Brew bash completion
+# See: https://docs.brew.sh/Shell-Completion#configuring-completions-in-bash
+if type brew &>/dev/null
+then
+  # PERFORMANCE: Assumes `HOMEBREW_PREFIX` is already set in `.bash_profile`
+  # HOMEBREW_PREFIX="$(brew --prefix)"
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
+  then
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  else
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*
+    do
+      [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
+    done
+  fi
+fi
+# End brew bash completion
 
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
