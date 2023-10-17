@@ -107,7 +107,7 @@ function join_by() {
 # Watch in colour with configurable interval
 function wtch {
   local -r interval="$1"
-  local -r args="${@:2}"
+  shift
 
-  \watch --interval "$interval" --color faketty "$args"
+  \watch --interval "$interval" --color faketty "$@"
 }
