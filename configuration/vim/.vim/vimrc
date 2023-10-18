@@ -290,7 +290,10 @@ nnoremap <leader>rd :call lsp#disable()<CR>
 
 " Special non-leader mappings:
 
-" - Find and select next placeholder
+" - Insert placeholder
+nnoremap <leader><C-j> a<++><Esc>
+
+" - Find and <++>select next placeholder
 nnoremap <C-j> :keeppattern normal! /\v\<\+[^>]*\+\><C-v><CR><CR>vf><C-g>
 smap <C-j> <Esc><C-j>
 imap <C-j> <Esc><C-j>
