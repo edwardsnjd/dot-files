@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-exec - Run an arbitrary command on a specific version.
+#
+# SYNOPSIS
+#   git-exec REVISION COMMAND [ARGS...]
+#
+# POSITIONAL ARGUMENTS
+#   REVISION  - commitish identifier (see `git help gitrevisions`)
+#   COMMAND   - the command to run (from the root of the repo)
+#   ARGS      - any arguments supplied to the command
+#
+# EXAMPLES
+#   git-exec HEAD~3 wc -l README.md
+#   git-exec 123def wc -l README.md
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local revision="${1:?Must supply revision to run command on}"
+  shift
+
+  git checkout --detach "$revision"
+  exec "$@"
+}
+
+Main "$@"
