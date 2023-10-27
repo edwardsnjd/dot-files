@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+
+# NAME
+#   timerange - print the datetimes in a given range
+#
+# SYNOPSIS
+#   timerange [days]
+#
+# DESCRIPTION
+#   days = number of days from today (default = 1)
+#
+# EXAMPLES
+#   $ timerange
+#   2000-01-02	00:00	W52	Sun
+#   2000-01-02	01:00	W52	Sun
+#   2000-01-02	02:00	W52	Sun
+#   2000-01-02	03:00	W52	Sun
+#   2000-01-02	04:00	W52	Sun
+#   2000-01-02	05:00	W52	Sun
+#   2000-01-02	06:00	W52	Sun
+#   2000-01-02	07:00	W52	Sun
+#   2000-01-02	08:00	W52	Sun
+#   2000-01-02	09:00	W52	Sun
+#   2000-01-02	10:00	W52	Sun
+#   2000-01-02	11:00	W52	Sun
+#   2000-01-02	12:00	W52	Sun
+#   2000-01-02	13:00	W52	Sun
+#   2000-01-02	14:00	W52	Sun
+#   2000-01-02	15:00	W52	Sun
+#   2000-01-02	16:00	W52	Sun
+#   2000-01-02	17:00	W52	Sun
+#   2000-01-02	18:00	W52	Sun
+#   2000-01-02	19:00	W52	Sun
+#   2000-01-02	20:00	W52	Sun
+#   2000-01-02	21:00	W52	Sun
+#   2000-01-02	22:00	W52	Sun
+#   2000-01-02	23:00	W52	Sun
+
+require "date"
+
+days = ARGV[0].to_i || 1
+
+from = Date.today
+to = from + days
+
+(from...to)
+  .flat_map { |date|
+    (0..23)
+      .map { |hour| ("0" + hour.to_s)[-2..-1] }
+      .map { |hour| date.strftime("%Y-%m-%d%t#{hour}:00%tW%V%t%a") }
+  }
+  .each { |d| puts(d) }
