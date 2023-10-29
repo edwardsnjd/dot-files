@@ -137,3 +137,11 @@ if executable('kotlin-language-server')
         \ 'whitelist': ['kotlin']
         \ })
 endif
+
+if executable('elm-language-server')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'elm-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'elm-language-server']},
+        \ 'whitelist': ['elm']
+        \ })
+endif
