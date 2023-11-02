@@ -238,11 +238,15 @@ nnoremap <leader>tc :keeppatterns s/\v\[([^\]]*)\]/\="[".(submatch(1)==" "?"-":"
 nnoremap <leader>ve :edit $MYVIMRC<CR>
 nnoremap <leader>vr :source $MYVIMRC <BAR> redraw <BAR> echo 'Reloaded .vimrc'<CR>
 
+" - Git shortcuts
+nnoremap <leader>gg :G<CR>
+
 " - Github cli shortcuts
 nnoremap <leader>gp :! gh pr create<CR>
 nnoremap <leader>gs :! gh pr status<CR>
 nnoremap <leader>gc :! gh pr checks<CR>
 nnoremap <leader>gC :! gh pr checks --watch<CR>
+nnoremap <leader>gm :! gh pr merge<CR>
 
 " - tmux
 nnoremap <leader>ts <Plug>(TmuxSendRight)
