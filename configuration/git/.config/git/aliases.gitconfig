@@ -58,4 +58,4 @@
 	li = ls-files --other --deleted --modified --exclude-standard --dedup
 
 	# Listing things
-	all-objects = cat-file --batch-check='%(objecttype) %(objectname) %(objectsize)' --batch-all-objects --unordered
+	all-objects = cat-file --batch-check='%(objecttype)\t%(objectname)\t%(objectsize)' --batch-all-objects --unordered
