@@ -17,6 +17,8 @@
 	# Less typing
 	ch = checkout
 	co = commit --verbose
+	ca = commit --amend --no-edit
+	cf = commit --fixup HEAD
 	df = diff
 	dfc = diff --cached
 	dfs = diff --stats
