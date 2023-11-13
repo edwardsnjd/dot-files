@@ -54,3 +54,6 @@
 
 	# List interesting files
 	li = ls-files --other --deleted --modified --exclude-standard --dedup
+
+	# Listing things
+	all-objects = cat-file --batch-check='%(objecttype) %(objectname) %(objectsize)' --batch-all-objects --unordered
