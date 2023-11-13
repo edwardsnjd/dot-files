@@ -131,6 +131,10 @@ inoremap jk <Esc>
 " - Visual mode quick duplicate
 xnoremap D y'>pgv
 
+" - Default substitutions
+nnoremap :s/ :s/\v
+vnoremap :s/ :s/\%V
+
 " - Highlight word under cursor but don't jump
 nnoremap <silent> * :let @/ = '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 " NOTE: Uses x register
