@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Select a prompt and run input through it.
+# Usage: llm-filter < INPUT
+
+# Optionally configure prompt directory via `LLM_FILTER_PROMPTS_DIR`
+# environment variable
+default_dir=~/.config/llm-filter
+snippet_dir=${LLM_FILTER_PROMPTS_DIR:-$default_dir}
+model="codellama:7b"
+
+# Pick a prompt
+preview="bat --color=always {3}"
+prompt=$(
+  find -L "${snippet_dir}" -type f \
+    | sort \
+    | sed -E 's|^.+/([^/]+)/([^/]+)$|\1\t\2\t&|' \
+    | fzf --no-sort --tac --with-nth=1..2 --preview "$preview" --query "$query" \
+    | cut -f3 \
+)
+
+# If we picked one, run input through it
+[ -n "$prompt" ] && "$prompt" /dev/stdin
