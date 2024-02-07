@@ -25,6 +25,7 @@
 	dfw = diff --word-diff-regex="[@a-zA-Z0-9_]+|[^[:space:]]" # identifier or non-space
 	dfl = diff --word-diff-regex="[@a-zA-Z0-9_]+|." # identifier or anything
 	dflc = !git dfl --word-diff=color
+	dfo = "!git lo -z | xargs -0 -n1 git --no-pager diff --color=always /dev/null | less"
 
 	# Concise status
 	st = status --short --branch
@@ -56,6 +57,7 @@
 
 	# List interesting files
 	li = ls-files --other --deleted --modified --exclude-standard --dedup
+	lo = ls-files --other --exclude-standard
 
 	# Listing things
 	all-objects = cat-file --batch-check='%(objecttype)\t%(objectname)\t%(objectsize)' --batch-all-objects --unordered
