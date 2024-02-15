@@ -318,7 +318,6 @@ inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 " See `README.md` for bootstrap
 
 call plug#begin('~/.vim/plugged')
-Plug 'https://github.com/chrisbra/matchit'
 Plug 'https://github.com/tpope/vim-sensible'
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'https://github.com/tpope/vim-vinegar'
@@ -337,10 +336,8 @@ Plug 'https://github.com/junegunn/fzf'
 Plug 'https://github.com/junegunn/fzf.vim'
 Plug 'https://github.com/junegunn/goyo.vim'
 Plug 'https://github.com/junegunn/limelight.vim'
-Plug 'https://github.com/junegunn/vim-peekaboo'
 Plug 'https://github.com/knsh14/vim-github-link'
 Plug 'https://github.com/wincent/terminus'
-Plug 'https://github.com/psf/black'
 Plug 'https://github.com/editorconfig/editorconfig-vim'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'https://github.com/edwardsnjd/vim-lsp', { 'branch': 'before-init' }
