@@ -1,5 +1,5 @@
 " Set code navigation options
-setlocal include=\\v(^import\ \|:\ )\\zs[a-zA-Z0-9_.]+\\ze
+setlocal include=\\v(^import\|:)\ \\zs[a-zA-Z0-9_.]+\\ze
 setlocal define=\\vclass\|fun\|interface
 setlocal suffixesadd=.kt
 setlocal includeexpr=s:KotlinIncludeExpr()
@@ -17,36 +17,31 @@ function! s:KotlinIncludeExpr()
     return
   endif
 
-  " List all candidate class names to look for (longest first, look
-  " for prefixes)
-  let l:ids = []
-  let l:parts = split(v:fname, '\.')
-  let l:idx = len(l:parts) - 1
-  while l:idx >= 0
-    let l:candidate = join(l:parts[0 : l:idx], '.')
-    call add(l:ids, l:candidate)
-    let l:idx -= 1
-  endwhile
+  " List all candidate file names to look for (split id on dots)
+  let l:parts = v:fname->split('\.')
+  let l:ids = range(len(l:parts))
+        \ ->map({ idx -> join(l:parts[0 : l:idx], '.') })
+        \ ->reverse()
 
   " Find the package name from the `package ...` line
-  let l:package = substitute(getbufoneline('%', 1) , 'package ', '', '')
+  " HACK: Assume always first line of kotlin file
+  let l:package = getbufoneline('%', 1)
+        \ ->substitute('package ', '', '')
 
   " Check longest prefix first, bare, then in implicit package
-  let l:candidateClasses = map(copy(l:ids), 'l:package .. "." .. v:val') + l:ids
+  let l:candidateClasses = l:ids + copy(l:ids)->map('l:package .. "." .. v:val')
 
-  " Stop as soon as we find one
+  " Return first one found
   for l:candidate in l:candidateClasses
-    let l:relativePath = s:ConvertIdToRelativePath(l:candidate)
+    let l:relativePath = substitute(l:candidate, '\.', '/', 'g') .. &l:suffixesadd
     let l:foundPath = globpath(&path, l:relativePath)
     if len(l:foundPath)
       return l:foundPath
     endif
   endfor
-endfunction
 
-" Convert dotted class identifiers to relative paths
-function! s:ConvertIdToRelativePath(id)
-  return substitute(a:id, '\.', '/', 'g') .. &l:suffixesadd
+  " Otherwise return nothing
+  return
 endfunction
 
 " Restore default values
