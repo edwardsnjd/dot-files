@@ -27,8 +27,10 @@ function PrintHostStatus() {
     ' \
       | awk -v OFS=$'\t' '
         {
-          status = system("ping -c1 -t1 -q " $1 " &>/dev/null")
+          cmd = "ping -c1 -t1 -q " $1 " &>/dev/null"
+          status = system(cmd)
           print $2, $1, status
+          close(cmd)
         }'
   } < ${1:-/dev/stdin}
 }
