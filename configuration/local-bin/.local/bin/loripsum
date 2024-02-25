@@ -1,3 +1,19 @@
 #! /usr/bin/env bash
 
-curl loripsum.net/api/plaintext
+
+# NAME
+#   loripsum - opinionated wrapper around https://loripsum.net/api
+#
+# SYNOPSIS
+#   loripsum [number [size]]
+#
+# OPTIONS
+#   number (default 1) - (integer)
+#     - The number of paragraphs to generate.
+#   size (default "medium") - short, medium, long, verylong
+#     - The average length of a paragraph.
+
+number="${1:-1}"
+size="${1:-medium}"
+
+curl "https://loripsum.net/api/${number}/${size}/plaintext"
