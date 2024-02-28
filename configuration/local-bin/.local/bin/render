@@ -42,7 +42,7 @@ function render_directory() {
 
 function render_directory_simple() {
   local directory="${1%%/}"
-  exa \
+  eza \
     --header \
     --tree \
     --git \
@@ -59,7 +59,7 @@ function render_directory_simple() {
 function render_directory_full() {
   local directory="${1%%/}"
   # HACK: Limit max depth to 5 to make listing ~ possible
-  exa \
+  eza \
     --header \
     --tree \
     --git \
