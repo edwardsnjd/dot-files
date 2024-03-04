@@ -50,14 +50,14 @@ fi
 # fzf autocompletion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# NVM
+# NVM (+ ~100ms)
 export NVM_DIR="$HOME/.nvm"
 [ -f "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" --no-use
 [ -f "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
 # End NVM
 # Note: NVM will not be ready until after it's been called once with `nvm ...`
 
-# RVM: Load *as a function*
+# RVM: Load *as a function* (cost ~150ms)
 [ -f "$HOME/.rvm/scripts/rvm" ] && source "$HOME/.rvm/scripts/rvm"
 
 # Allow broot convenient launch and extra features
