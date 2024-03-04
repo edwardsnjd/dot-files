@@ -1,0 +1,37 @@
+#! /usr/bin/env awk -f
+
+# Timestamps file:
+#   n.nnnnnn (++) (item)
+#   n.nnnnnn (item continuation)
+
+BEGIN { OFMT = "%.6f" }
+
+# Tally up duration
+{ duration += $1 }
+
+# Remove duration field
+{
+  $1 = ""
+  # Awk dark magic to rebuild line and fields
+  $0 = $0
+  $1 = $1
+}
+
+# First line (print previous line and duration)
+$1 ~ /^\++$/ {
+  # Print previous line and duration
+  print duration, line
+  # New line
+  duration = 0
+  line = $0
+}
+
+# Special case: Trim trailing slash for line continuations
+line ~ /\\$/ {
+  line = substr(line, 1, length(line) - 1)
+}
+
+# Append line continuation
+$1 !~ /^\++$/ {
+  line = line $0
+}

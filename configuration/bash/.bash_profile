@@ -12,6 +12,9 @@
 #
 # Enable tracing:
 # set -x
+#
+# Analyse timing logs:
+# bash-fix-timing /tmp/timestamps
 
 # --- Environment variables ---
 
