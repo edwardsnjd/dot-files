@@ -29,7 +29,7 @@ shopt -s dirspell   # correct minor errors in directory names on expansion
 shopt -s histappend # append to the history file, don't overwrite it
 #shopt -s globstar  # expand "**" in pathname
 
-# Brew bash completion
+# Brew bash completion (+ ~150ms)
 # See: https://docs.brew.sh/Shell-Completion#configuring-completions-in-bash
 if type brew &>/dev/null
 then
