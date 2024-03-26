@@ -155,7 +155,6 @@ nnoremap <leader>D :bdelete<CR>
 nnoremap <leader>d :bprevious \| bdelete #<CR>
 nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprevious<CR>
-nnoremap <leader>m :Make<CR>
 
 " - Append all valid quickfix lines to some register (default is 'a')
 nnoremap <leader>yc :cdo execute 'normal "Ayy'<LEFT><LEFT><LEFT>
