@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+# NAME
+#   strip-ansi - Remove ANSI escape sequences
+#
+# SYNOPSIS
+#   strip-ansi FILE
+#   strip-ansi < FILE
+#   cat FILE | strip-ansi
+#
+# OUTPUT
+#   The input with all ANSI escape sequences removed.
+
+exec sed -Ee 's/\x1b\[[0-9;]*m//g' "$@"
