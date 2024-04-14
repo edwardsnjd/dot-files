@@ -19,7 +19,13 @@ function! <SID>NullifyProcess(init_params) abort
   return a:init_params
 endfunction
 
-if executable('lsp-python')
+if executable('pylsp')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'pylsp',
+        \   'cmd': { server_info->['pylsp'] },
+        \   'allowlist': ['python'],
+        \ })
+elseif executable('lsp-python')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-python',
         \   'cmd': { server_info->['lsp-python'] },
