@@ -16,12 +16,6 @@ FOOS := $(shell find $(FOO_DIR) -type f -name "*.csv" | sort)
 
 # Convenience targets
 
-.PHONY : all help clean touch list
-
-all: reports
-
-help:
-	@echo "Targets:"
-	@echo "- all (default) = generate all journals and reports"
-	@echo "- reports = generate all reports"
-	@echo "- clean = delete generated files"
+.PHONY: error
+error:
+	@echo "Type make<TAB><TAB> to see the available targets"
