@@ -35,8 +35,12 @@ set incfilter
 # Leave some space at the top and the bottom of the screen
 set scrolloff 10
 
+# Kill server as final client closes (so refreshes config)
+# set autoquit
+
 # Use custom preview script
 set preview
+set sixel
 set previewer render
 map i $paginate $f
 
