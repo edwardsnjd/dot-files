@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# NAME
+#   preview-gfm - preview Github Flavoured Markdown (converted via Github API)
+#
+# USAGE
+#   preview-gfm <PATH>
+#
+# DEPENDENCIES
+#   gh - authenticated locally so you can use the Github API
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local path="${1:?Must supply the path of the markdown file}"
+
+  local dir="$(dirname $path)"
+  local file="$(basename $path '.md')"
+
+  local tmpdir="${TMPDIR}${dir}"
+  local tmp="${tmpdir}/${file}.html"
+
+  mkdir -p "$tmpdir"
+
+  gh api \
+    --method="POST" \
+    /markdown \
+    -f "mode=gfm" \
+    -f "text=$(cat $path)" \
+    > $tmp
+
+  open "$tmp"
+}
+
+Main "$@"
