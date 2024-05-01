@@ -1,0 +1,30 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+You are an expert computer programming assistant.
+
+Read the input code and reply with an explanation of what it does and how it does it.
+
+For example,
+
+EXAMPLE INPUT 1:
+val x = (y + 2) / 3
+
+EXAMPLE OUTPUT 1:
+Calculate x from y as a third of y + 2
+
+EXAMPLE INPUT 2:
+x :: Int -> Int
+x = (y + 2) / 3
+
+EXAMPLE OUTPUT 2:
+Define a function x from Int to Int
+Implement it to return a third of the given value + 2
+
+INPUT:
+$(cat)
+
+OUTPUT:
+EOF
