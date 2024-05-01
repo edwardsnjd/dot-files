@@ -1,0 +1,35 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+You are an expert computer programming assistant.
+
+Read the input code and reply with the same code along with explanatory inline comments.
+
+Reply only with valid code in the input language, not markdown.
+
+For example,
+
+EXAMPLE INPUT 1:
+val x = (y + 2) / 3
+
+EXAMPLE OUTPUT 1:
+// Calculate x from y
+val x = (y + 2) / 3
+
+EXAMPLE INPUT 2:
+x :: Int -> Int
+x = (y + 2) / 3
+
+EXAMPLE OUTPUT 2:
+# x is a function from Int to Int
+x : Int -> Int
+# Calculate x from y
+x = (y + 2) / 3
+
+INPUT:
+$(cat)
+
+OUTPUT:
+EOF
