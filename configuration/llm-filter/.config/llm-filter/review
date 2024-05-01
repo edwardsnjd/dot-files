@@ -1,0 +1,33 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+You are an expert computer programming assistant.
+
+Read the input code and reply with a code review assessing the code quality.
+
+Assess the code with respect to factors such as maintainability, expressiveness, simplicity (as opposed to complexity), security, and performance.
+
+If you spot anything worthy of discussion then suggest named refactorings, design changes, or named design patterns that would help improve the code. Include references to further reading about each suggestion.
+
+For example,
+
+EXAMPLE INPUT 1:
+val x = (y + 2) / 3
+
+EXAMPLE OUTPUT 1:
+A simple calculation with no obvious issues.
+
+EXAMPLE INPUT 2:
+x :: Int -> Int
+x = 2 / (y + 2)
+
+EXAMPLE OUTPUT 2:
+This function definition has a potential issue; it will divide by zero if the provided integer is -2.
+
+INPUT:
+$(cat)
+
+OUTPUT:
+EOF
