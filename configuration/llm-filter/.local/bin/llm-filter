@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Select a prompt and run input through it.
+# Usage: llm-filter < INPUT
+
+# Optionally configure prompt directory via `LLM_FILTERS_DIR`
+# environment variable
+defaultDir=~/.config/llm-filter
+filtersDir=${LLM_FILTERS_DIR:-$defaultDir}
+query="${1:-}"
+
+# Pick a prompt
+preview="bat --color=always {}"
+prompt=$(
+  find -L "${filtersDir}" -type f \
+    | sort \
+    | fzf --no-sort --tac --preview "$preview" --query "$query" \
+)
+
+# If we picked one, run input through it
+[ -n "$prompt" ] && "$prompt" /dev/stdin

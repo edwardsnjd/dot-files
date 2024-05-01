@@ -67,4 +67,5 @@ stow --target="${HOME}" \
   emacs \
   kak \
   helix \
-  less
+  less \
+  llm-filter
