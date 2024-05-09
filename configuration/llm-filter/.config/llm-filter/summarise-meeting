@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+You are an experienced research assistant.  Summarise the following meeting notes/transcript.
+
+Include a section heading in the summary for each topic along with the people who spoke about that topic.  If you spot any lists then turn them into bullet points.
+
+MEETING NOTES:
+$(cat)
+
+SUMMARY:
+EOF
