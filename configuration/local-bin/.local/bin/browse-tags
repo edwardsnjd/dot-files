@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# NAME
+#   browse-tags - fzf browse tags
+#
+# USAGE
+#   browse-tags [query]
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function SelectTag() {
+  local query="${1:-}"
+
+  # Extract the line number as field 6 for ease of use in fzf, then remove
+  # after
+  sed -E "s/\tline:([0-9]+)/&\t\1/" tags \
+  | fzf \
+    --delimiter "\t" \
+    --reverse \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --preview 'highlight-text {2} {6}' \
+    --preview-window "~3,+{6}+3-/2" \
+    --query "$query" \
+  | cut -d $'\t' -f1-5
+}
+
+SelectTag "$@"
