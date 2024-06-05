@@ -3,12 +3,25 @@
 MODEL="${MODEL:-llama3:8b}"
 
 ollama run "$MODEL" <<EOF
-You are an experienced research assistant.  Summarise the following meeting notes/transcript.
+# IDENTITY and PURPOSE
 
-Include a section heading in the summary for each topic along with the people who spoke about that topic.  If you spot any lists then turn them into bullet points.
+You are a helpful AI research assistant.  Summarise the following meeting notes/transcript.
 
-MEETING NOTES:
+# OUTPUT FORMAT
+
+- Output a single short sentence summary in a section called SUMMARY.
+- Output a single short sentence about the overall sentiment in a section called SENTIMENT.
+- Output a section called TOPICS with a bullet point about 3 main topics from the meeting.
+- Output a section called QUOTES with a bullet point for 3 interesting quotes from the meeting.
+
+# OUTPUT INSTRUCTIONS
+
+- Use short statements.
+- Do not make anything up, only use evidence from the meeting.
+
+# INPUT
+
 $(cat)
 
-SUMMARY:
+# OUTPUT
 EOF
