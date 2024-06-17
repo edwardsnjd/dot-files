@@ -1,0 +1,48 @@
+# What protocol to use when performing git operations. Supported values: ssh, https
+git_protocol: https
+# What editor gh should run when creating issues, pull requests, etc. If blank, will refer to environment.
+editor:
+# When to interactively prompt. This is a global config that cannot be overridden by hostname. Supported values: enabled, disabled
+prompt: enabled
+# A pager program to send command output to, e.g. "less". Set the value to "cat" to disable the pager.
+pager: delta
+# Aliases allow you to create nicknames for gh commands
+aliases:
+    co: pr checkout
+    prs: |
+        ! GH_FORCE_TTY=97% gh search prs --owner=iCareWorld --state=open --limit=1000 | sed "1,3d"
+    pl: |
+        ! gh prs \
+            | fzf \
+              --bind "ctrl-r:reload(gh prs)" \
+              --bind "alt-enter:execute(gh pr view --web --repo {1} {2})" \
+              --bind "enter:execute(GH_FORCE_TTY=97% gh pd --repo {1} {2} | less -+X -+F +g)" \
+              --header ":: Enter = view selected PR, Alt-Enter = view selected PR in browser, Ctrl-R = reload list" \
+              --reverse
+    pl-pick: |
+        ! gh prs \
+            | fzf \
+              --bind "enter:execute(gh pr view --web --repo {1} {2})+close" \
+              --header ":: Enter = view selected PR in browser" \
+              --reverse
+    pd: |
+        ! gh pr view "$@"; echo; gh pr checks "$@"; echo; gh pr diff "$@"
+    repos: |
+        ! gh repo list \
+          --template '{{range . }}{{ .nameWithOwner }}|{{ if .isPrivate }}private{{else}}public{{end}}|{{ .description }}{{"\n"}}{{end}}' \
+          --json nameWithOwner,isPrivate,description \
+          --limit 1000 \
+          "$@" \
+          | column -s'|' -t \
+    repos-pick: |
+        ! gh repos "$@" \
+          | fzf \
+            --reverse \
+            --header ":: Enter = view selected repo in browser" \
+            --bind "enter:execute(gh repo view --web {1})+close" \
+            --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}'
+# The path to a unix socket through which send HTTP connections. If blank, HTTP traffic will be handled by net/http.DefaultTransport.
+http_unix_socket:
+# What web browser gh should use when opening URLs. If blank, will refer to environment.
+browser:
+version: "1"

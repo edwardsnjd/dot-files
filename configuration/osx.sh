@@ -68,4 +68,5 @@ stow --target="${HOME}" \
   kak \
   helix \
   less \
-  llm-filter
+  llm-filter \
+  gh
