@@ -35,12 +35,13 @@ function Main() {
 }
 
 function List() {
-  RunInDb "$1" ls -Rf "$2"
+  RunInDb "$1" ls --recursive --flatten "$2"
 }
 
 function Show() {
   {
     echo "Path: $3"
+    echo "(Password will not be displayed here, use 'Copy' option from list)"
     RunInDb "$1" show "$2" "$3"
   } | less -+F -+X --tilde +g
 }
