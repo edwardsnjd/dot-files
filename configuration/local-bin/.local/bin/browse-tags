@@ -14,16 +14,32 @@ set -o pipefail
 function SelectTag() {
   local query="${1:-}"
 
+  local preview='highlight-text {2} {6}'
+  local view="paginate -t {1}"
+  local edit="vim -t {1}"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-S${normal} toggle sort"
+  local header2="∷ Actions: ${magenta}Enter${normal} exit with selection, ${magenta}A-Enter${normal} edit, ${magenta}A-p${normal} view"
+  local header="${header1}${nl}${header2}"
+
   # Extract the line number as field 6 for ease of use in fzf, then remove
   # after
   sed -E "s/\tline:([0-9]+)/&\t\1/" tags \
   | fzf \
     --delimiter "\t" \
     --reverse \
-    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-    --preview 'highlight-text {2} {6}' \
-    --preview-window "~3,+{6}+3-/2" \
+    --prompt "Tag> " \
+    --header "$header" \
     --query "$query" \
+    --preview "$preview" \
+    --preview-window "~3,+{6}+3-/2" \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --bind "ctrl-s:toggle-sort" \
+    --bind "alt-p:execute($view)" \
+    --bind "alt-enter:execute($edit)" \
   | cut -d $'\t' -f1-5
 }
 
