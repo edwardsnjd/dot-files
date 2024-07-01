@@ -7,15 +7,25 @@
 #   git-browse-diff [git diff args]
 
 function GitBrowseDiff {
-  local details="bat {} --pager='less -c -+F -+X'"
   local preview="git diff --color=always $@ -- {}"
+  local delta="git diff {} | delta --pager='less -+F --tilde +g1'"
+  local details="paginate {}"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header2="∷ Actions: ${magenta}Enter${normal} view file, ${magenta}A-Enter${normal} view diff"
+  local header="${header1}${nl}${header2}"
 
   git diff --name-only --relative "$@" \
     | fzf \
       --multi \
       --layout=reverse \
+      --header "$header" \
       --preview "$preview" \
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind="alt-enter:execute($delta)" \
       --bind="enter:execute($details)"
 }
 

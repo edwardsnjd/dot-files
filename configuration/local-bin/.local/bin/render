@@ -149,7 +149,7 @@ function render_json() {
 }
 
 function render_textual() {
-  bat --force-colorization --plain --paging "never" "$1"
+  bat --force-colorization --plain --paging "never" --wrap "never" "$1"
 }
 
 main "$@"
