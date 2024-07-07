@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# USAGE
+#   workflowy <FILE>
+#   echo IDEA | workflowy
+#
+# DEPENDENCIES
+#   curl - For the HTTP
+#   jq - To parse the response JSON
+#
+# ENVIRONMENT VARIABLEs
+#   WORKFLOWY_API_KEY - API key
+#   WORKFLOWY_SAVE_LOCATION - (Optional) Parent for added bullet
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -o xtrace
+
+WORKFLOWY_API_URL="https://workflowy.com/api/bullets/create/"
+
+function Main() {
+  local apiKey="${WORKFLOWY_API_KEY:?Must supply API key in WORKFLOWY_API_KEY}"
+  EscapeNewLines "$@" | BuildJson | PostToApi "$apiKey" | ExtractInfo
+}
+
+function EscapeNewLines() {
+  cat "$@" | sed 's/$/\\n/g' | tr -d '\n'
+}
+
+function BuildJson() {
+  cat <<-EOF
+	{
+	  "new_bullet_title": "$(cat)",
+	  "new_bullet_note": "",
+	  "save_location_url": "${WORKFLOWY_SAVE_LOCATION:-}"
+	}
+	EOF
+}
+
+function PostToApi() {
+  local apiKey="$1"
+  curl "${WORKFLOWY_API_URL}" \
+    -H "Authorization: Bearer ${apiKey}" \
+    -X POST \
+    --json @- \
+    --silent
+}
+
+function ExtractInfo() {
+  jq '[.new_bullet_id, .new_bullet_url, .new_bullet_title] | @tsv' -r
+}
+
+Main "$@"
