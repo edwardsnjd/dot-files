@@ -8,8 +8,8 @@ set hidden              " Allow unsaved buffers off screen
 
 " General
 set showcmd             " Show commands as typing them
-set number              " Show line numbers
-set relativenumber      " Show relative line numbers
+set nonumber            " Hide line numbers
+set norelativenumber    " Hide relative line numbers
 set linebreak           " Break lines at word (requires Wrap lines)
 set textwidth=0         " Do not change buffer text when wrapping
 set showmatch           " Highlight matching brace
