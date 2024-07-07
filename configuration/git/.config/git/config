@@ -31,3 +31,8 @@
 [merge]
 	tool = vimdiff
 	conflictStyle = diff3
+[blame]
+	coloring = highlightRecent
+	ignoreRevsFile = .git-blame-ignore-revs
+	markIgnoredLines = true
+	markUnblamableLines = true
