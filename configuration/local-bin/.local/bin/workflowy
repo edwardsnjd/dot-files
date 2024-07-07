@@ -9,7 +9,9 @@
 #   jq - To parse the response JSON
 #
 # ENVIRONMENT VARIABLEs
-#   WORKFLOWY_API_KEY - API key
+#   XDG_DATA_HOME - Path to user data files
+#   WORKFLOWY_API_KEY_FILE - (Optional) Path to file containing the API key
+#     (defaults to $XDG_DATA_HOME/workflowy-api-key)
 #   WORKFLOWY_SAVE_LOCATION - (Optional) Parent for added bullet
 
 set -o nounset
@@ -18,10 +20,15 @@ set -o pipefail
 # set -o xtrace
 
 WORKFLOWY_API_URL="https://workflowy.com/api/bullets/create/"
+WORKFLOWY_API_KEY_FILE="${WORKFLOWY_API_KEY_FILE:-${XDG_DATA_HOME}/.workflowy-api-key}"
 
 function Main() {
-  local apiKey="${WORKFLOWY_API_KEY:?Must supply API key in WORKFLOWY_API_KEY}"
-  EscapeNewLines "$@" | BuildJson | PostToApi "$apiKey" | ExtractInfo
+  if [[ ! -s "$WORKFLOWY_API_KEY_FILE" ]]; then
+    echo "ERROR: Could not find Workflowy API key in \"$WORKFLOWY_API_KEY_FILE\"" > /dev/stderr
+    exit 1
+  fi
+
+  EscapeNewLines "$@" | BuildJson | PostToApi "$WORKFLOWY_API_KEY_FILE" | ExtractInfo
 }
 
 function EscapeNewLines() {
@@ -39,9 +46,9 @@ function BuildJson() {
 }
 
 function PostToApi() {
-  local apiKey="$1"
+  local apiKeyFile="$1"
   curl "${WORKFLOWY_API_URL}" \
-    -H "Authorization: Bearer ${apiKey}" \
+    -H @<(printf "Authorization: Bearer "; cat "$apiKeyFile") \
     -X POST \
     --json @- \
     --silent
