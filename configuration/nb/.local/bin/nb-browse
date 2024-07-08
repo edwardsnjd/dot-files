@@ -1,0 +1,42 @@
+#! /usr/bin/env bash
+
+# NAME
+#   nb-browse - Interactive nb note browser
+#
+# DEPENDENCIES
+#   nb - to list and display notes.
+#   nb-browse-content - to search notes by title
+#   fzf - for interactive browse and preview
+#   render - for markdown render
+#   paginate - for markdown pagination
+
+set -o nounset
+#set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function BrowseNb() {
+  local query="${1:-}"
+
+  local selectPath="echo {1} | tr -d '[]' | xargs nb show --path"
+  local display="$selectPath | xargs paginate"
+  local preview="$selectPath | xargs render"
+
+  nb list --type text \
+    | fzf \
+      --ansi \
+      --reverse \
+      --header "🔍 Search nb" \
+      --header-first \
+      --prompt "Titles> " \
+      --query "$query" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "ctrl-f:become(nb-browse-content {q})" \
+      --bind "enter:execute($display)" \
+      --preview="$preview"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
+}
+
+BrowseNb "$@"

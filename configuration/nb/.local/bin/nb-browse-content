@@ -1,0 +1,54 @@
+#! /usr/bin/env bash
+
+# NAME
+#   nb-browse-content - Interactively search and browse nb note contents
+#
+# DEPENDENCIES
+#   nb- to list and display notes.
+#   nb-search - to search notes
+#   nb-browse - to search notes by title
+#   fzf - for interactive browse and preview
+#   render - for markdown render
+#   paginate - for markdown pagination
+#   rg - for highlighting
+
+set -o nounset
+#set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function BrowseNbContent() {
+  local query="${1:-}"
+
+  local selectPath="echo {1} | tr -d '[]' | xargs nb show --path"
+  local display="$selectPath | xargs paginate"
+  local preview="$selectPath | xargs render \
+    | rg \
+      --passthru \
+      --smart-case \
+      --color=always \
+      --colors 'match:fg:yellow' \
+      --colors 'match:style:underline' \
+      {q}
+  "
+
+  nb-search "$query" \
+    | fzf \
+      --ansi \
+      --reverse \
+      --header "🔍 Search nb" \
+      --header-first \
+      --prompt "Content> " \
+      --query "$query" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "ctrl-f:become(nb-browse {q})" \
+      --bind "enter:execute($display)" \
+      --preview "$preview" \
+      --disabled \
+      --bind "change:reload:sleep 0.1; nb-search {q} || true"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
+}
+
+BrowseNbContent "$@"
