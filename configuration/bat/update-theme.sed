@@ -20,5 +20,5 @@
   i\
 				<!-- Tweak highlight color -->
   n
-  s/#010E17/#112630/
+  s/#010E17/#213650/
 }
