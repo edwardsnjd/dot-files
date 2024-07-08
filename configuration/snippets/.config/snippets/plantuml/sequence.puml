@@ -1,0 +1,30 @@
+@startuml
+actor Foo1 as Foo1
+boundary Foo2 as Foo2
+control Foo3 as Foo3
+entity Foo4 as Foo4
+database Foo5 as Foo5
+collections Foo6 as Foo6
+queue Foo7 as Foo7
+
+Foo1 -> Foo2: Hello
+Foo2 --> Foo3: Dotted
+
+' alt/else
+' opt
+' loop
+' par
+' break
+' critical
+' group followed by a text to be displayed
+'
+' end
+
+' ...delay message...
+
+' activate Foo1
+' deactivate Foo1
+' destroy Foo1
+
+note over Foo1 : initial state of Alice
+@enduml
