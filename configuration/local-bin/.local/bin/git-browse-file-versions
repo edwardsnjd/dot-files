@@ -19,10 +19,10 @@ function GitBrowseFileVersions() {
 function SelectGitCommit() {
   local path="$1"
 
-  local pretty="format:%C(yellow)%h%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+  local pretty="format:%C(yellow)%h%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
   local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs -I%% git show %%:$path | bat --style=plain --color=always --file-name=$path"
 
-  git log --pretty="$pretty" --color -- $path \
+  git log --pretty="$pretty" --date=short --color -- $path \
     | fzf \
       --ansi \
       --layout=reverse \
