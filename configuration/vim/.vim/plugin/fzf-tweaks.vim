@@ -58,9 +58,15 @@ nnoremap <Plug>(FzfSessions) :Sessions<CR>
 nnoremap <Plug>(FzfFiles) :Files<CR>
 nnoremap <Plug>(FzfBuffers) :Buffers<CR>
 nnoremap <Plug>(FzfHistory) :HISTORY<CR>
+
 nnoremap <Plug>(FzfBufferLines) :BSLines<CR>
+nnoremap <Plug>(FzfBufferLinesCurrentWord) :BSLines <C-R>=expand('<cword>')<CR><CR>
 xnoremap <Plug>(FzfBufferLinesSelection) "xy:<C-U>BSLines =escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
+
 nnoremap <Plug>(FzfBufferTags) :BTags<CR>
+nnoremap <Plug>(FzfBufferTagsCurrentWord) :BTags <C-R>=expand('<cword>')<CR><CR>
+xnoremap <Plug>(FzfBufferTagsSelection) "xy:<C-U>BTags <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
+
 nnoremap <Plug>(FzfText) :RG 
 nnoremap <Plug>(FzfTextCurrentWord) :RG \b<C-R>=expand('<cword>')<CR>\b<CR>
 xnoremap <Plug>(FzfTextSelection) "xy:<C-U>RG <C-R>=escape(getreg('x'), '\()[]+*{}^$')<CR><CR>
