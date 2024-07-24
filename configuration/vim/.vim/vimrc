@@ -210,6 +210,7 @@ nnoremap <leader>Od :! rm <C-r>=v:this_session<CR>
 " - Display navigable file outline (in local list or scratch buffer)
 nnoremap <leader>so <Plug>(ShowLocalOutline)
 nnoremap <leader>sO <Plug>(ShowOutline)
+nnoremap <leader>sc :echo system("tags-context" . " " . expand("%") . " " . line("."))<CR>
 
 " - Display file git history
 nnoremap <leader>sl :Redir !git log --oneline -n 1000 -- %<CR>
