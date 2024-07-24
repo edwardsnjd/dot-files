@@ -42,6 +42,9 @@ set undofile            " Persist undo details for all files
 set undodir=$XDG_STATE_HOME/vim/undo
 call mkdir(&undodir, "p")
 
+" Swap files
+set directory=$XDG_STATE_HOME/vim/swap
+
 " Session management
 set sessionoptions-=options " Don't store maps or options
 
