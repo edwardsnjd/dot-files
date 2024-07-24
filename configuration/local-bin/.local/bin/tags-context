@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tags-context - find the context for a line from tags
+#
+# SYNOPSIS
+#   tags-context <path> <line>
+#
+# OUTPUT
+#   <last class>\t<last function>
+#
+# DEPENDENCIES
+#   ctags - to build tags
+#   POSIX tools - to process tags
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function FindTagsContext() {
+  local file="$1"
+  local line="$2"
+
+  BuildTags "$file" \
+    | Enrich \
+    | PrintContext "$line"
+}
+
+function BuildTags() {
+  ctags -o - "$1"
+}
+
+function Enrich() {
+  # Prepend line number and tag type, sort by line number
+  sed -E 's/(.*\t)([^\t]+)(\tline:)([0-9]+)$/\4\t\2\t&/' \
+   | sort -nk1,1
+}
+
+function PrintContext() {
+  # Remember last class and function tags, print when get to target line
+  awk -v line="$1" '
+    $1 > line { exit }
+    $2 == "c" { lastTagClass = $3; lastTagMethod = "" }
+    $2 == "m" { lastTagMethod = $3 }
+    $2 == "f" { lastTagFunction = $3 }
+    END { print (lastTagClass ? lastTagClass : "?"), (lastTagMethod ? lastTagMethod : "?"), lastTagFunction }
+  '
+}
+
+FindTagsContext "$@"
