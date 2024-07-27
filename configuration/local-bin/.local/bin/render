@@ -96,16 +96,8 @@ function render_file() {
 }
 
 function render_visual() {
-  # Hack to detect whether or not to use sixel
-  local formatOpts="$( [ "${TERM_PROGRAM:-}" = "iTerm.app" ] && echo "--format sixel" )"
-
-  chafa \
-    ${formatOpts} \
-    --polite=true \
-    --animate=false \
-    --duration=0 \
-    --work=1 \
-    --size "${2:-$(tput cols)}x${3:-$(tput lines)}" \
+  timg \
+    -g "${2:-$(tput cols)}x${3:-$(tput lines)}" \
     "$1"
 }
 
