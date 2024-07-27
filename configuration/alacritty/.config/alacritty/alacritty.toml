@@ -1,59 +1,34 @@
-[colors]
-draw_bold_text_with_bright_colors = false
-
-[colors.bright]
-black = "#575656"
-blue = "#82aaff"
-cyan = "#7fdbca"
-green = "#22da6e"
-magenta = "#c792ea"
-red = "#ef5350"
-white = "#ffffff"
-yellow = "#ffeb95"
-
-[colors.cursor]
-cursor = "#7e57c2"
-text = "#feffff"
-
-[colors.normal]
-black = "#011627"
-blue = "#82aaff"
-cyan = "#21c7a8"
-green = "#22da6e"
-magenta = "#c792ea"
-red = "#ef5350"
-white = "#ffffff"
-yellow = "#c5e478"
-
-[colors.primary]
-background = "#011627"
-foreground = "#d6deeb"
-
-[colors.selection]
-background = "#5f7e97"
-text = "#dee4ee"
+import = [
+"~/.config/alacritty/themes/night_owl.toml",
+]
 
 [env]
 TERM = "xterm-256color"
 
+[window]
+decorations = "buttonless"
+startup_mode = "Maximized"
+dynamic_padding = true
+padding = { x = 13, y = 10 }
+
 [font]
-size = 13.0
+size = 15
+offset = { x = 0, y = 3 }
 
 [font.bold]
-family = "Jetbrains Mono"
+family = "Jetbrains Mono NL"
 style = "Bold"
 
 [font.italic]
-family = "Jetbrains Mono"
-style = "Italic"
+family = "Jetbrains Mono NL"
+style = "Light Italic"
 
 [font.normal]
-family = "Jetbrains Mono"
-style = "Regular"
+family = "Jetbrains Mono NL"
+style = "Light"
 
-[font.offset]
-x = 1
-y = 2
+[colors]
+draw_bold_text_with_bright_colors = true
 
 [[keyboard.bindings]]
 chars = "\u001Ba"
@@ -434,11 +409,3 @@ mods = "Alt|Shift"
 chars = "\u001E"
 key = "Key6"
 mods = "Control"
-
-[window]
-decorations = "buttonless"
-startup_mode = "Maximized"
-
-[window.padding]
-x = 12
-y = 6
