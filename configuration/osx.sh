@@ -69,4 +69,5 @@ stow --target="${HOME}" \
   helix \
   less \
   llm-filter \
-  gh
+  gh \
+  wezterm
