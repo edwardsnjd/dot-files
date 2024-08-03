@@ -5,7 +5,7 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
-config.font = wezterm.font('JetBrains Mono NL')
+config.font = wezterm.font('JetBrains Mono NL', { weight = 'Medium' })
 config.bold_brightens_ansi_colors = true
 config.color_scheme = 'Night Owl (Gogh)'
 config.enable_tab_bar = false
