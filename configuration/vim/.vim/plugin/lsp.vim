@@ -139,7 +139,10 @@ endif
 if executable('kotlin-language-server')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'kotlin-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'kotlin-language-server']},
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-language-server']},
+        \ 'initialization_options': {
+        \   'storagePath': '~/.local/state/kotlin-language-server/cache',
+        \ },
         \ 'whitelist': ['kotlin']
         \ })
 endif
