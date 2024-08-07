@@ -141,7 +141,6 @@ if executable('kotlin-language-server')
         \ 'name': 'kotlin-language-server',
         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-language-server']},
         \ 'initialization_options': {
-        \   'storagePath': '~/.local/state/kotlin-language-server/cache',
         \ },
         \ 'whitelist': ['kotlin']
         \ })
