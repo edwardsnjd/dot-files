@@ -17,7 +17,10 @@ set visualbell          " Use visual bell (no beeping)
 set cursorline          " Highlight current line
 set title               " Set window title if possible
 set nowrap              " Do not wrap long lines by default
+set backspace=indent,eol,start " Allow backspace over anything
+set lazyredraw          " Speed up macro playback by leaving screen
 
+" Search
 set hlsearch            " Highlight all search results
 set smartcase           " Enable smart-case search
 set ignorecase          " Always case-insensitive
@@ -39,26 +42,33 @@ set fillchars=vert:│
 " Enable persistent undo
 set undolevels=1000     " Number of undo levels
 set undofile            " Persist undo details for all files
-set undodir=$XDG_STATE_HOME/vim/undo
+set undodir=~/.local/state/vim/undo// " Use complete path to build undo file path
 call mkdir(&undodir, "p")
 
 " Swap files
-set directory=$XDG_STATE_HOME/vim/swap
+set swapfile
+set directory=~/.local/state/vim/swap// " Use complete path to build swap file path
+call mkdir(&directory, "p")
 
 " Session management
 set sessionoptions-=options " Don't store maps or options
 
 " Enable code folding
-set foldmethod=indent
+set foldmethod=indent   " Fast folding
 set nofoldenable        " Do not fold on opening
-set foldnestmax=10
-set foldlevel=1         " Start folding at this level
+set foldnestmax=10      " Limit max nesting (e.g. JSON/XML)
+set foldlevelstart=1    " Start folding at this level
 set foldminlines=0      " Fold single line regions
 let g:markdown_folding = 1
 let g:markdown_fenced_languages = ['bash=sh', 'dot', 'js=javascript', 'kt=kotlin']
 
+" Joining
+set nojoinspaces        " Don't add double space after end of sentence when joining
+set formatoptions+=j    " Remove comment leader when joining lines
+
 " Show more context
-set scrolloff=6
+set scrolloff=4         " Try to show some context at top/bottom of screen
+set sidescrolloff=4     " Try to show some context at left/right of screen
 
 " Enable mouse
 set mouse=a
@@ -96,6 +106,7 @@ endif
 
 " General file editing enhancements
 filetype indent plugin on
+syntax enable
 
 " Specific file types
 autocmd Filetype gitcommit setlocal textwidth=80
@@ -131,6 +142,13 @@ vnoremap > >gv
 
 " - Save some LH typing
 inoremap jk <Esc>
+inoremap kj <Esc>
+
+" - Save typing dates
+nnoremap   <F7> a<C-R>=strftime("%Y-%m-%d")<CR><Esc>
+nnoremap <S-F7> a<C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR><Esc>
+inoremap   <F7>  <C-R>=strftime("%Y-%m-%d")<CR>
+inoremap <S-F7>  <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
 
 " - Visual mode quick duplicate
 xnoremap D y'>pgv
@@ -375,14 +393,21 @@ let g:airline_theme='night_owl'
 
 function! <SID>ConfigureLsp() abort
   " Misc
-  setlocal signcolumn=yes
   let g:lsp_format_sync_timeout = 1000
 
-  " Show errors inline
-  let g:lsp_diagnostics_echo_cursor = 1
+  " Show errors details as popup on cursor
+  let g:lsp_diagnostics_virtual_text_enabled = 1
+  let g:lsp_diagnostics_virtual_text_align = "right"
   let g:lsp_diagnostics_float_cursor = 1
-  let g:lsp_diagnostics_virtual_text_enabled = 0
-  let g:lsp_inlay_hints_enabled = 1
+  let g:lsp_diagnostics_float_delay = 200
+
+  " Tweak preview
+  let g:lsp_peek_alignment = "top"
+endfunction
+
+function! <SID>ConfigureLspBuffer() abort
+  " Make space for LSP status in sign column
+  setlocal signcolumn=yes
 
   " C-X C-O for LSP autocomplete
   setlocal omnifunc=lsp#complete
@@ -394,14 +419,17 @@ function! <SID>ConfigureLsp() abort
 
   " Informational mappings
   nmap <buffer> K <plug>(lsp-hover)
+  nmap <buffer> ge <plug>(lsp-document-diagnostics)
   nmap <buffer> [g <plug>(lsp-previous-diagnostic)
   nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-  nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
   nmap <buffer> gd <plug>(lsp-definition)
-  nmap <buffer> ge <plug>(lsp-document-diagnostics)
   nmap <buffer> gp <plug>(lsp-peek-definition)
   nmap <buffer> gr <plug>(lsp-references)
   nmap <buffer> gs <plug>(lsp-document-symbol-search)
+  nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+  " Scroll hover popups
+  nnoremap <buffer> <expr> <c-h> lsp#scroll(+1)
+  nnoremap <buffer> <expr> <c-l> lsp#scroll(-1)"
   " Mutating mappings
   nmap <buffer> <leader>rf <plug>(lsp-document-format)
   nmap <buffer> <leader>rn <plug>(lsp-rename)
@@ -411,5 +439,6 @@ endfunction
 
 augroup lsp_install
   autocmd!
-  autocmd User lsp_buffer_enabled call <SID>ConfigureLsp()
+  autocmd User lsp_setup call <SID>ConfigureLsp()
+  autocmd User lsp_buffer_enabled call <SID>ConfigureLspBuffer()
 augroup END
