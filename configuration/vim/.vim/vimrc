@@ -145,10 +145,12 @@ inoremap jk <Esc>
 inoremap kj <Esc>
 
 " - Save typing dates
-nnoremap   <F7> a<C-R>=strftime("%Y-%m-%d")<CR><Esc>
-nnoremap <S-F7> a<C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR><Esc>
-inoremap   <F7>  <C-R>=strftime("%Y-%m-%d")<CR>
-inoremap <S-F7>  <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+inoremap   <F7> <C-R>=strftime("%Y-%m-%d")<CR>
+inoremap <S-F7> <C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR>
+nmap       <F7> a<F7>
+nmap     <S-F7> a<S-F7>
+vmap       <F7> c<F7>
+vmap     <S-F7> c<S-F7>
 
 " - Visual mode quick duplicate
 xnoremap D y'>pgv
