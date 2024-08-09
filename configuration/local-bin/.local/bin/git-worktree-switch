@@ -1,0 +1,29 @@
+#! /usr/bin/env bash
+
+# NAME
+#   git-worktree-switch - Interactively switch to a worktree
+#
+# DEPENDENCIES
+#   git - to do the work
+#   fzf - to interactively browse the worktrees
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function SwitchWorktree() {
+  local worktreePath="$(SelectWorktree "$@")"
+  [[ -n "$worktreePath" ]] && cd "$worktreePath"
+}
+
+function SelectWorktree() {
+  local query="${1:-}"
+
+  git worktree list \
+    | fzf \
+      --query "$query" \
+      --bind "enter:become(echo {1})"
+}
+
+SwitchWorktree "$@"
