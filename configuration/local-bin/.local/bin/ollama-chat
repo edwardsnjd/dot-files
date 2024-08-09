@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+ollama-chat.mjs "$@" | bat --language=markdown -pp
