@@ -3,27 +3,52 @@
 # NAME
 #   git-worktree-switch - Interactively switch to a worktree
 #
+# SYNOPSIS
+#   source git-worktree-switch
+#
+#   Since this is intended to change the pwd for the current
+#   shell, it needs to be executed in that process via `source`.
+#
 # DEPENDENCIES
 #   git - to do the work
 #   fzf - to interactively browse the worktrees
 
-set -o nounset
-set -o errexit
-set -o pipefail
-#set -o xtrace
+# NOTE: Since this runs in the context of the current shell it is
+# careful not to `set` any shell settings.
 
-function SwitchWorktree() {
-  local worktreePath="$(SelectWorktree "$@")"
-  [[ -n "$worktreePath" ]] && cd "$worktreePath"
+function GitSwitchWorktree() {
+  if GitIsInGitRepo; then
+    local worktreePath="$(GitSelectWorktree)"
+    if [[ -n "$worktreePath" ]]; then
+      echo "Switching to worktree: $worktreePath"
+      cd "${worktreePath}"
+    else
+      echo "No worktree selected"
+    fi
+  else
+    echo "Not in a git repository"
+  fi
 }
 
-function SelectWorktree() {
-  local query="${1:-}"
-
+function GitSelectWorktree() {
   git worktree list \
+    | while read path rest; do
+        # Try to map "worktree" path to top level path
+        local wt="$(GitTopLevelFor "$path")"
+        if [ -n "$wt" ]; then
+          printf "%s\t%s\n" "$rest" "$wt"
+        else
+          printf "%s\t%s\n" "$rest" "$path"
+        fi
+      done \
     | fzf \
-      --query "$query" \
-      --bind "enter:become(echo {1})"
+        --query "${1:-}" \
+        --delimiter "\t" \
+        --bind "enter:become(echo {2})"
 }
 
-SwitchWorktree "$@"
+function GitIsInGitRepo() { git rev-parse --git-dir &>/dev/null; }
+
+function GitTopLevelFor() { git -C "$1" rev-parse --show-toplevel 2>/dev/null; }
+
+GitSwitchWorktree "$@"
