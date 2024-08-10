@@ -96,10 +96,12 @@ function render_file() {
 }
 
 function render_visual() {
-  # Fallback to symbols if piping output
-  local formatOpts="$( [ ! -t 1 ] && echo "--pixelation=quarter")"
+  # Explicitly render with symbols if piping output
+  if [ ! -t 1 ]; then
+    local formatOpts="--pixelation=quarter"
+  fi
   timg \
-    ${formatOpts} \
+    ${formatOpts:-} \
     -g "${2:-$(tput cols)}x${3:-$(tput lines)}" \
     "$1"
 }
