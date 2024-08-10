@@ -18,8 +18,9 @@
 
 # --- Environment variables ---
 
-# Embrace vim
+# Embrace terminal
 export EDITOR=vim
+export BROWSER=w3m
 
 # Allow colour
 export CLICOLOR=1
