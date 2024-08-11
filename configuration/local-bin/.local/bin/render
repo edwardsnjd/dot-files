@@ -90,6 +90,10 @@ function render_file() {
       render_pdf "$@";;
     *.json)
       render_json "$@";;
+    *.stl)
+      render_stl "$@";;
+    *.scad)
+      render_scad "$@";;
     *)
       render_textual "$@";;
   esac
@@ -143,6 +147,22 @@ function render_pdf() {
 
 function render_json() {
   jq --color-output '.' "$1"
+}
+
+function render_stl() {
+  echo "import(\"$1\");" | render_scad -
+}
+
+function render_scad() {
+  openscad \
+    --export-format png \
+    --autocenter \
+    --viewall \
+    --imgsize 1024,1024 \
+    --quiet \
+    -o - \
+    "$1" \
+  | render_visual -
 }
 
 function render_textual() {
