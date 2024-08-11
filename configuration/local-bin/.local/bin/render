@@ -118,10 +118,7 @@ function render_svg() {
   local file="$1"
   shift
 
-  local png="$(mktemp).png"
-  convert "svg:$file" "$png"
-  render_visual "$png" "$@"
-  rm "$png"
+  magick "svg:$file" "png:-" | render_visual - "$@"
 }
 
 function render_markdown() {
