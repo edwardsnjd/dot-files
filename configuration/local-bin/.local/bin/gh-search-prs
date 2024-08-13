@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+gh search prs \
+  --limit 1000 \
+  --json "id,repository,createdAt,closedAt,commentsCount,state,title,body,url" \
+  "$@"

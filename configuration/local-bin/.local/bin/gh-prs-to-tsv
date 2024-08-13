@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+jq '.[] | [.id,.createdAt,.closedAt,.repository.name,.commentsCount,.state,.title,(.body|length),.url]|  @tsv' --raw-output
