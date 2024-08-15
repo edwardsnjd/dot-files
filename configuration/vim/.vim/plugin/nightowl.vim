@@ -25,7 +25,7 @@ hi SpecialKey               guifg=#a8826b
 hi diffAdded   guifg=#40dd40
 hi diffRemoved guifg=#dd5874
 " - Subtle column marker
-hi ColorColumn guibg=#011728
+hi ColorColumn guibg=#021829
 " - Add highlight for column, to match cursor line
 hi CursorColumn guibg=#112630
 
