@@ -1,0 +1,20 @@
+@startuml
+hide empty description
+scale 350 width
+
+[*] --> State1
+State1 --> [*]
+State1 : this is a string
+State1 : this is another string
+
+State1 -> State2
+State2 --> [*]
+
+state State2 {
+  [*] --> Idle
+  Idle --> Configuring : Foo
+  Configuring --> Idle : Bar
+}
+
+@enduml
+
