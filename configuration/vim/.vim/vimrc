@@ -398,9 +398,10 @@ function! <SID>ConfigureLsp() abort
 
   " Show errors details as popup on cursor
   let g:lsp_diagnostics_virtual_text_enabled = 1
-  let g:lsp_diagnostics_virtual_text_align = "right"
+  let g:lsp_diagnostics_virtual_text_align = "after"
   let g:lsp_diagnostics_float_cursor = 1
   let g:lsp_diagnostics_float_delay = 200
+  let g:lsp_inlay_hints_mode = { 'normal': ['!curline'] }
 
   " Tweak preview
   let g:lsp_peek_alignment = "top"
@@ -436,6 +437,9 @@ function! <SID>ConfigureLspBuffer() abort
   nmap <buffer> <leader>rn <plug>(lsp-rename)
   nmap <buffer> <leader>rr <plug>(lsp-code-action)
   vmap <buffer> <leader>rr :LspCodeAction<CR>
+  " Toggle info
+  nnoremap <buffer> <leader>Gi :let g:lsp_inlay_hints_enabled = 1<CR>
+  nnoremap <buffer> <leader>GI :let g:lsp_inlay_hints_enabled = 0<CR>
 endfunction
 
 augroup lsp_install
