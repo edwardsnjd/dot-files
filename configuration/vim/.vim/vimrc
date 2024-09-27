@@ -406,6 +406,7 @@ function! <SID>ConfigureLsp() abort
   let g:lsp_diagnostics_virtual_text_align = "after"
   let g:lsp_diagnostics_float_cursor = 1
   let g:lsp_diagnostics_float_delay = 200
+  let g:lsp_inlay_hints_enabled = 1
   let g:lsp_inlay_hints_mode = { 'normal': ['!curline'] }
 
   " Tweak preview
