@@ -301,6 +301,7 @@ nnoremap <leader>ty <Plug>(TmuxCopy)
 xnoremap <leader>ty <Plug>(TmuxCopySelect)
 nnoremap <leader>tp <Plug>(TmuxPasteBelow)
 nnoremap <leader>tP <Plug>(TmuxPasteAbove)
+nnoremap <leader>te :! tmux display-popup -T "%" -S "fg=blue" -w "80\%" ./% &<CR><CR>
 
 " - Execute lines and append output
 " Uses x register.
@@ -316,6 +317,10 @@ nnoremap <leader>es :!<C-R>=escape(getline('.'), '%')<CR><CR>
 nnoremap <leader>eS :!clear;<C-R>=escape(getline('.'), '%')<CR><CR>
 vnoremap <leader>es :write !sh<CR>
 vnoremap <leader>eS :write !sh<CR>
+
+" - Execute current file (in shell)
+nnoremap <leader>ef :! ./%<CR>
+nnoremap <leader>eF :!clear; ./%<CR>
 
 " Snippets
 nnoremap <leader>is <Plug>(SnippetsInsert)
