@@ -52,6 +52,13 @@ function PromptVenvInfo() {
   [[ -n "$VIRTUAL_ENV_PROMPT" ]] && printf "${LOLIGHT}(venv)${RESET} "
 }
 
+function PromptShlvlInfo() {
+  # tmux intial shell has $SHLVL == 3 (shell + tmux + tmux shell?)
+  local baseShlvl=$([[ -n "$TMUX" ]] && echo 3 || echo 1)
+  local extraShells=$(( $SHLVL - $baseShlvl ))
+  [[ $extraShells -gt 0 ]] && printf "${LOLIGHT}(SHLVL+${extraShells})${RESET} "
+}
+
 function GitCurrentBranch() {
   # Once Git >= v2.2:
   # git branch --show-current 2>/dev/null
