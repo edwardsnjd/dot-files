@@ -20,7 +20,7 @@ LOLIGHT="\[$(tput bold)\]\[$(tput setaf 0)\]"
 
 function PromptPS1() {
   local exit="$(PromptExitInfo)"
-  PS1="${BLUE}»${RESET} $(PromptHistoryInfo)\W $(PromptGitInfo)$(PromptLfInfo)$(PromptVenvInfo)${exit}\$ "
+  PS1="${BLUE}»${RESET} $(PromptHistoryInfo)\W $(PromptGitInfo)$(PromptLfInfo)$(PromptNixInfo)$(PromptVenvInfo)${exit}\$ "
 }
 
 
@@ -41,6 +41,11 @@ function PromptHistoryInfo() {
 
 function PromptLfInfo() {
   [[ -n "$LF_LEVEL" ]] && printf "${LOLIGHT}(lf$LF_LEVEL)${RESET} "
+}
+
+function PromptNixInfo() {
+  # Checking the PATH seems crude, but can't find any other indicators
+  [[ $PATH =~ "/nix/store/" ]] && printf "${LOLIGHT}(nix)${RESET} "
 }
 
 function PromptVenvInfo() {
