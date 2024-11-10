@@ -65,12 +65,12 @@ function SelectSession() {
 }
 
 function ListSessions() {
-  # Using both maxdepth and depth allows find to be fast
+  # Using both maxdepth and mindepth allows find to be fast
   find "$1" \
+    -maxdepth 1 \
+    -mindepth 1 \
     -type f \
     -name "*.vim" \
-    -maxdepth 1 \
-    -depth 1 \
     -exec basename {} \;
 }
 
