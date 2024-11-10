@@ -28,6 +28,7 @@ shopt -s direxpand  # expand directory names
 shopt -s dirspell   # correct minor errors in directory names on expansion
 shopt -s histappend # append to the history file, don't overwrite it
 #shopt -s globstar  # expand "**" in pathname
+#shopt -s checkwinsize # update LINES and COLUMNS after each command
 
 # Brew bash completion (+ ~150ms)
 # See: https://docs.brew.sh/Shell-Completion#configuring-completions-in-bash
