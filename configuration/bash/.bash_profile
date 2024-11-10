@@ -136,7 +136,8 @@ alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
 export HOMEBREW_PREFIX="/usr/local"
 [ -d "/opt/homebrew" ] && export HOMEBREW_PREFIX="/opt/homebrew"
 [ -d "/home/linuxbrew/.linuxbrew" ] && export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-[ -d "$HOMEBREW_PREFIX" ] && eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
+HOMEBREW_BIN="${HOMEBREW_PREFIX}/bin/brew"
+[ -x "$HOMEBREW_BIN" ] && eval "$("$HOMEBREW_BIN" shellenv)"
 
 # Include private bin if it exists
 [ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
