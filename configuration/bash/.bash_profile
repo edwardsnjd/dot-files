@@ -146,5 +146,8 @@ export HOMEBREW_PREFIX="/usr/local"
 
 # --- Source other files ---
 
+# Include local config if available
+[ -f "$HOME/.bash_profile_local" ] && source "$HOME/.bash_profile_local"
+
 # Include rest of things used for all interactive shell
 [ -f ~/.bashrc ] && source ~/.bashrc
