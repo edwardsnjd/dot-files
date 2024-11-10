@@ -12,7 +12,7 @@ function Main() {
   curl "${THEME_URL}" > "${THEME_PATH}"
 
   # Patch the theme file
-  sed -i '' -E -f "update-theme.sed" "${THEME_PATH}"
+  sed -i'' -E -f "update-theme.sed" "${THEME_PATH}"
 }
 
 Main "$@"
