@@ -23,4 +23,5 @@ stow --target=$HOME \
   kak \
   helix \
   less \
-  info
+  info \
+  newsboat
