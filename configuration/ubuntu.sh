@@ -22,4 +22,5 @@ stow --target=$HOME \
   readline \
   kak \
   helix \
-  less
+  less \
+  info

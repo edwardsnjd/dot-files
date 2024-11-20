@@ -70,4 +70,5 @@ stow --target="${HOME}" \
   less \
   llm-filter \
   gh \
-  wezterm
+  wezterm \
+  info
