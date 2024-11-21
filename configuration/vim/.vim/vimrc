@@ -299,6 +299,7 @@ xnoremap <leader>ty <Plug>(TmuxCopySelect)
 nnoremap <leader>tp <Plug>(TmuxPasteBelow)
 nnoremap <leader>tP <Plug>(TmuxPasteAbove)
 nnoremap <leader>te :! tmux display-popup -T "%" -S "fg=blue" -w "80\%" ./% &<CR><CR>
+cnoremap <C-\><CR> <C-B>execute '<Right> tmux display-popup -S "fg=magenta" -w "80\%" <C-E> &' \| redraw!<CR><CR>
 
 " - Execute lines and append output
 " Uses x register.
