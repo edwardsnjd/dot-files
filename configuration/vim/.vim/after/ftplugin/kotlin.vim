@@ -14,7 +14,7 @@ let s:kotlin_include_stop_words = [
 function! s:KotlinIncludeExpr()
   " PERFORMANCE: Short circuit to avoid checking stop words
   if index(s:kotlin_include_stop_words, v:fname) >= 0
-    return
+    return v:fname
   endif
 
   " List all candidate file names to look for (split id on dots)
@@ -25,23 +25,21 @@ function! s:KotlinIncludeExpr()
 
   " Find the package name from the `package ...` line
   " HACK: Assume always first line of kotlin file
-  let l:package = getbufoneline('%', 1)
-        \ ->substitute('package ', '', '')
+  let l:package = getbufoneline('%', 1)->substitute('package ', '', '')
 
   " Check longest prefix first, bare, then in implicit package
   let l:candidateClasses = l:ids + copy(l:ids)->map('l:package .. "." .. v:val')
 
   " Return first one found
   for l:candidate in l:candidateClasses
-    let l:relativePath = substitute(l:candidate, '\.', '/', 'g') .. &l:suffixesadd
-    let l:foundPath = globpath(&path, l:relativePath)
+    let l:relativePath = tr(l:candidate, '.', '/')
+    let l:foundPath = findfile(l:relativePath)
     if len(l:foundPath)
-      return l:foundPath
+      return l:relativePath
     endif
   endfor
 
-  " Otherwise return nothing
-  return
+  return v:fname
 endfunction
 
 " Restore default values
