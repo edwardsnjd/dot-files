@@ -61,3 +61,7 @@
 
 	# Listing things
 	all-objects = cat-file --batch-check='%(objecttype)\t%(objectname)\t%(objectsize)' --batch-all-objects --unordered
+
+	# Blame
+	bl = blame --color-lines --color-by-age
+	bli = bl --ignore-revs-file=".git-blame-ignore-revs"
