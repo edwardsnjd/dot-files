@@ -1,5 +1,5 @@
 " Set code navigation options
-setlocal include=\\v(^import\|:)\ \\zs[a-zA-Z0-9_.]+\\ze
+setlocal include=\\v^import\ \\zs[a-zA-Z0-9_.]\{2,}\\ze
 setlocal define=\\vclass\|fun\|interface
 setlocal suffixesadd=.kt
 setlocal includeexpr=s:KotlinIncludeExpr()
