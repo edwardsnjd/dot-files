@@ -14,11 +14,11 @@
 #       2    |  2| last
 #       3| 2| last
 #   to this (on stdout):
-#       Col    | Col2  |Col3
-#       -------|-------|----
-#       1      |    2  | last
-#       2      |  2    | last
-#       3      | 2     | last
+#       Col  | Col2  |Col3
+#       -----|-------|----
+#       1    |    2  | last
+#       2    |  2    | last
+#       3    | 2     | last
 
 set -o nounset
 set -o errexit
@@ -31,9 +31,9 @@ Main() {
   local sentinel="§"
 
   grep -v -e "$dividerRowPattern" \
-    | sed -e "s/|/${sentinel}&/g" \
+    | sed -Ee "s/ *(\|)/${sentinel}\1/g" \
     | column -s "${sentinel}" -t \
-    | sed -e "1p; 1s/[^|]/${dividerRowCharacter}/g"
+    | sed -Ee "1p; 1s/[^|]/${dividerRowCharacter}/g"
 }
 
 Main "$@"
