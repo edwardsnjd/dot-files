@@ -122,10 +122,18 @@ function render_svg() {
 }
 
 function render_markdown() {
-  glow \
-    --width "${2:-$(tput cols)}" \
-    --style "$XDG_CONFIG_HOME/glow/dark-tight.json" \
-    "$1"
+  if [[ -x $(command -v glow) ]]; then
+    glow \
+      --width "${2:-$(tput cols)}" \
+      --style "$XDG_CONFIG_HOME/glow/dark-tight.json" \
+      "$1"
+  elif [[ -x $(command -v bat) ]]; then
+    bat --force-colorization --style=plain --paging="never" --wrap="never" "$1"
+  elif [[ -x $(command -v pandoc) ]]; then
+    pandoc --to=man --standalone "$1" | man -l -
+  else
+    cat "$1"
+  fi
 }
 
 function render_html() {
@@ -163,7 +171,7 @@ function render_scad() {
 }
 
 function render_textual() {
-  bat --force-colorization --plain --paging "never" --wrap "never" "$1"
+  bat --force-colorization --style=plain --paging=never --wrap=never "$1"
 }
 
 main "$@"
