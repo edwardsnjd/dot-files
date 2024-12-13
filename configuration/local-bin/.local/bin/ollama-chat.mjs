@@ -80,9 +80,9 @@ async function* readLines(body) {
 // APP
 
 async function start() {
-  let chat = buildChat('llama3')
+  let chat = buildChat('llama3.2')
 
-  const resetChat = () => { chat = buildChat('llama3') }
+  const resetChat = () => { chat = buildChat('llama3.2') }
 
   const handleUserInput = async (userContent) => {
     chat = appendUserMessage(chat, userContent)
