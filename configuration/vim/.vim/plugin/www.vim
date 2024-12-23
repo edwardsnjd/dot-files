@@ -6,9 +6,9 @@ let g:loaded_www = 1
 
 " Create commands
 command! -nargs=* SearchWeb        silent exec "! ddg ".shellescape(<q-args>) | redraw!
-command! -nargs=* SearchDevDocs    silent exec "! open https://devdocs.io/\\#q=".shellescape(<q-args>) | redraw!
-command! -nargs=* SearchDictionary silent exec "! define ".shellescape(<q-args>)
-command! -nargs=* SearchThesaurus  silent exec "! thesaurus ".shellescape(<q-args>)
+command! -nargs=* SearchDevDocs    silent exec "! open https://devdocs.io/\\#q=".shellescape(<q-args>)
+command! -nargs=* SearchDictionary silent exec "! define ".shellescape(<q-args>)." | less" | redraw!
+command! -nargs=* SearchThesaurus  silent exec "! thesaurus ".shellescape(<q-args>)." | less" | redraw!
 
 " Mappings:
 " NOTE: Current selection ones use x register
