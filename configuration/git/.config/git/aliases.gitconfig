@@ -21,7 +21,7 @@
 	cf = commit --fixup HEAD
 	df = diff
 	dfc = diff --cached
-	dfs = diff --stats
+	dfs = diff --stat
 	dfw = diff --word-diff-regex="[@a-zA-Z0-9_]+|[^[:space:]]" # identifier or non-space
 	dfl = diff --word-diff-regex="[@a-zA-Z0-9_]+|." # identifier or anything
 	dflc = !git dfl --word-diff=color
