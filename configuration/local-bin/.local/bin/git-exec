@@ -24,7 +24,7 @@ function Main() {
   local revision="${1:?Must supply revision to run command on}"
   shift
 
-  git checkout --detach "$revision"
+  git checkout --force --detach --quiet "$revision"
   exec "$@"
 }
 
