@@ -28,6 +28,10 @@
 	tool = vimdiff
 	colorMoved = dimmed-zebra
 	colorMovedWs = ignore-space-change
+[diff.image]
+	binary = true
+	command = git-diff-img
+	trustExitCode = true
 [merge]
 	tool = vimdiff
 	conflictStyle = diff3

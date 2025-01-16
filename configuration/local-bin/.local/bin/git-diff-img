@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-diff-img - Produce a visual diff of two images for git
+#
+# SYNOPSIS
+#   git-diff-img PATH OLD-FILE OLD-HEX OLD-MODE NEW-FILE NEW-HEX NEW-MODE
+#
+#   These arguments and their order are specified in git(1) under
+#   `GIT_EXTERNAL_DIFF`.
+#
+# USAGE
+#   Wire this up via `.gitattributes` and git config as the `git.image.command`
+#   for the desired file types.
+#
+# DEPENDENCIES
+#   compare - part of the ImageMagick suite
+#   timg - to render the resulting PNG diff in the terminal
+
+set -o nounset
+#set -o xtrace
+
+function Main() {
+  diff "$2" "$5" || {
+    if [ "$2" != "/dev/null" ] && [ "$5" != "/dev/null" ]; then
+      compare "$2" "$5" png:- | timg -g 100x40 -
+    fi
+    exit 1
+  }
+}
+
+Main "$@"
