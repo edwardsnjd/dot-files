@@ -18,11 +18,12 @@ brew "bats-core"
 brew "cairo"
 brew "harfbuzz"
 brew "chafa"
+brew "cloc"
 brew "croc"
 brew "ctags"
 brew "datamash"
 brew "dcmtk"
-brew "emacs", restart_service: true
+brew "emacs", restart_service: :changed
 brew "entr"
 brew "expect"
 brew "eza"
@@ -92,7 +93,7 @@ brew "slides"
 brew "solargraph"
 brew "stow"
 brew "structurizr-cli"
-brew "syncthing", restart_service: true
+brew "syncthing", restart_service: :changed
 brew "texinfo"
 brew "tidy-html5"
 brew "timg"
