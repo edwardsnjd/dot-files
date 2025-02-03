@@ -22,7 +22,7 @@ function ChooseSession() {
       --height "~35" \
       --prompt "Pick existing session to join> " \
       --query="$query" \
-    | cut -c3-
+    | sed -E 's/^.+ +//' # strip off indicator
  }
 
 Main "$@"
