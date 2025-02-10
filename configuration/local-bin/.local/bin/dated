@@ -1,18 +1,30 @@
 #!/usr/bin/env bash
 
 # USAGE
-#   dated <path>
-#   dated --list <path>
+#   dated [--all] <path>
+#   dated --interactive [--all] <path>
+#   dated --list [--all] <path>
 #
 # DEPENDENCIES
+#  - fd - faster finding files
+#  - fzf - interactive fuzzy finding
+#  - GNU utils - text processing
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
 
 function Main() {
   local cmd="interactive"
+  local all=0
 
   local others=()
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -l|--list) cmd="list" && shift ;;
+      -i|--interactive) cmd="interactive" && shift ;;
+      --all) all=1 && shift ;;
       -*|--*) echo "Unknown option $1" && exit 1 ;;
       *) others+=("$1") && shift ;;
     esac
@@ -20,8 +32,8 @@ function Main() {
   set -- "${others[@]}"
 
   case "$cmd" in
-    interactive) Interactive "$@" ;;
-    list) List "$@" ;;
+    interactive) Interactive $all "$@" ;;
+    list) List $all "$@" ;;
   esac
 }
 
@@ -36,15 +48,20 @@ function Interactive() {
 }
 
 function List() {
+  local all=$1; shift
   ListFiles "$@" \
-    | rg        '(\b|_)((19|20)[0-9]{2}(-[01][0-9](-[0-3][0-9])?)?)(\b|_)' \
     | sed -E 's/(\b|_)((19|20)[0-9]{2}(-[01][0-9](-[0-3][0-9])?)?)(\b|_)/\1<<\2>>\6/g' \
-    | awk -v OFS=$'\t' '{
+    | awk -v OFS=$'\t' -v all="$all" '{
         line = $0
+        printed = 0
         while (match($0, /<<[^>]*>>/)) {
           num = substr($0, RSTART+2, RLENGTH-4)
           $0 = substr($0, RSTART + RLENGTH)
+          printed += 1
           print num, line
+        }
+        if (all && !printed) {
+          print "????-??-??", line
         }
       }' \
     | sed -E 's/<<//g ; s/>>//g'
