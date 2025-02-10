@@ -51,7 +51,7 @@ function List() {
 }
 
 function ListFiles() {
-  fd --type file "$@"
+  fd . --type file "$@"
 }
 
 function TestFiles() {
