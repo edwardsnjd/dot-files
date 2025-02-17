@@ -20,7 +20,7 @@ Main() {
   local dir="$(dirname $path)"
   local file="$(basename $path '.md')"
 
-  local tmpdir="${TMPDIR}${dir}"
+  local tmpdir="${TMPDIR:-/tmp/}${dir}"
   local tmp="${tmpdir}/${file}.html"
 
   mkdir -p "$tmpdir"
