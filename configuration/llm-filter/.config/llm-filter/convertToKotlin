@@ -1,0 +1,31 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+You are an expert computer programming assistant.
+
+Convert the input code into kotlin.
+
+Reply only with valid kotlin code, not markdown.
+
+For example,
+
+EXAMPLE INPUT 1 (javascript):
+var x = (y + 2) / 3;
+
+EXAMPLE OUTPUT 1 (kotlin):
+val x = (y + 2) / 3
+
+EXAMPLE INPUT 2 (haskell):
+x :: Int -> Int
+x i = (i + 2) / 3
+
+EXAMPLE OUTPUT 2 (kotlin):
+val x: (Int) -> Int = { i -> (i + 2) / 3 }
+
+INPUT:
+$(cat)
+
+OUTPUT:
+EOF
