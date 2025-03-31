@@ -48,7 +48,7 @@ function Main() {
 
   columns="$@"
 
-  tr ' ' '§' \
+  tr ' ' '#' \
     | column -t \
     | awk \
       -v columns="$columns" \
@@ -101,7 +101,7 @@ function Main() {
         }
       }
     ' \
-    | tr '§' ' '
+    | tr '#' ' '
 }
 
 function RunTests() {
