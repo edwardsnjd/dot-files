@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-plot-contributors - plot count of git contributors over time
+#
+# SYNOPSIS
+#   git-plot-contributors [git log args...]
+#
+# OUTPUT
+#   Gnuplot chart
+#
+# EXAMPLES
+#   git-plot-contributors
+#   git-plot-contributors --author="edwards"
+#   git-plot-contributors -- foo.js
+#   git-plot-contributors -G 'ClassFoo'
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  git count-contributors "$@" \
+   | iconv -s -f utf8 -t ASCII//TRANSLIT \
+   | tr ' ' '-' \
+   | feedgnuplot --domain --timefmt "%Y-%m" --dataid --exit --autolegend
+}
+
+Main "$@"

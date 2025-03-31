@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-count-contributors - count git contributors over time
+#
+# SYNOPSIS
+#   git-count-contributors [git log args...]
+#
+# OUTPUT
+#   TSV row per date division
+#   <date> <tab> <contributor> <tab> <count>
+#
+#   By default, date division is YYYY-MM for authored date but `--date`
+#   and `--pretty` can be used to change those.
+#
+# EXAMPLES
+#   git-count-contributors
+#   git-count-contributors --author="edwards"
+#   git-count-contributors --date="format:%Y-%V"
+#   git-count-contributors -- foo.js
+#   git-count-contributors -G 'ClassFoo'
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  # NOTE: Supplied args can override date and pretty
+  git log --date="format:%Y-%m" --pretty="tformat:%ad	%aN" "$@" \
+   | count-uniq \
+   | awk -v OFS=$'\t' -v FS=$'\t' '{print $2, $3, $1}'
+}
+
+Main "$@"
