@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Update all installed packages to latest published versions.
+sudo apt-get update --assume-yes
+sudo apt-get upgrade --assume-yes
+guix pull
+guix upgrade
+
+# Record installed versions
+./capture

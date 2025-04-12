@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Capture the current state of installed packages.
+
+guix describe --format=channels > channels.scm
+guix package --export-manifest > packages.scm

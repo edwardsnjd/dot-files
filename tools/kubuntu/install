@@ -1,0 +1,158 @@
+#! /usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function InstallPackages() {
+  sudo apt install network-manager-openvpn
+}
+
+function InstallGuix() {
+  # [Install Guix](https://guix.gnu.org/manual/en/html_node/Installation.html)
+
+  # Enable nscd (Name Switch Service daemon):
+  sudo apt install nscd
+
+  # Get Guix
+  wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
+  chmod +x guix-install.sh
+  sudo ./guix-install.sh
+  echo "TODO: Check and run guix-install.sh"
+
+  # [Configure Guix](https://guix.gnu.org/manual/en/html_node/Application-Setup.html)
+
+  # Install locales:
+  guix install glibc-locales
+  echo 'export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale' >> $HOME/.profile
+
+  # Install certs:
+  guix install nss-certs
+  echo 'export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"' >> $HOME/.profile
+  echo 'export SSL_CERT_FILE="$SSL_CERT_DIR/ca-certificates.crt"' >> $HOME/.profile
+  echo 'export GIT_SSL_CAINFO="$SSL_CERT_FILE"' >> $HOME/.profile
+  echo 'export CURL_CA_BUNDLE="$SSL_CERT_FILE"' >> $HOME/.profile
+
+  # Add personal Guix channel:
+  cat <<-EOF > ~/.config/guix/channels.scm
+	(cons (channel
+	        (name 'edwardsnjd-guix-channel)
+	        (url "https://github.com/edwardsnjd/guix-channel.git")
+	        (branch "main"))
+	      %default-channels)
+	EOF
+
+  # Restore packages list
+  guix package -m packages.scm
+}
+
+# Install random stuff:
+function Install Ollama() {
+  curl -s https://ollama.com/install.sh > ollama-install.sh
+  echo "TODO: Check and run ollama-install.sh"
+}
+
+function InstallDropbox() {
+  ## Dropbox (see [installation page](https://www.dropbox.com/install-linux)):
+  curl --silent --location \
+   https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2024.04.17_amd64.deb > dropbox_2024.04.17_amd64.deb
+  sudo apt install dropbox_2024.04.17_amd64.deb
+  # Then when started, allow installation of the daemon
+}
+
+function EnableUfw() {
+  # UFW comes pre-installed but disabled with Kubuntu
+
+  # Service
+  sudo systemctl status ufw
+  sudo systemctl enable ufw
+  sudo systemctl start ufw
+  sudo systemctl status ufw
+
+  # UFW itself
+  sudo ufw status
+  sudo ufw enable
+  sudo ufw status
+}
+
+function InstallZeroTier() {
+  curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import
+  if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
+
+  echo "TODO: Manually register and accept to network... then check"
+
+  sudo zerotier-cli info
+  sudo zerotier-cli listnetworks
+  ip address
+}
+
+function InstallSSH() {
+  sudo apt install openssh-server
+
+  cat <<-EOF
+	# Set the following:
+	#  PubkeyAuthentication yes
+	#  PasswordAuthentication no
+	#  PermitRootLogin no
+	EOF
+  sudo vim /etc/ssh/sshd_config
+
+  sudo systemctl start ssh
+  sudo systemctl status ssh
+
+  echo "TODO: Approve SSH keys"
+}
+
+# DEPRECATED: Use podman instead
+function InstallDocker() {
+  ## Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  ## Add the repository to Apt sources:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+  ## Install
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  ## Check
+  sudo docker run --rm hello-world
+
+  ## Add current user to groups to avoid need for sudo
+  sudo groupadd docker
+  sudo usermod -aG docker $USER
+  newgrp docker
+
+  ## Check
+  docker run hello-world
+}
+
+function InstallPodman() {
+  sudo apt update
+  sudo apt install podman
+}
+
+function InstallJuiceFS() {
+  sudo add-apt-repository ppa:juicefs/ppa
+  sudo apt-get update
+  sudo apt-get install juicefs
+}
+
+InstallPackages
+InstallGuix
+Install Ollama
+InstallDropbox
+EnableUfw
+InstallZeroTier
+InstallSSH
+# InstallDocker
+InstallPodman
+InstallJuiceFS
