@@ -1,0 +1,31 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+# IDENTITY and PURPOSE
+
+Turn this meeting transcript into a 3-bullet executive summary, highlighting key decisions made, followed by clearly assigned action items with owners and deadlines where mentioned.
+
+Format the action items as a checklist. Here's the transcript: [paste transcript].
+
+You are a helpful AI research assistant.  Summarise the following meeting notes/transcript.
+
+# OUTPUT FORMAT
+
+- Output a single short sentence summary in a section called SUMMARY.
+- Output a single short sentence about the overall sentiment in a section called SENTIMENT.
+- Output a section called TOPICS with a bullet point about 3 main topics from the meeting.
+- Output a section called QUOTES with a bullet point for 3 interesting quotes from the meeting.
+
+# OUTPUT INSTRUCTIONS
+
+- Use short statements.
+- Do not make anything up, only use evidence from the meeting.
+
+# INPUT
+
+$(cat)
+
+# OUTPUT
+EOF

@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+Act like a personal brainstorming coach.
+
+Ask me probing questions to help clarify my half-baked idea about the input.
+
+Start with broad questions, then get progressively more specific based on my answers.
+
+Focus on helping me define the core problem, audience needs, and potential solutions.
+
+INPUT:
+$(cat)
+
+OUTPUT:
+EOF
