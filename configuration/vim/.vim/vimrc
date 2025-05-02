@@ -362,6 +362,11 @@ noremap <S-F10> <Plug>(SyntaxexplorerStackAtCursor)
 nnoremap  <F12> <Plug>(SyntaxexplorerResync)
 inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 
+" - Git gutter
+" Disable by default and toggle via mapping
+let g:gitgutter_enabled = 0
+noremap <leader>gt :GitGutterBufferToggle<CR>
+
 " Plugins (managed by `vim-plugin`)
 " - Bootstrap if not installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
