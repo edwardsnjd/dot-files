@@ -367,6 +367,30 @@ inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 let g:gitgutter_enabled = 0
 noremap <leader>gt :GitGutterBufferToggle<CR>
 
+" - Copilot
+" Disable by default and toggle via mapping
+let g:copilot_filetypes = { '*': v:false }
+function! <SID>CopilotToggle()
+  let b:copilot_enabled = getbufvar(bufnr('%'), 'copilot_enabled', 0) ? v:false : v:true
+  echo b:copilot_enabled ? 'Copilot enabled' : 'Copilot disabled'
+endfunction
+noremap <Space>zt <Cmd>call <SID>CopilotToggle()<CR>
+
+" Quality of life copilot keymaps
+inoremap <C-l> <Cmd>call copilot#Next()<CR>
+inoremap <C-b> <Plug>(copilot-accept-word)
+
+" Copilot airline indicator (beware cloud!)
+function! <SID>AirlineInit()
+  function! GetCopilotStatus()
+    return getbufvar(bufnr('%'), 'copilot_enabled', 0) != 0 ? 'COPILOT' : ''
+  endfunction
+  call airline#parts#define_function('copilot', 'GetCopilotStatus')
+  call airline#parts#define_accent('copilot', 'red')
+  let g:airline_section_a = airline#section#create(['mode', 'crypt', 'paste', 'spell', 'iminsert', 'copilot'])
+endfunction
+autocmd User AirlineAfterInit call <SID>AirlineInit()
+
 " Plugins (managed by `vim-plugin`)
 " - Bootstrap if not installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -401,6 +425,7 @@ Plug 'https://github.com/mbbill/undotree.git'
 Plug 'https://github.com/edwardsnjd/vim-lsp', { 'branch': 'before-init' }
 Plug 'https://github.com/elkasztano/nushell-syntax-vim'
 Plug 'https://github.com/justin2004/vim-apl'
+Plug 'https://github.com/github/copilot.vim'
 call plug#end()
 
 " enable the theme
