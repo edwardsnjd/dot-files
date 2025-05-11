@@ -18,9 +18,6 @@ esac
 # Prompt (env)
 [ -f $XDG_CONFIG_HOME/bash/bash_prompt ] && source $XDG_CONFIG_HOME/bash/bash_prompt
 
-# gpg agent autocompletion
-[ -f $XDG_CONFIG_HOME/bash/bash_gpg ] && source $XDG_CONFIG_HOME/bash/bash_gpg
-
 # bash config
 shopt -s autocd     # directory path is treated as a `cd`
 shopt -s cdspell    # correct minor errors in directory names for `cd`
