@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+guix shell speedtest-cli -- speedtest-cli --secure --simple "$@"
