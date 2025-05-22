@@ -48,7 +48,7 @@ function InstallGuix() {
 }
 
 # Install random stuff:
-function Install Ollama() {
+function InstallOllama() {
   curl -s https://ollama.com/install.sh > ollama-install.sh
   echo "TODO: Check and run ollama-install.sh"
 }
@@ -148,7 +148,7 @@ function InstallJuiceFS() {
 
 InstallPackages
 InstallGuix
-Install Ollama
+InstallOllama
 InstallDropbox
 EnableUfw
 InstallZeroTier
