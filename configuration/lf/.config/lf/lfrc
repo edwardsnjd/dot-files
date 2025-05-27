@@ -77,6 +77,23 @@ cmd fzf_jump ${{
 }}
 map <c-p> :fzf_jump
 
+# RG
+cmd rg_jump ${{
+    res="$(
+        rg . --line-number --color=always \
+        | fzf --reverse --delimiter ':' --accept-nth '1' --header='Jump to content'
+    )"
+    if [ -d "$res" ] ; then
+        cmd="cd"
+    elif [ -f "$res" ] ; then
+        cmd="select"
+    else
+        exit 0
+    fi
+    lf -remote "send $id $cmd \"$res\""
+}}
+map <c-f> :rg_jump
+
 # Symlinks
 cmd link %{{
     # lf `files` file contains lines: <mode>, <paths>+
