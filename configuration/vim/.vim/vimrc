@@ -362,6 +362,21 @@ noremap <S-F10> <Plug>(SyntaxexplorerStackAtCursor)
 nnoremap  <F12> <Plug>(SyntaxexplorerResync)
 inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 
+" - Quickfix list
+" Toggle quickfix list
+noremap <leader>lt :call <SID>ToggleQuickfixWindow()<CR>
+function! <SID>ToggleQuickfixWindow()
+  if <SID>QuickfixWindowNumber() > 0
+    cclose
+  else
+    copen
+  endif
+endfunction
+function! <SID>QuickfixWindowNumber()
+  let wins = filter(getwininfo(), 'v:val.quickfix && !v:val.loclist')
+  return empty(wins) ? 0 : wins[0].winnr
+endfunction
+
 " - Git gutter
 " Disable by default and toggle via mapping
 let g:gitgutter_enabled = 0
