@@ -461,6 +461,9 @@ function! <SID>ConfigureLsp() abort
   let g:lsp_inlay_hints_enabled = 1
   let g:lsp_inlay_hints_mode = { 'normal': ['!curline'] }
 
+  " Allow full width popups
+  let g:lsp_float_max_width = 0
+
   " Tweak preview
   let g:lsp_peek_alignment = "top"
 endfunction
