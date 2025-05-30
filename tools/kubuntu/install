@@ -146,6 +146,22 @@ function InstallJuiceFS() {
   sudo apt-get install juicefs
 }
 
+function InstallUiua() {
+  # HACK: Manually download and link to local bin
+  mkdir -p downloads
+  curl --silent --location \
+    "https://github.com/uiua-lang/uiua/releases/download/0.16.2/uiua-bin-x86_64-unknown-linux-gnu.zip" \
+    | gunzip > downloads/uiua
+  chmod +x downloads/uiua
+  mv downloads/uiua ~/.local/bin
+}
+
+function InstallRust() {
+  sudo apt-get install rustup
+  rustup default stable
+  rustup component add rust-analyzer
+}
+
 InstallPackages
 InstallGuix
 InstallOllama
@@ -156,3 +172,5 @@ InstallSSH
 # InstallDocker
 InstallPodman
 InstallJuiceFS
+# InstallUiua
+# InstallRust
