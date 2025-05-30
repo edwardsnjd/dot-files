@@ -3,4 +3,9 @@
 # Capture the current state of installed packages.
 
 guix describe --format=channels > channels.scm
-guix package --export-manifest > packages.scm
+guix package --export-manifest | {
+  # Pass through until the blank line
+  sed -E '/^$/q'
+  # Process the s-expression
+  ./sort-packages.scm
+} > packages.scm
