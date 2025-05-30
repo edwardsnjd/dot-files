@@ -1,6 +1,6 @@
 [Appearance]
 ColorScheme=night-owl
-Font=Hack,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+Font=Hack,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 LineSpacing=3
 WordMode=false
 
@@ -13,7 +13,7 @@ UseCustomCursorColor=true
 Name=night-owl
 Parent=FALLBACK/
 TerminalCenter=false
-TerminalMargin=10
+TerminalMargin=15
 
 [Scrolling]
 HistoryMode=1
