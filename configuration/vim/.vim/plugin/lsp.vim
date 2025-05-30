@@ -157,7 +157,7 @@ endif
 if executable('uiua')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'uiua-lsp',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'uiua', 'lsp']},
-        \ 'whitelist': ['ua']
+        \ 'cmd': {server_info->['uiua', 'lsp']},
+        \ 'whitelist': ['uiua']
         \ })
 endif
