@@ -5,8 +5,8 @@ MIRROR_URL="https://codeberg.org/guix/guix-mirror"
 # Update all installed packages to latest published versions.
 sudo apt-get update --assume-yes
 sudo apt-get upgrade --assume-yes
-guix pull || guix pull --url="$MIRROR_URL"
-guix upgrade || guix upgrade --url="$MIRROR_URL"
+guix pull --url="$MIRROR_URL"
+guix upgrade
 
 # Record installed versions
 ./capture
