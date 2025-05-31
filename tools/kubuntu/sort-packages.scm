@@ -1,22 +1,28 @@
 #!/usr/bin/env -S guile --no-auto-compile -e main -s
 !#
 (use-modules (ice-9 match)
-             (ice-9 pretty-print)
-             (srfi srfi-1))
+             (ice-9 pretty-print))
 
-(define (sort-manifest in-port out-port)
-  (let loop ((expr (read in-port)))
+(define (sort-manifest)
+  (let loop ((expr (read)))
     (unless (eof-object? expr)
-      (match expr
-        ;; Match (specifications->manifest (list ...))
-        (('specifications->manifest ('list . packages))
-         (let ((sorted (sort packages string<?)))
-           (pretty-print `(specifications->manifest
-                            (list ,@sorted))
-                         out-port)))
-        ;; Fallback: print other expressions as-is
-        (_ (pretty-print expr out-port)))
-      (loop (read in-port)))))
+      (pretty-print
+        (match expr
+               ;; Sort the manifest packages
+               (('specifications->manifest expr)
+                  `(specifications->manifest
+                     (list ,@(sort-list expr))))
+               ;; Fallback: print other expressions as-is
+               (_ expr)))
+      (loop (read)))))
 
-(define (main args)
-  (sort-manifest (current-input-port) (current-output-port)))
+(define (sort-list expr)
+  (let ((expr-vals
+          (match expr
+                 (('quote vals) vals)
+                 (('quasiquote vals) vals)
+                 (('list . vals) vals)
+                 (_ (error "Unrecognized list expression:" expr)))))
+    (sort expr-vals string<?)))
+
+(define (main args) (sort-manifest))
