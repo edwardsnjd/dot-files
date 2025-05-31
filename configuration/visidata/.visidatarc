@@ -85,3 +85,13 @@ BaseSheet.addCommand('', 'sysedit-screenshot', 't = TextSheet(source=screenshot(
 GraphSheet.bindkey('gz"', 'open-screenshot')
 GraphSheet.bindkey('gzY', 'syscopy-screenshot')
 GraphSheet.bindkey('g^O', 'sysedit-screenshot')
+
+# See https://github.com/saulpw/visidata/discussions/1844
+@Canvas.api
+def toggle_plot_asterisk(canvas: Canvas) -> None:
+    if canvas.options.disp_canvas_charset == ' \u25cf':
+        canvas.options.disp_canvas_charset = None
+    else:
+        canvas.options.disp_canvas_charset = ' \u25cf'
+
+Canvas.addCommand('*', 'toggle-plot-asterisk', 'toggle_plot_asterisk()') 
