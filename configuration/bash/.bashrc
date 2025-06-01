@@ -46,7 +46,9 @@ fi
 # End brew bash completion
 
 # fzf autocompletion
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+if [ -f ~/.fzf.bash ]; then source ~/.fzf.bash
+elif command -v fzf >/dev/null 2>&1; then eval "$(fzf --bash)"
+fi
 
 # NVM (+ ~100ms)
 export NVM_DIR="$HOME/.nvm"
