@@ -162,6 +162,16 @@ function InstallRust() {
   rustup component add rust-analyzer
 }
 
+InstallVirtManager() {
+  sudo apt install virt-manager qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
+  sudo adduser $USER libvirt
+  sudo systemctl enable --now libvirtd
+  sudo systemctl status libvirtd
+  # Disable QEMU SELinux so we can access default storage pool location /var/lib/libvirt/images/
+  sudo sed --in-place 's/#security_driver = "selinux"/security_driver = "none"/' /etc/libvirt/qemu.conf
+  sudo systemctl restart libvirtd
+}
+
 InstallPackages
 InstallGuix
 InstallOllama
@@ -174,3 +184,4 @@ InstallPodman
 InstallJuiceFS
 # InstallUiua
 # InstallRust
+InstallVirtManager
