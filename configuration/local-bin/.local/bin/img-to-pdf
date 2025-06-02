@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Usage: img-to-pdf IMG
+#
+# Build a pdf version with OCRd text for the given image.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+tesseract "${1:--}" - pdf

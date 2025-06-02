@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Usage: img-to-text IMG
+#
+# OCR text for the given image.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local input="${1:--}"
+
+  # Copy input to tempfile and clean up on exit
+  local tempfile="$(mktemp)"
+  trap "rm -f \"$tempfile\"" EXIT
+  cat "$input" > "$tempfile"
+
+  local rotation="$(DetectRotationNeeded "$tempfile")"
+  Rotated "$tempfile" "$rotation" | tesseract - -
+}
+
+function Rotated() {
+  [ "$2" -eq "0" ] && cat "$1" || convert -rotate "$2" "$1" -
+}
+
+function DetectRotationNeeded() {
+  tesseract "$1" - --psm 0 2>/dev/null | awk '/Rotate/ { print $2 }'
+}
+
+Main "$@"
