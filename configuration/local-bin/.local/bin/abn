@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Usage: abn ABN
+#
+# Plan text rendering of info from business.gov.au
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Abn() {
+  local abn="$1"
+
+  local url="https://abr.business.gov.au/ABN/View?id=${abn}"
+  curl "$url" | pandoc -f html -t plain
+}
+
+Abn "$@"
