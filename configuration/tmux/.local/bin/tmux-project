@@ -35,35 +35,9 @@ function Main() {
   local project="$(SelectProject "$baseDir" "$@")"
 
   if [[ -n "${project}" ]]; then
-    EnsureSession "$baseDir" "$project"
-    AttachSession "$project"
+    tmux-ensure "$project" "$baseDir/$project"
+    tmux-join "$project"
   fi
-}
-
-function EnsureSession() {
-  local baseDir="$1"
-  local project="$2"
-
-  local projectDir="$baseDir/$project"
-  local initFile="$projectDir/.tmux-init.sh"
-
-  tmux has-session -t "=$project" &> /dev/null || {
-    tmux new-session -d \
-      -s "$project" \
-      -c "$projectDir"
-
-    if [[ -x "$initFile" ]]; then
-      ( cd "$projectDir" && "$initFile" "$project" )
-    fi
-  }
-}
-
-function AttachSession() {
-  local project="$1"
-
-  [[ -z "${TMUX:-}" ]] \
-    && tmux attach-session -t "${project}" \
-    || tmux switch-client -t "${project}"
 }
 
 function SelectProject() {

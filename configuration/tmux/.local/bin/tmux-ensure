@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tmux-ensure - ensure the given session exists
+#
+# SYNOPSIS
+#   tmux-ensure project [projectdir]
+#
+# DEPENDENCIES
+#   - tmux - manage sessions
+
+set -o nounset
+set -o errexit
+
+function EnsureSession() {
+  local project="${1:-Must supply session name}"
+  local projectDir="${2:-~}"
+
+  local initFile="$projectDir/.tmux-init.sh"
+
+  tmux has-session -t "=$project" &> /dev/null || {
+    tmux new-session -d \
+      -s "$project" \
+      -c "$projectDir"
+
+    if [[ -x "$initFile" ]]; then
+      ( cd "$projectDir" && "$initFile" "$project" )
+    fi
+  }
+}
+
+EnsureSession "$@"
