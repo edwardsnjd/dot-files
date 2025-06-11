@@ -1,0 +1,32 @@
+#! /usr/bin/env bash
+
+# Connect to shared global tmux session over ssh
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -o xtrace
+
+SESSION_NAME="Shared 🏡"
+
+SharedTmux() {
+  local remote=1
+  local otherArgs=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --local) remote=0 && shift ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+  set -- "${otherArgs[@]}" # restore positional parameters
+
+  if [ $remote -eq 0 ]; then
+    tmux-ensure "$SESSION_NAME"
+    tmux-join "$SESSION_NAME"
+  else
+    local server="${TMUX_SHARED_SERVER:?Missing TMUX_SHARED_SERVER environment variable}"
+    ssh "$server" tmux-shared --local
+  fi
+}
+
+SharedTmux "$@"
