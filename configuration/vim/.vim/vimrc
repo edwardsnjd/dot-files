@@ -363,8 +363,10 @@ nnoremap  <F12> <Plug>(SyntaxexplorerResync)
 inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 
 " - Quickfix list
-" Toggle quickfix list
-noremap <leader>qt :call <SID>ToggleQuickfixWindow()<CR>
+" Toggle quickfix list (unimpaired-like keybindings)
+noremap [oq :copen<CR>
+noremap ]oq :cclose<CR>
+noremap yoq :call <SID>ToggleQuickfixWindow()<CR>
 function! <SID>ToggleQuickfixWindow()
   if <SID>QuickfixWindowNumber() > 0
     cclose
