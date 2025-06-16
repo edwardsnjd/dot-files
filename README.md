@@ -14,7 +14,8 @@ Config:
 Tools:
 
 - [Homebrew](https://brew.sh/) (for MacOS packages)
-- [apt](https://en.wikipedia.org/wiki/APT_(software)) (for Linux packages)
+- [apt](https://en.wikipedia.org/wiki/APT_(software)) (for Linux packages on WSL)
+- [Guix](https://en.wikipedia.org/wiki/GNU_Guix) (for Linux packages on Kubuntu)
 - [Chocolatey](https://chocolatey.org/) (for Windows packages)
 
 ## Structure
@@ -25,7 +26,8 @@ Tools:
     ├── apt/            # 📦 Linux tooling (WSL)
     ├── chocolatey/     # 📦 Windows tooling
     ├── homebrew/       # 📦 MacOS tooling (home)
-    └── homebrew-work/  # 📦 MacOS tooling (work)
+    ├── homebrew-work/  # 📦 MacOS tooling (work)
+    └── kubuntu/        # 📦 Linux tooling (Kubuntu)
 ```
 
 ## Usage
@@ -42,14 +44,17 @@ Tools:
     │   └── install.ps1
     ├── homebrew/
     │   └── install.sh
-    └── homebrew-work/
-        └── install.sh
+    ├── homebrew-work/
+    │   └── install.sh
+    └── kubuntu/
+        └── install
     ```
 
 2. Pick an install script for the config:
 
     ```
     configuration/
+    ├── kubuntu
     ├── osx.sh
     ├── ubuntu.sh
     └── windows.sh
@@ -67,14 +72,17 @@ Tools:
     │   └── upgrade.ps1
     ├── homebrew/
     │   └── upgrade.sh
-    └── homebrew-work/
-        └── upgrade.sh
+    ├── homebrew-work/
+    │   └── upgrade.sh
+    └── kubuntu/
+        └── upgrade
     ```
 
 2. Run the appropriate install script again:
 
     ```
     configuration/
+    ├── kubuntu
     ├── osx.sh
     ├── ubuntu.sh
     └── windows.sh
