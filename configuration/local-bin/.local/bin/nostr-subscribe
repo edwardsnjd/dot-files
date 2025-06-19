@@ -1,0 +1,26 @@
+#! /usr/bin/env node
+
+// wss://relay.damus.io
+
+const WebSocket = require('ws')
+
+function printEvents(relay) {
+  const ws = new WebSocket(relay);
+
+  ws.on('open', () => { ws.send(JSON.stringify(["REQ", "subid1", { kinds: [1] }])) })
+  ws.on('error', (err) => { console.error("error", err) })
+  ws.on('message', (data) => {
+    const [type, subid, event] = JSON.parse(data)
+    console.log(`[${type}]`, event)
+  })
+}
+
+if (require.main === module) {
+  if (process.argv.length != 3) {
+    console.error("Usage: <script> RELAY")
+    process.exit(1)
+  }
+
+  const relay = process.argv[2]
+  printEvents(relay)
+}
