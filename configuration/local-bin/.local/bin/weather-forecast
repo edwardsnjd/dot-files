@@ -3,10 +3,10 @@
 # NAME
 #   weather-forecast - display current weather forecast
 
-
 # Find current weather forecast
 function Main() {
-  curl wttr.in?pF
+  local query="${1:-?pF}"
+  curl "wttr.in${query}"
 }
 
 Main "$@"
