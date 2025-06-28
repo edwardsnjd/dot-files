@@ -1,3 +1,29 @@
 #!/usr/bin/env bash
 
-curl --silent "dict://dict.org/define:$1"
+curl --silent "dict://dict.org/define:$1:*" | sed -nE '
+# 552 No match
+/^552\s+.*/ {
+  s//No matches./p
+}
+
+# 150: Number of definitions line
+/^150\s+(.*)/ {
+  s//\1\n/p
+}
+
+# 151: Definition text continues until "."
+/^151\s+"([^"]+)"\s+([^ ]+)\s+"([^"]+)"/ {
+  s//\3 [\2]:\n/p
+  # Print indented lines until "."
+  : definitionLine
+  n
+  /^\./ ! {
+    s/.*/  &/p
+    b definitionLine
+  }
+  # End of definition
+  /^\./ {
+    s///p
+  }
+}
+'
