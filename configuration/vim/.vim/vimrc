@@ -367,7 +367,6 @@ inoremap  <F12> <C-o><Plug>(SyntaxexplorerResync)
 " Toggle quickfix list (unimpaired-like keybindings)
 noremap [oq :copen<CR>
 noremap ]oq :cclose<CR>
-noremap yoq :call <SID>ToggleQuickfixWindow()<CR>
 function! <SID>ToggleQuickfixWindow()
   if <SID>QuickfixWindowNumber() > 0
     cclose
