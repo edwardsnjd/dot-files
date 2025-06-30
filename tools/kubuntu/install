@@ -157,7 +157,7 @@ function InstallUiua() {
 }
 
 function InstallRust() {
-  sudo apt-get install rustup
+  sudo apt-get install rustup build-essential
   rustup default stable
   rustup component add rust-analyzer
 }
