@@ -466,7 +466,9 @@ function! <SID>ConfigureLsp() abort
   let g:lsp_inlay_hints_mode = { 'normal': ['!curline'] }
 
   " Allow full width popups
-  let g:lsp_float_max_width = 0
+  let ninety5pct = &columns * 95 / 100
+  let maxWidth = 100
+  let g:lsp_float_max_width = ninety5pct < maxWidth ? ninety5pct: maxWidth
 
   " Tweak preview
   let g:lsp_peek_alignment = "top"
