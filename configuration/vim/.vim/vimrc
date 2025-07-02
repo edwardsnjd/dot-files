@@ -468,6 +468,7 @@ function! <SID>ConfigureLsp() abort
   let ninety5pct = &columns * 95 / 100
   let maxWidth = 100
   let g:lsp_float_max_width = ninety5pct < maxWidth ? ninety5pct: maxWidth
+  let g:lsp_preview_float = 0
 
   " Tweak preview
   let g:lsp_peek_alignment = "top"
