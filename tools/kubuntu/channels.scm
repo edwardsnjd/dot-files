@@ -9,7 +9,7 @@
         (url "https://codeberg.org/guix/guix-mirror")
         (branch "master")
         (commit
-          "22bda41fbf2c716a7c8b9fd4730c7856a40802bf")
+          "502ad9da2a7da064aef6a6dcdada3c92ae90aa72")
         (introduction
           (make-channel-introduction
             "9edb3f66fd807b096b48283debdcddccfea34bad"
