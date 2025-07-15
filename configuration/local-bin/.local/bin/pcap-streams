@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+# NAME
+#   pcap-streams - tool for exploring TCP streams in packet captures
+#
+# SYNOPSIS
+#   pcap-streams PCAP_FILE COMMAND [OPTIONS]
+#
+# OPTIONS
+#   PCAP_FILE - The path to the packet capture file ("-" for stdin)
+#   COMMAND - One of the following:
+#      interactive [FILTER] - Interactively browse TCP streams
+#      list [FILTER]        - List all TCP streams matching the filter
+#      show STREAM_NUMBER   - Show the details of a specific TCP stream
+#
+# DEPENDENCIES
+#   - tshark: part of the Wireshark suite, used for packet analysis
+#   - fzf: a command-line fuzzy finder for interactive selection
+#
+# EXAMPLES
+#   Explore all TCP streams:
+#     pcap foo.pcap
+#     pcap foo.pcap interactive
+#     pcap foo.pcap interactive "tcp"
+#
+#   List all HTTP streams:
+#     pcap foo.pcap list "tcp and (http.request or http.response)"
+#
+#   Show a stream:
+#     pcap foo.pcap show 0
+#     pcap foo.pcap show 2
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local pcapFile="$(ensurePcapFile "$@")"
+  shift
+
+  local cmd="interactive"
+  local otherArgs=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      interactive) cmd="interactive" && shift ;;
+      list) cmd="list" && shift ;;
+      show) cmd="show" && shift ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+  set -- "${otherArgs[@]}" # restore positional parameters
+
+  case "$cmd" in
+    interactive) interactive "$pcapFile" "$@" ;;
+    list) listStreams "$pcapFile" "$@" ;;
+    show) showTcpStream "$pcapFile" "$@" ;;
+    *) echo "Unknown command: $cmd" > /dev/stderr && exit 1 ;;
+  esac
+}
+
+function interactive() {
+  local pcapFile="$(ensurePcapFile "$@")"
+  local filter=${2:-"tcp"}
+
+  local show="$0 $pcapFile show {}"
+
+  listStreams "$@" \
+    | fzf \
+      --preview "$show" \
+      --preview-window="right:80%" \
+      --prompt="Stream> " \
+      --bind="enter:execute($show | less -+F +g)"
+}
+
+function listStreams() {
+  local pcapFile="$(ensurePcapFile "$@")"
+  local filter=${2:-"tcp"}
+
+  tshark -2R "${filter}" -T fields -e tcp.stream -r "$pcapFile" \
+    | sort -n \
+    | uniq
+}
+
+function showTcpStream() {
+  local pcapFile="${1:?Pcap file is required}"
+  local streamNumber="${2:?Stream number is required}"
+
+  tshark -r "$pcapFile" -z "follow,tcp,ascii,$streamNumber" -q
+}
+
+# Always create and delete a temporary file for stdin handling
+tempFile="$(mktemp /tmp/pcap-streams.XXXXXX.pcap)"
+trap 'rm -f "$tempFile"' EXIT
+
+function ensurePcapFile() {
+  local pcapFile="${1:-"-"}"
+
+  if [ "$pcapFile" = "-" ]; then
+    cat - > "${tempFile}"
+    pcapFile="${tempFile}"
+  fi
+
+  echo $pcapFile
+}
+
+Main "$@"
