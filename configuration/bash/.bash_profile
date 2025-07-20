@@ -145,6 +145,9 @@ HOMEBREW_BIN="${HOMEBREW_PREFIX}/bin/brew"
 # Include private bin if it exists
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
+# Include cargo bin if it exists
+[ -d "/home/nick/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
+
 # --- Source other files ---
 
 # Include local config if available
