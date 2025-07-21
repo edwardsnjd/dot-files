@@ -184,6 +184,10 @@ InstallLlmPackages() {
   llm install llm-ollama
 }
 
+InstallMosh() {
+  sudo apt-get install mosh
+}
+
 InstallPackages
 InstallGuix
 InstallOllama
@@ -198,3 +202,4 @@ InstallJuiceFS
 # InstallRust
 InstallVirtManager
 InstallUv
+InstallMosh
