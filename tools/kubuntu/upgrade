@@ -9,6 +9,10 @@ guix pull --url="$MIRROR_URL"
 guix upgrade
 rustup upgrade
 
+# Update UV (via cargo)
+cargo install --git https://github.com/astral-sh/uv uv
+#uv self update
+
 # Upgrade ollama by reinstalling
 # https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-upgrade-ollama
 # curl -fsSL https://ollama.com/install.sh | sh

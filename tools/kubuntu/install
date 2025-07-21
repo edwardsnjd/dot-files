@@ -172,6 +172,18 @@ InstallVirtManager() {
   sudo systemctl restart libvirtd
 }
 
+InstallUv() {
+  cargo install --git https://github.com/astral-sh/uv uv
+}
+
+InstallUvPackages() {
+  uv tool install llm
+}
+
+InstallLlmPackages() {
+  llm install llm-ollama
+}
+
 InstallPackages
 InstallGuix
 InstallOllama
@@ -185,3 +197,4 @@ InstallJuiceFS
 # InstallUiua
 # InstallRust
 InstallVirtManager
+InstallUv
