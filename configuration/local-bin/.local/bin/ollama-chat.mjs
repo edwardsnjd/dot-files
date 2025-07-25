@@ -5,6 +5,8 @@ import { createInterface } from 'readline'
 const OLLAMA_HOST = 'http://127.0.0.1:11434'
 const END_OF_INPUT_MARKER = '.'
 
+const DEFAULT_MODEL = 'llama3.2'
+
 // OLLAMA: Requests
 
 const buildChat = (model, messages = [], format = '', options = {}) => ({
@@ -79,10 +81,10 @@ async function* readLines(body) {
 
 // APP
 
-async function start() {
-  let chat = buildChat('llama3.2')
+async function start(model) {
+  let chat = buildChat(model)
 
-  const resetChat = () => { chat = buildChat('llama3.2') }
+  const resetChat = () => { chat = buildChat(model) }
 
   const handleUserInput = async (userContent) => {
     chat = appendUserMessage(chat, userContent)
@@ -139,4 +141,7 @@ async function start() {
   }
 }
 
-(async function() { await start() })()
+(async function() {
+  const model = process.env.MODEL || DEFAULT_MODEL
+  await start(model)
+})()
