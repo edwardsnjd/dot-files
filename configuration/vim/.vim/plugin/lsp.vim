@@ -171,3 +171,11 @@ if executable('ccls')
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
 endif
+
+if executable('openscad-lsp')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'openscad-lsp',
+      \ 'cmd': {server_info->['openscad-lsp', '--stdio']},
+      \ 'whitelist': ['openscad'],
+      \ })
+endif
