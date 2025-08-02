@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# NAME
+#   partition - partition incoming lines into multiple output files
+#
+# SYNOPSIS
+#   input | partition SEPARATOR
+#   partition SEPARATOR < input
+#
+# OUTPUT
+#   Appends input to output files separated by given pattern:
+#     "output_{i}"
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+awk -v separator="${1:?Must supply separator}" '
+  BEGIN { i = 0 }
+  $0 ~ separator { i++ }
+  { print >> ("output_" i) }
+'
