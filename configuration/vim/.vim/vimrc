@@ -24,6 +24,7 @@ set lazyredraw          " Speed up macro playback by leaving screen
 set hlsearch            " Highlight all search results
 set smartcase           " Enable smart-case search
 set ignorecase          " Always case-insensitive
+set incsearch           " Start searching as typing
 
 " Tabs
 set tabstop=2           " Size of tab in spaces
@@ -67,7 +68,7 @@ set nojoinspaces        " Don't add double space after end of sentence when join
 set formatoptions+=j    " Remove comment leader when joining lines
 
 " Show more context
-set scrolloff=4         " Try to show some context at top/bottom of screen
+set scrolloff=0         " Skip top/bottom context so it's easy to align things
 set sidescrolloff=4     " Try to show some context at left/right of screen
 
 " Enable mouse
