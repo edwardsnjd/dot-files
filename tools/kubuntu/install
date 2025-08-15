@@ -188,6 +188,14 @@ InstallMosh() {
   sudo apt-get install mosh
 }
 
+InstallNoMachine() {
+  curl --silent --location \
+    https://web9001.nomachine.com/download/9.1/Linux/nomachine_9.1.24_6_amd64.deb \
+    > nomachine.deb
+  sudo dpkg --install nomachine.deb
+  rm nomachine.deb
+}
+
 InstallPackages
 InstallGuix
 InstallOllama
@@ -203,3 +211,4 @@ InstallJuiceFS
 InstallVirtManager
 InstallUv
 InstallMosh
+InstallNoMachine
