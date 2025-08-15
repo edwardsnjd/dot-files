@@ -104,7 +104,6 @@ function InstallSSH() {
   echo "TODO: Approve SSH keys"
 }
 
-# DEPRECATED: Use podman instead
 function InstallDocker() {
   ## Add Docker's official GPG key:
   sudo apt-get update
@@ -203,7 +202,7 @@ InstallDropbox
 EnableUfw
 InstallZeroTier
 InstallSSH
-# InstallDocker
+InstallDocker
 InstallPodman
 InstallJuiceFS
 # InstallUiua
