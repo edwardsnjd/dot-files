@@ -195,6 +195,16 @@ InstallNoMachine() {
   rm nomachine.deb
 }
 
+InstallNodeJS() {
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  node -v
+}
+
+InstallTypescriptLsp() {
+  npm install --global typescript typescript-language-server
+  typescript-language-server --help
+}
+
 InstallPackages
 InstallGuix
 InstallOllama
@@ -211,3 +221,5 @@ InstallVirtManager
 InstallUv
 InstallMosh
 InstallNoMachine
+InstallNodeJS
+InstallTypescriptLsp

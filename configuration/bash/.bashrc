@@ -51,7 +51,7 @@ elif command -v fzf >/dev/null 2>&1; then eval "$(fzf --bash)"
 fi
 
 # NVM (+ ~100ms)
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 [ -f "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" --no-use
 [ -f "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
 # End NVM
