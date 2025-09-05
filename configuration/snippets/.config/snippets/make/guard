@@ -1,0 +1,9 @@
+# Checks that an environment variable is set
+guard-%:
+	@if [ "${${*}}" = "" ]; then \
+		echo "Environment variable $* not set"; \
+		exit 1; \
+	fi
+
+myrule: guard-MY_ENV_VAR
+	@echo "MY_ENV_VAR is $${MY_ENV_VAR}"

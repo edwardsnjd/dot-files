@@ -1,0 +1,4 @@
+ifeq ($(origin MY_ENV_VAR),undefined)
+$(error MY_ENV_VAR is not set)
+endif
+
