@@ -7,7 +7,6 @@ import * as path from 'path'
 const OLLAMA_HOST = 'http://127.0.0.1:11434'
 const DEFAULT_MODEL = 'llama3.2'
 
-const END_OF_INPUT_MARKER = '.'
 const CLEAR_COMMAND = '/clear'
 const DUMP_COMMAND = '/dump'
 const FILE_COMMAND = '/file '
@@ -157,7 +156,7 @@ async function start(model) {
     const images = []
     while (true) {
       const line = await prompt('')
-      if (line == END_OF_INPUT_MARKER) break
+      if (line === '') break
       if (line.startsWith(FILE_COMMAND)) {
         const filePath = line.substring(FILE_COMMAND.length).trim()
         lines.push(filePath)
