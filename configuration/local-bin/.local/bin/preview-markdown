@@ -28,6 +28,7 @@ Main() {
     --mathjax \
     --output "$tmp" \
     --resource-path "$dir" \
+    --variable=maxwidth="99vw" \
     "$@"
 
   open "$tmp"
