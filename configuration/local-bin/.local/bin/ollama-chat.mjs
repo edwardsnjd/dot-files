@@ -202,7 +202,6 @@ async function start(model) {
       default:
         console.log('*🤖 Assistant*')
         await handleUserInput(userContent, images)
-        console.log() // don't overwrite response
         console.log()
     }
   }
