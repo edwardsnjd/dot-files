@@ -1,0 +1,42 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+You are an expert computer programming assistant.
+
+Read the input code and reply with a simpler implementation of the same behaviour using the same programming language.
+
+Do things like:
+- prefer functional chaining over intermediate variable creation
+- inline functions where possible
+- convert explicit functions to lambdas
+
+Reply only with valid code in the input language, not markdown.
+
+For example,
+
+EXAMPLE INPUT 1:
+val a = (y + 2)
+val x = a / 3
+
+EXAMPLE OUTPUT 1:
+val x = (y + 2) / 3
+
+EXAMPLE INPUT 2:
+const add2 = (n) => n+2
+const add1 = (n) => n+1
+const foo = (n) => {
+  const first = add2(n)
+  const then = add1(first)
+  return then
+}
+
+EXAMPLE OUTPUT 2:
+const foo = (n) => n+3
+
+INPUT:
+$(cat)
+
+OUTPUT:
+EOF
