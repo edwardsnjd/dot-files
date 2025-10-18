@@ -19,6 +19,13 @@ function! <SID>NullifyProcess(init_params) abort
   return a:init_params
 endfunction
 
+function! <SID>Vim_lsp_settings_vscode_json_language_server_capabilities() abort
+  let l:capabilities = lsp#default_get_supported_capabilities('vscode-json-language-server')
+  " Override snippetSupport: true for enable completion
+  let l:capabilities.textDocument.completion.completionItem.snippetSupport = v:true
+  return l:capabilities
+endfunction
+
 if executable('pylsp')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'pylsp',
@@ -48,6 +55,16 @@ if executable('lsp-json')
         \   'cmd': { server_info->['lsp-json'] },
         \   'allowlist': ['json'],
         \   'before_init': function('<SID>NullifyProcess'),
+        \ })
+elseif executable('vscode-json-languageserver')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'vscode-json-languageserver',
+        \   'cmd': { server_info->['vscode-json-languageserver', '--stdio'] },
+        \   'allowlist': ['json', 'jsonc'],
+        \   'initialization_options': {
+        \     'provideFormatter': v:true
+        \   },
+        \   'capabilities': <SID>Vim_lsp_settings_vscode_json_language_server_capabilities(),
         \ })
 endif
 
