@@ -130,6 +130,9 @@ export SQLITE_HISTORY="${XDG_CACHE_HOME}/sqlite_history"
 # Use XDG directories
 alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
 
+# Ensure bash history directory exists
+mkdir -p "$(dirname "$HISTFILE")"
+
 # --- Manage PATH ---
 
 # Include homebrew binaries if present
