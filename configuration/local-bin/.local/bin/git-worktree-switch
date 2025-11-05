@@ -16,6 +16,11 @@
 # NOTE: Since this runs in the context of the current shell it is
 # careful not to `set` any shell settings.
 
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "Sorry, this script has to be sourced so it can change dir"
+  exit 1
+fi
+
 function GitSwitchWorktree() {
   if GitIsInGitRepo; then
     local worktreePath="$(GitSelectWorktree)"
