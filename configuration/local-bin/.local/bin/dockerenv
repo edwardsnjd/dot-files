@@ -294,7 +294,7 @@ function unknown() {
 }
 
 function hlp() {
-  sed -E -f <(getSection "UsageSedScript") $0
+  sed -En -f <(getSection "UsageSedScript") $0
 }
 
 # Get a delimited section of this file
@@ -313,7 +313,6 @@ main "$@"
 # particular section.
 
 #~~~~~~~~~~~~~~~~~~~~UsageSedScript:Start~~~~~~~~~~~~~~~~~~~~
-# #n
 # /^#!/ n
 # /^#/ {
 #   :heading
