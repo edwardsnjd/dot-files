@@ -65,3 +65,6 @@
 	# Blame
 	bl = blame --color-lines --color-by-age
 	bli = bl --ignore-revs-file=".git-blame-ignore-revs"
+
+	# Configure fetch for bare repos
+	config-fetch = config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
