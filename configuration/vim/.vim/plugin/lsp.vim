@@ -196,3 +196,16 @@ if executable('openscad-lsp')
       \ 'whitelist': ['openscad'],
       \ })
 endif
+
+if executable('fsautocomplete')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'fsautocomplete',
+      \ 'cmd': {server_info->['fsautocomplete']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git'))},
+      \ 'whitelist': ['fsharp'],
+      \ 'initialization_options': {
+      \   'AutomaticWorkspaceInit': 'true'
+      \ },
+      \ 'before_init': function('<SID>NullifyProcess'),
+      \ })
+endif
