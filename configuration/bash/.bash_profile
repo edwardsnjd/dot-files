@@ -81,16 +81,6 @@ export PAGER="pager"
 # Specify command lines that should not appear in `history`
 export HISTIGNORE="$(cat <<-EOF | tr '\n' ':' | rev | tail -c +2 | rev
 		history
-		clear:c
-		ls:l:ll
-		tree:t:tt
-		exa
-		cd:cd -:cd ..:..:...
-		pwd
-		git status:git st:g
-		exit
-		date
-		* --help
 	EOF
 )"
 export HISTCONTROL="ignorespace"
