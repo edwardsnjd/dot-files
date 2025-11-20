@@ -22,10 +22,11 @@ let (|Foo|_|) (s: string) =
   let m = fooRegex.Match s
   if m.Success then Some (int m.Groups.[1].Value, m.Groups.[2].Value) else None
 
-let parsePatternLine line =
+let parse line =
   match line with
   | Ints ints -> printfn "%d ints found" (List.length ints)
   | Words ws -> printfn "%d words found" (List.length ws)
+  | Foo (a,b) -> printfn "%A values found" [a; b]
 
 lines
-  |> List.map parsePatternLine
+  |> List.map parse
