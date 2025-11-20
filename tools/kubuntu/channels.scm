@@ -3,13 +3,13 @@
         (url "https://github.com/edwardsnjd/guix-channel.git")
         (branch "main")
         (commit
-          "030167af63b3a7113d9d800dd250d1380291b207"))
+          "15bece21808e2f15cc096b9c8628e3d23fe7ddef"))
       (channel
         (name 'guix)
         (url "https://codeberg.org/guix/guix-mirror")
         (branch "master")
         (commit
-          "800cbcf7cd22387807747e51a19335603f2c16eb")
+          "9245f57207c81ced0b4780f88a97a441a86b7790")
         (introduction
           (make-channel-introduction
             "9edb3f66fd807b096b48283debdcddccfea34bad"

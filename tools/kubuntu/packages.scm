@@ -5,8 +5,7 @@
 ;; See the "Replicating Guix" section in the manual.
 
 (specifications->manifest
-  (list "aerc"
-        "ansible"
+  (list "ansible"
         "bat"
         "curl"
         "datamash"
