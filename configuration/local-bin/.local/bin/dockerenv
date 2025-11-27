@@ -132,9 +132,6 @@ set -o pipefail
 
 # Constants
 
-# Where the host directory is mounted
-MOUNT_TARGET="/work"
-
 # Used on containers to indicate they are managed by this script
 FLAG_LABEL="com.edwardsnjd.dockerenv"
 # Used on containers to store the mounted host directory
@@ -173,10 +170,10 @@ function up() {
      --interactive \
      --tty \
      --detach \
-     --volume "${PWD}":"${MOUNT_TARGET}" \
+     --volume "${PWD}":"${PWD}" \
      --label "${MOUNT_LABEL}=${PWD}" \
      --label "${FLAG_LABEL}" \
-     --workdir "${MOUNT_TARGET}" \
+     --workdir "${PWD}" \
      --name="$name" \
      "$@" \
      "$image"
@@ -196,15 +193,19 @@ function shell() {
     exit 1
   }
 
-  local reldir="$(activereldir)"
-
   local command="${1:-bash}"
   shift
 
+  # If stdin is a TTY, enable TTY allocation for Docker
+  local execArgs=""
+  if [ -t 0 ]; then
+      execArgs="--tty"
+  fi
+
   docker exec \
+     $execArgs \
      --interactive \
-     --tty \
-     --workdir "${MOUNT_TARGET}/${reldir}" \
+     --workdir "${PWD}" \
      "${id}" \
      "${command}" \
      "$@"
@@ -247,11 +248,6 @@ function activeinfo() {
 # Return the ID of the active container
 function activeid() {
   activeinfo | cut -f3
-}
-
-# Return the relative directory in the active container
-function activereldir() {
-  activeinfo | cut -f2
 }
 
 # Build the Go template string to list containers
