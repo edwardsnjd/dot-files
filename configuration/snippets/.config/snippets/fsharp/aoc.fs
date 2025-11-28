@@ -5,6 +5,9 @@ let lines =
   |> Seq.takeWhile (fun line -> line <> null)
   |> Seq.toList
 
+let words (line: string) =
+  line.Split(',', System.StringSplitOptions.RemoveEmptyEntries)
+
 let (|Ints|) (line: string) =
   Regex.Matches(line, @"-?\d+")
   |> Seq.cast<Match>
@@ -28,5 +31,8 @@ let parse line =
   | Words ws -> printfn "%d words found" (List.length ws)
   | Foo (a,b) -> printfn "%A values found" [a; b]
 
-lines
-  |> List.map parse
+let part1 = id
+let part2 = id
+
+lines |> part1 |> printfn "Part1: %A"
+lines |> part2 |> printfn "Part2: %A"
