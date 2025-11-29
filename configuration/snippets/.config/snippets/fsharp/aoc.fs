@@ -1,3 +1,5 @@
+#! /usr/bin/env -S dotnet fsi
+
 open System.Text.RegularExpressions
 
 let lines =
@@ -36,3 +38,6 @@ let part2 = id
 
 lines |> part1 |> printfn "Part1: %A"
 lines |> part2 |> printfn "Part2: %A"
+
+lines |> List.map (part1 >> printfn "Part1: %A")
+lines |> List.map (part2 >> printfn "Part2: %A")
