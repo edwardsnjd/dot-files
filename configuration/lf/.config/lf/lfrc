@@ -17,11 +17,12 @@ set shellopts '-eu'
 # commands accordingly.
 set ifs "\n"
 
-# Show all files
+# Show all files (`zh` toggles [default])
 set hidden
 
-# Sort directories first
+# Sort directories first (`zd` toggles)
 set dirfirst
+map zd set dirfirst!
 
 # Draw outlines around each pane
 set drawbox
