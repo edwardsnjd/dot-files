@@ -5,27 +5,29 @@
 	<key>AIFeatureFunctionCalling</key>
 	<true/>
 	<key>AIFeatureHostedCodeInterpeter</key>
-	<true/>
+	<false/>
 	<key>AIFeatureHostedFileSearch</key>
-	<true/>
+	<false/>
 	<key>AIFeatureHostedWebSearch</key>
-	<true/>
+	<false/>
 	<key>AIFeatureStreamingResponses</key>
 	<true/>
 	<key>AITermAPI</key>
-	<integer>2</integer>
+	<integer>5</integer>
 	<key>AIVectorStore</key>
-	<integer>1</integer>
+	<integer>0</integer>
+	<key>AIVendor</key>
+	<integer>3</integer>
 	<key>AdjustWindowForFontSizeChange</key>
 	<false/>
 	<key>AiMaxTokens</key>
-	<integer>1000000</integer>
+	<integer>10000000</integer>
 	<key>AiModel</key>
-	<string>gpt-4.1</string>
+	<string>llama4:latest</string>
 	<key>AiResponseMaxTokens</key>
-	<integer>32768</integer>
+	<integer>10000000</integer>
 	<key>AitermURL</key>
-	<string>https://api.openai.com/v1/responses</string>
+	<string>http://localhost:11434/api/chat</string>
 	<key>AllowClipboardAccess</key>
 	<true/>
 	<key>AlternateMouseScroll</key>
@@ -2656,7 +2658,7 @@
 			<key>Use Underline Color</key>
 			<false/>
 			<key>Vertical Spacing</key>
-			<real>1.05</real>
+			<real>1.03</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
@@ -2787,6 +2789,8 @@
 	<true/>
 	<key>UseMetal</key>
 	<true/>
+	<key>UseRecommendedAIModel</key>
+	<false/>
 	<key>UseTmuxStatusBar</key>
 	<true/>
 	<key>VisualIndicatorForEsc</key>
