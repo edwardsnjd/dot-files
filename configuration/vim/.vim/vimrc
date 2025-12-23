@@ -458,11 +458,13 @@ function! <SID>ConfigureLsp() abort
   let g:lsp_format_sync_timeout = 1000
 
   " Show errors details as popup on cursor
-  let g:lsp_diagnostics_virtual_text_enabled = 1
+  let g:lsp_diagnostics_enabled = 1
+  let g:lsp_diagnostics_virtual_text_enabled = 0
   let g:lsp_diagnostics_virtual_text_align = "after"
+  let g:lsp_diagnostics_echo_cursor = 0
   let g:lsp_diagnostics_float_cursor = 1
-  let g:lsp_diagnostics_float_delay = 200
-  let g:lsp_inlay_hints_enabled = 1
+  let g:lsp_diagnostics_float_delay = 500
+  let g:lsp_inlay_hints_enabled = 0
   let g:lsp_inlay_hints_mode = { 'normal': ['!curline'] }
 
   " Allow full width popups
@@ -489,6 +491,7 @@ function! <SID>ConfigureLspBuffer() abort
 
   " Informational mappings
   nmap <buffer> K <plug>(lsp-hover)
+  nmap <buffer> gK <plug>(lsp-signature-help)
   nmap <buffer> ge <plug>(lsp-document-diagnostics)
   nmap <buffer> [g <plug>(lsp-previous-diagnostic)
   nmap <buffer> ]g <plug>(lsp-next-diagnostic)
@@ -508,6 +511,9 @@ function! <SID>ConfigureLspBuffer() abort
   " Toggle info
   nnoremap <buffer> <leader>Gi :let g:lsp_inlay_hints_enabled = 1<CR>
   nnoremap <buffer> <leader>GI :let g:lsp_inlay_hints_enabled = 0<CR>
+  " Toggle info
+  nnoremap <buffer> <leader>Gd :let g:lsp_diagnostics_virtual_text_enabled = 1<CR>
+  nnoremap <buffer> <leader>GD :let g:lsp_diagnostics_virtual_text_enabled = 0<CR>
 endfunction
 
 augroup lsp_install
