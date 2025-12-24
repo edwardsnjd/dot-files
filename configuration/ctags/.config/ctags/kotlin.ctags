@@ -7,7 +7,7 @@
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|open)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*enum class[[:space:]]+([[:alnum:]_:]+)/\6/e,enum classes/
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*interface[[:space:]]+([[:alnum:]_:]+)/\4/i,interfaces/
 --regex-kotlin=/^[[:space:]]*type[[:space:]]+([[:alnum:]_:]+)/\1/T,types/
---regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|override|open|private[^ ]*(\[[a-z]*\])*|protected)[[:space:]]*)*fun[[:space:]]+(([[:alnum:]_:]+)\.)?([[:alnum:]_:]+)/\6/m,methods/
+--regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|override|open|private[^ ]*(\[[a-z]*\])*|protected)[[:space:]]*)*fun[[:space:]]+(([[:alnum:]_:]+)\.)?(([[:alnum:]_:]+)|`([[:alnum:]_: ]+)`)/\7\8/m,methods/
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|override|private[^ ]*|protected)[[:space:]]*)*(const[[:space:]])*val[[:space:]]+([[:alnum:]_]+)/\4/C,constants/
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|override|private[^ ]*|protected)[[:space:]]*)*(lateinit[[:space:]]*)*var[[:space:]]+([[:alnum:]_]+)/\4/v,variables/
 --regex-kotlin=/^[[:space:]]*package[[:space:]]+([[:alnum:]_.:]+)/\1/p,packages/
