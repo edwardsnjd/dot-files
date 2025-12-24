@@ -40,6 +40,7 @@ function Enrich() {
 function PrintContext() {
   # Remember last class and function tags, print when get to target line
   awk -v line="$1" '
+    BEGIN { OFS = FS = "\t" }
     $1 > line { exit }
     $2 == "c" { lastTagClass = $3; lastTagMethod = "" }
     $2 == "m" { lastTagMethod = $3 }
