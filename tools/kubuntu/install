@@ -213,9 +213,9 @@ InstallSyncthing() {
   # Update and install syncthing:
   sudo apt-get update
   sudo apt-get install syncthing
-  # Install and start service running as current user:
-  systemctl --user enable syncthing.service
-  systemctl --user start syncthing.service
+  # Install and start service running as my user:
+  systemctl enable syncthing@nick.service
+  systemctl start syncthing@nick.service
 }
 
 InstallPackages
