@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+MODEL="${MODEL:-llama3:8b}"
+
+ollama run "$MODEL" <<EOF
+Output two SVG images of the subject that I'll specify in a moment. The goal is to generate some colouring in for children.
+
+The two images should be two versions of the same image:
+- a black and white line drawing (suitable for colouring in)
+- the same line drawing with the colours filled in (to act as an example to the child)
+
+Output just the two root SVG elements without any discussion.
+
+The topic I'd like you to create images for is:
+$(cat)
+
+The two SVG elements:
+EOF
