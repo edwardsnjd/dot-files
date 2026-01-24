@@ -49,7 +49,6 @@ function Embed() {
       local cmd="${line#<!--embed:}"
       cmd="${cmd%-->}"
 
-      echo "$line"
       eval "$cmd"
       echo "<!--embed-end-->"
     fi
