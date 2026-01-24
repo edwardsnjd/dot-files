@@ -4,7 +4,8 @@ Collection of utility scripts for shell, git, Docker, productivity, etc. that I 
 
 ## Quick Navigation
 
-- [Git Power Tools](#git-power-tools)
+- [Git Tools](#git-tools)
+- [GitHub Tools](#github-tools)
 - [Productivity & Time](#productivity--time)
 - [Text & Data Processing](#text--data-processing)
 - [Development Tools](#development-tools)
@@ -15,31 +16,13 @@ Collection of utility scripts for shell, git, Docker, productivity, etc. that I 
 
 ---
 
-## Git Power Tools
+## Git Tools
 
 ### browse-tags
 
 Interactive git tag browser.
 
 Example: `./browse-tags`
-
-### gh-prs
-
-List GitHub Pull Requests for the current repo.
-
-Example: `./gh-prs`
-
-### gh-prs-to-tsv
-
-Convert GitHub PR list to TSV format.
-
-Example: `./gh-prs | ./gh-prs-to-tsv`
-
-### gh-search-prs
-
-Search through GitHub Pull Requests.
-
-Example: `./gh-search-prs "refactor"`
 
 ### git-browse-branches
 
@@ -217,6 +200,28 @@ Example: `./tags-context v1.2.0`
 
 ---
 
+## GitHub Tools
+
+### gh-prs
+
+List GitHub Pull Requests for the current repo.
+
+Example: `./gh-prs`
+
+### gh-prs-to-tsv
+
+Convert GitHub PR list to TSV format.
+
+Example: `./gh-prs | ./gh-prs-to-tsv`
+
+### gh-search-prs
+
+Search through GitHub Pull Requests.
+
+Example: `./gh-search-prs "refactor"`
+
+---
+
 ## Productivity & Time
 
 ### emojify-cal
@@ -260,12 +265,6 @@ Example: `./simple-pomodoro`
 Simple terminal-based stopwatch.
 
 Example: `./stopwatch`
-
-### timerange
-
-Generate sequences of times or ranges.
-
-Example: `./timerange 09:00 17:00`
 
 ### timezones
 
@@ -330,6 +329,12 @@ Example: `./dated "yesterday"`
 Generate a range of dates.
 
 Example: `./daterange 2023-01-01 2023-01-07`
+
+### timerange
+
+Generate sequences of times or ranges.
+
+Example: `./timerange 09:00 17:00`
 
 ### datetime
 
@@ -517,7 +522,7 @@ Example: `source ./shell-info.sh`
 
 ### transform
 
-Execute and embed results of internal scripts.
+Execute and embed command output in markdown/html files.
 
 Example: `./transform notes.md`
 
