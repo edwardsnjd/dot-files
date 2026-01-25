@@ -87,3 +87,7 @@ Tools:
     ├── ubuntu.sh
     └── windows.sh
     ```
+
+## Style
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on the coding style etc.
