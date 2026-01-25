@@ -5,12 +5,12 @@ This repository contains configuration files (dotfiles) and a collection of util
 ## 🛠 Build, Lint, and Test
 
 ### Shell Scripts (Bash)
-- **Linting**: Use `shellcheck` for all shell scripts. It is the primary tool for catching common errors and ensuring best practices.
+- **Linting**: Use `shellcheck` for scripts beyond simple one-liners to catch common errors and ensure best practices.
   ```bash
   shellcheck configuration/local-bin/.local/bin/<script>
   ```
 - **Testing**:
-  - Many scripts (e.g., `pie-bar`, `pie-column`) have internal tests triggered by the `--test` flag.
+  - Complex scripts (e.g., `pie-bar`, `pie-column`) often include internal tests triggered by the `--test` flag.
     ```bash
     ./configuration/local-bin/.local/bin/<script> --test
     ```
@@ -29,21 +29,22 @@ This repository contains configuration files (dotfiles) and a collection of util
 - **Consistency**: Mimic the style of surrounding code. Check existing scripts in `configuration/local-bin/.local/bin/` for reference.
 
 ### Bash Scripting (The Core of this Repo)
-- **Shebang**: Use `#!/usr/bin/env bash` for maximum portability.
-- **Strict Mode**: Every script should start with:
+- **Complexity and Structure**: Adhere to the following structural requirements proportionally to the script's complexity. A simple one-liner does not need a full structure. As a script adds multiple arguments, functions, or external dependencies, it should gradually adopt the formal sections below.
+- **Shebang**: Use `#!/usr/bin/env bash` for maximum portability (required for any script longer than a one-liner).
+- **Strict Mode**: Use for any script beyond a trivial one-liner:
   ```bash
   set -o nounset  # Treat unset variables as an error
   set -o errexit   # Exit immediately if a command exits with a non-zero status
   set -o pipefail  # The return value of a pipeline is the status of the last command to exit with a non-zero status
   ```
-- **Structure**:
+- **Structure**: (For multi-function or complex scripts)
   1. **Documentation Header**: (See below)
   2. **Strict Mode**
   3. **Main Function**: Use `function Main() { ... }`.
   4. **Implementation Functions**: Descriptive names in `UpperCamelCase`.
   5. **Utility Functions**: Small helpers.
   6. **Call Main**: `Main "$@"` should be the last line.
-- **Documentation Header**: Use a standardized block with the following sections (as required):
+- **Documentation Header**: Use a standardized block for scripts with multiple options or complex behavior:
   - `NAME`: Name and headline.
   - `SYNOPSIS`: Quick syntax reference.
   - `USAGE`: Detailed command-line patterns.
