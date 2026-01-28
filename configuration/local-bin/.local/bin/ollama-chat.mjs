@@ -11,7 +11,8 @@ const DEFAULT_MODEL = 'llama3.2'
 // {
 //   "model": "llama3.2",
 //   "messages": [
-//     { "role": "user", "content": "why is the sky blue?" }
+//     { "role": "user", "content": "why is the sky blue?" },
+//     { "role": "user", "content": "what is this?", images: ["<base64>"] }
 //   ],
 //   "stream": true
 // }

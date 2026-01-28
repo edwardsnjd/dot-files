@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+openai-chat.mjs "$@" | bat --language=markdown -pp

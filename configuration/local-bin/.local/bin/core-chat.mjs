@@ -65,6 +65,63 @@ export async function* readJsonStream(body, transform = identity) {
   }
 }
 
+export async function* readSseJsonStream(body, transform = identity) {
+  const doneEvent = '[DONE]'
+
+  const decoder = new TextDecoder()
+  let buffer = ''
+
+  const collectEvents = (final = false) => {
+    const events = []
+    buffer = buffer.replace(/\r\n/g, '\n')
+
+    let separatorIndex
+    while ((separatorIndex = buffer.indexOf('\n\n')) !== -1) {
+      const rawEvent = buffer.slice(0, separatorIndex)
+      buffer = buffer.slice(separatorIndex + 2)
+
+      const lines = rawEvent.split('\n')
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue
+        const data = line.slice(5).trim()
+        if (!data) continue
+        events.push(data)
+      }
+    }
+
+    if (final && buffer.trim()) {
+      const lines = buffer.trim().split('\n')
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue
+        const data = line.slice(5).trim()
+        if (!data) continue
+        events.push(data)
+      }
+      buffer = ''
+    }
+
+    return events
+  }
+
+  for await (const chunk of body) {
+    buffer += decoder.decode(chunk, { stream: true })
+    const events = collectEvents()
+    for (const event of events) {
+      if (doneEvent !== undefined && event === doneEvent) return
+      const parsed = JSON.parse(event)
+      yield transform(parsed)
+    }
+  }
+
+  buffer += decoder.decode(new Uint8Array(), { stream: false })
+  const finalEvents = collectEvents(true)
+  for (const event of finalEvents) {
+    if (doneEvent !== undefined && event === doneEvent) return
+    const parsed = JSON.parse(event)
+    yield transform(parsed)
+  }
+}
+
 async function* readLines(body) {
   const decoder = new TextDecoder()
   const matcher = /\r?\n/
@@ -138,14 +195,17 @@ export async function runChatLoop(sendMessage) {
   const resetChat = () => { messages = emptyMessages() }
 
   const handleUserInput = async (userContent, images) => {
+    messages = appendUserMessage(messages, userContent, images)
+
+    const chunks = await sendMessage(messages)
+
     let assistantContent = ''
-    for await (const chunk of sendMessage(messages)) {
+    for await (const chunk of chunks) {
       assistantContent += chunk
       process.stdout.write(chunk)
       process.stdout.uncork() // Flush
     }
 
-    messages = appendUserMessage(messages, userContent, images)
     messages = appendAssistantMessage(messages, assistantContent)
   }
 
