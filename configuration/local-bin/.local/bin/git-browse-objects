@@ -20,7 +20,7 @@ function Main() {
   local findSha="echo {} | grep -Eo '[0-9a-f]\{40}'"
   local preview="$findSha | xargs git notes show 2>/dev/null || echo no notes"
   local display="$findSha | xargs git browse-objects"
-  local annotate="$findSha | xargs git notes add"
+  local annotate="$findSha | xargs git -c core.commentString='::' notes add -e"
 
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
