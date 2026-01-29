@@ -1,0 +1,56 @@
+#! /usr/bin/env bash
+
+# NAME
+#   git-notes-tree - annotate the file tree with notes
+#
+# USAGE
+#   git notes-tree [ARGS...]
+#
+# SYNOPSIS
+#   ARGS - optional args to `tree`
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+TEMP_INFO_FILE="$(mktemp)"
+trap 'rm -rf "$TEMP_INFO_FILE"' EXIT
+
+function Main() {
+  BuildInfoFile > "$TEMP_INFO_FILE"
+  tree --infofile "$TEMP_INFO_FILE" "$@"
+}
+
+# BuildInfoFile :: () -> .info file
+# See: `man tree | less +/"^.INFO FILES"` for the format
+function BuildInfoFile() {
+  BuildTreeInfo | while read path sha; do
+    echo "./${path}"
+    git show $sha \
+    | bat --color=always --language=md --plain \
+    | sed 's/^/\t/'
+  done
+}
+
+# BuildTreeInfo :: () -> [ OBJ_PATH <TAB> NOTE_SHA ]
+function BuildTreeInfo() {
+  join \
+    -t $'\t' \
+    -2 2 \
+    -o 1.2,2.1 \
+    <(ListSortedTreeObjects) \
+    <(ListSortedNotes)
+}
+
+# ListNotes :: () -> [ NOTE_SHA <TAB> OBJ_SHA ]
+function ListSortedNotes() {
+  git notes list | tr ' ' '\t' | sort -k2,2
+}
+
+# ListTree :: () -> [ OBJ_SHA <TAB> OBJ_PATH ]
+function ListSortedTreeObjects() {
+  git ls-tree -r -t HEAD | cut -d' ' -f 3- | sort -k1,1
+}
+
+Main "$@"
