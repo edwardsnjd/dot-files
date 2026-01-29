@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-browse-objects - fzf browse git objects
+#
+# USAGE
+#   git browse-objects [SHA]
+#
+# SYNOPSIS
+#   SHA - optional SHA to show (default: HEAD)
+
+set -o nounset
+#set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local sha="${1:-HEAD}"
+
+  local findSha="echo {} | grep -Eo '[0-9a-f]\{40}'"
+  local preview="$findSha | xargs -I \{} sh -c 'echo Object: \{} && git notes show \{} 2>/dev/null || echo no notes'"
+  local display="$findSha | xargs git browse-objects"
+  local annotate="$findSha | xargs git notes add"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} annotate selected"
+  local header="${header1}${nl}${header2}"
+
+  git cat-file -p "$sha" \
+  | fzf \
+      --ansi \
+      --reverse \
+      --no-sort \
+      --prompt "Object> " \
+      --header "$header" \
+      --preview "$preview" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "alt-a:select-all" \
+      --bind "alt-d:deselect-all" \
+      --bind "alt-enter:execute($annotate)" \
+      --bind "enter:execute($display)"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
+}
+
+Main "$@"
