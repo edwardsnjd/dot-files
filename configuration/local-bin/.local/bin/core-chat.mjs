@@ -184,6 +184,7 @@ export async function runChatLoop(sendMessage) {
         console.log('*🤖 Assistant*')
         await handleUserInput(userContent, images)
         console.log()
+        console.log()
     }
   }
 

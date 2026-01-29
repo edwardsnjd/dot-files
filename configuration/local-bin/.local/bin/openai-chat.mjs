@@ -33,16 +33,30 @@ const oaiText = (text) => ({ type: 'text', text })
 const oaiImage = (base64) => ({ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64}` } })
 
 function extractContent(line) {
+  // Final line is special
   if (line === DONE_MARKER) return ''
-  const event = eventFrom(line)
-  if (event.error) throw event.error
-  return extractChunkContent(event)
+
+  const data = stripAnyPrefix(line)
+  const json = tryParseJson(data)
+
+  // Ignore text lines
+  if (!json) return ''
+
+  if (json.error) throw json.error
+
+  return extractChunkContent(json)
 }
 
-const eventFrom = line =>
-  line.startsWith(SSE_PREFIX)
-    ? JSON.parse(line.slice(SSE_PREFIX_LENGTH))
-    : JSON.parse(line)
+const tryParseJson = line => {
+  try {
+    return JSON.parse(line)
+  } catch {
+    return null
+  }
+}
+
+const stripAnyPrefix = line =>
+  line.startsWith(SSE_PREFIX) ? line.slice(SSE_PREFIX_LENGTH) : line
 
 function extractChunkContent(response) {
   const content = response.choices?.[0]?.delta?.content
