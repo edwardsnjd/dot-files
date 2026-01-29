@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-notes-manager - interactively browse and manage git notes
+#
+# USAGE
+#   git notes-manager
+#   git notes-manager commits
+#   git notes-manager commit SHA
+#
+# SYNOPSIS
+#   SHA - optional SHA to show (default: HEAD)
+
+set -o nounset
+#set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local subcommand="${1:-commits}"
+  shift
+
+  case ${subcommand} in
+    commits) Commits "$@" ;;
+    commit) Commit "$@" ;;
+  esac
+}
+
+function Commits() {
+  local sha="${1:-HEAD}"
+
+  local preview="git notes show {3} 2>/dev/null | bat --plain --color=always --language=md || echo no notes"
+  local display="git notes-manager commit {3}"
+  local annotate="git -c core.commentString='::' notes add -e {3}"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} annotate selected"
+  local header="${header1}${nl}${header2}"
+
+  AddIndicators \
+    <(git notes list | cut -d ' ' -f2 | sort) \
+    <(git log --pretty="%H %h %s" "$@") \
+  | fzf \
+      --ansi \
+      --reverse \
+      --no-sort \
+      --prompt "Commit> " \
+      --nth "2,4.." \
+      --with-nth "1,4.." \
+      --header "$header" \
+      --preview "$preview" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "alt-a:select-all" \
+      --bind "alt-d:deselect-all" \
+      --bind "alt-enter:execute($annotate)" \
+      --bind "enter:execute($display)"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
+}
+
+function Commit() {
+  local sha="${1:?}"
+
+  local preview="git notes show {3} 2>/dev/null | bat --plain --color=always --language=md || echo no notes"
+  local display="git show {3} | bat --plain --color=always --file-name={4..}"
+  local annotate="git -c core.commentString='::' notes add -e {3}"
+
+  local magenta=$(tput setaf 5) # see terminfo
+  local normal=$(tput sgr0) # see terminfo
+  local nl=$'\n'
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} annotate selected"
+  local header="${header1}${nl}${header2}"
+
+  AddIndicators \
+    <(git notes list | cut -d ' ' -f2 | sort) \
+    <(git ls-tree -r -t --format="%(objectname) %(path)" $sha) \
+  | fzf \
+      --ansi \
+      --reverse \
+      --no-sort \
+      --prompt "File> " \
+      --header "$header" \
+      --preview "$preview" \
+      --with-nth "1,4.." \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "alt-a:select-all" \
+      --bind "alt-d:deselect-all" \
+      --bind "alt-enter:execute($annotate)" \
+      --bind "enter:execute($display)"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return 0
+}
+
+function AddIndicators() {
+  awk -v onIndicator="🟢 :notes:" -v offIndicator="⚪️ ::" '
+    NR==FNR { seen[$1]=1; next }
+    { if ($1 in seen) print onIndicator, $0; else print offIndicator, $0; }
+  ' "$@"
+}
+
+Main "$@"
