@@ -1,3 +1,5 @@
 #! /usr/bin/env bash
 
+set -o pipefail
+
 ollama-chat.mjs "$@" | bat --language=markdown -pp

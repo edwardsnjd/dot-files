@@ -10,11 +10,12 @@ const EXIT_COMMAND = 'exit'
 
 // Prompt management
 
-export function buildPrompt(input, output) {
+function buildPrompt(input, output) {
   const rl = createInterface({ input, output, completer })
   return (query) => new Promise((resolve) => rl.question(query, resolve))
 }
 
+// completer :: String -> [Command[], String]
 function completer(line) {
   if (line.length === 0 || line === '/') return [
     [CLEAR_COMMAND, DUMP_COMMAND, FILE_COMMAND, IMAGE_COMMAND],
@@ -57,68 +58,10 @@ function filesMatching(line) {
 
 const identity = (x) => x
 
-export async function* readJsonStream(body, transform = identity) {
+export async function* readStream(body, transform = identity) {
   for await (const line of readLines(body)) {
-    if (!line) continue
-    const parsed = JSON.parse(line)
-    yield transform(parsed)
-  }
-}
-
-export async function* readSseJsonStream(body, transform = identity) {
-  const doneEvent = '[DONE]'
-
-  const decoder = new TextDecoder()
-  let buffer = ''
-
-  const collectEvents = (final = false) => {
-    const events = []
-    buffer = buffer.replace(/\r\n/g, '\n')
-
-    let separatorIndex
-    while ((separatorIndex = buffer.indexOf('\n\n')) !== -1) {
-      const rawEvent = buffer.slice(0, separatorIndex)
-      buffer = buffer.slice(separatorIndex + 2)
-
-      const lines = rawEvent.split('\n')
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue
-        const data = line.slice(5).trim()
-        if (!data) continue
-        events.push(data)
-      }
-    }
-
-    if (final && buffer.trim()) {
-      const lines = buffer.trim().split('\n')
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue
-        const data = line.slice(5).trim()
-        if (!data) continue
-        events.push(data)
-      }
-      buffer = ''
-    }
-
-    return events
-  }
-
-  for await (const chunk of body) {
-    buffer += decoder.decode(chunk, { stream: true })
-    const events = collectEvents()
-    for (const event of events) {
-      if (doneEvent !== undefined && event === doneEvent) return
-      const parsed = JSON.parse(event)
-      yield transform(parsed)
-    }
-  }
-
-  buffer += decoder.decode(new Uint8Array(), { stream: false })
-  const finalEvents = collectEvents(true)
-  for (const event of finalEvents) {
-    if (doneEvent !== undefined && event === doneEvent) return
-    const parsed = JSON.parse(event)
-    yield transform(parsed)
+    if (line === '') continue
+    yield transform(line)
   }
 }
 

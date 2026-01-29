@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { runChatLoop, readJsonStream } from './core-chat.mjs'
+import { runChatLoop, readStream } from './core-chat.mjs'
 
 const OLLAMA_HOST = 'http://127.0.0.1:11434'
 const DEFAULT_MODEL = 'llama3.2'
@@ -47,8 +47,8 @@ function ollamaMessage(message) {
   return { ...rest, images }
 }
 
-function extractChunkContent(jsonChunk) {
-  const { message } = jsonChunk
+function extractContent(line) {
+  const { message } = JSON.parse(line)
   return message?.content ?? ''
 }
 
@@ -64,7 +64,7 @@ function createSendMessage(host, model) {
   return async function(messages) {
     const ollamaChat = ollamaRequest(model, messages)
     const httpResponse = await send(host, ollamaChat)
-    return readJsonStream(httpResponse.body, extractChunkContent)
+    return readStream(httpResponse.body, extractContent)
   }
 }
 
@@ -73,4 +73,7 @@ function createSendMessage(host, model) {
   const model = process.env.MODEL || DEFAULT_MODEL
   const sendMessage = createSendMessage(host, model)
   await runChatLoop(sendMessage)
-})()
+})().catch(error => {
+  console.error('ERROR:', error.stack || error.message)
+  process.exit(1)
+})
