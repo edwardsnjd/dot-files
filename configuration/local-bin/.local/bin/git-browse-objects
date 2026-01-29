@@ -18,7 +18,7 @@ function Main() {
   local sha="${1:-HEAD}"
 
   local findSha="echo {} | grep -Eo '[0-9a-f]\{40}'"
-  local preview="$findSha | xargs -I \{} sh -c 'echo Object: \{} && git notes show \{} 2>/dev/null || echo no notes'"
+  local preview="$findSha | xargs git notes show 2>/dev/null || echo no notes"
   local display="$findSha | xargs git browse-objects"
   local annotate="$findSha | xargs git notes add"
 
