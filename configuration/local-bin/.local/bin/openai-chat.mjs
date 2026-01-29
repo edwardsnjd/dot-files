@@ -35,7 +35,6 @@ const oaiImage = (base64) => ({ type: 'image_url', image_url: { url: `data:image
 function extractContent(line) {
   if (line === DONE_MARKER) return ''
   const event = eventFrom(line)
-  if (!event) return ''
   if (event.error) throw event.error
   return extractChunkContent(event)
 }
