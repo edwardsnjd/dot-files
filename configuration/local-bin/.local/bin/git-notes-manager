@@ -68,7 +68,7 @@ function Commits() {
   local only="${2:-}"
 
   local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-U${normal} all, ${magenta}C-I${normal} only noted"
-  local header2="∷ Actions: ${magenta}Enter${normal} explore, ${magenta}A-Enter${normal} edit note"
+  local header2="∷ Actions: ${magenta}Enter${normal} explore selected, ${magenta}A-Enter${normal} edit note"
 
   ListCommits "$sha" "$only" | fzf \
     --ansi \
@@ -93,7 +93,7 @@ function Paths() {
   local only="${2:-}"
 
   local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-U${normal} all, ${magenta}C-I${normal} only noted"
-  local header2="∷ Actions: ${magenta}Enter${normal} display, ${magenta}A-Enter${normal} edit note"
+  local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} edit note"
 
   ListPaths "$sha" "$only" | fzf \
     --ansi \
