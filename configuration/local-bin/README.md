@@ -150,6 +150,24 @@ Statistics on lines added/removed in git.
 
 Example: `./git-lines`
 
+### git-browse-objects
+
+Interactively browse and manage notes for a commit's tree.
+
+Example: `./git-browse-objects`
+
+### git-notes-manager
+
+Interactively browse and manage git notes for the repo.
+
+Example: `./git-notes-manager`
+
+### git-notes-tree
+
+Display file tree annotated with git notes.
+
+Example: `./git-notes-tree`
+
 ### git-plot-commits
 
 Plot git commit activity over time.
@@ -490,17 +508,23 @@ Interactive picker for running npm scripts.
 
 Example: `./npm-run`
 
+### nostr-subscribe
+
+Subscribe to Nostr relay events via WebSocket.
+
+Example: `./nostr-subscribe wss://relay.damus.io`
+
 ### ollama-chat
 
 Terminal chat interface for Ollama (LLM) with bat.
 
 Example: `./ollama-chat "Explain quantum physics"`
 
-### ollama-chat.mjs
+### openai-chat
 
-Node.js backend for the Ollama chat utility.
+Terminal chat interface for OpenAI API with markdown rendering.
 
-Example: `node ./ollama-chat.mjs`
+Example: `./openai-chat "Explain recursion"`
 
 ### pcap-streams
 
