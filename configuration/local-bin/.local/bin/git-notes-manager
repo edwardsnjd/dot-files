@@ -132,11 +132,7 @@ function ShowObject() {
 function EditNote() {
   local sha="${1:?Missing note target sha}"
 
-  git \
-    -c core.commentString='::' \
-    notes add \
-    -e \
-    "$sha"
+  git -c core.commentString='::' notes add -e "$sha"
 }
 
 function ListRefs() {
