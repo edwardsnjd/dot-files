@@ -4,12 +4,13 @@
 #   git-notes-manager - interactively browse and manage git notes
 #
 # USAGE
-#   git notes-manager
-#   git notes-manager commits
-#   git notes-manager commit SHA
+#   git notes-manager commits SHA [--only]
+#   git notes-manager commits-list SHA [--only]
+#   git notes-manager paths SHA [--only]
+#   git notes-manager paths-list SHA [--only]
 #
 # SYNOPSIS
-#   SHA - optional SHA to show (default: HEAD)
+#   SHA - SHA to show
 
 set -o nounset
 #set -o errexit
@@ -22,25 +23,30 @@ function Main() {
 
   case ${subcommand} in
     commits) Commits "$@" ;;
-    commit) Commit "$@" ;;
+    commits-list) ListCommits "$@" ;;
+    paths) Paths "$@" ;;
+    paths-list) ListPaths "$@" ;;
   esac
 }
 
 function Commits() {
   local sha="${1:-HEAD}"
+  local only="${2:-}"
 
   local preview="git notes show {2} 2>/dev/null | bat --plain --color=always --language=md || echo no notes"
-  local display="git notes-manager commit {2}"
+  local display="git notes-manager paths {2}"
   local annotate="git -c core.commentString='::' notes add -e {2}"
+  local all="git notes-manager commits-list $sha"
+  local noted="git notes-manager commits-list $sha --only"
 
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
-  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-U${normal} all, ${magenta}C-I${normal} only noted"
   local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} annotate selected"
   local header="${header1}${nl}${header2}"
 
-  ListCommits \
+  ListCommits "$sha" "$only" \
   | fzf \
       --ansi \
       --reverse \
@@ -50,6 +56,8 @@ function Commits() {
       --with-nth "1,3.." \
       --header "$header" \
       --preview "$preview" \
+      --bind "ctrl-u:reload($all)" \
+      --bind "ctrl-i:reload($noted)" \
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
       --bind "alt-enter:execute($annotate)" \
       --bind "enter:execute($display)"
@@ -58,21 +66,24 @@ function Commits() {
   return 0
 }
 
-function Commit() {
-  local sha="${1:?}"
+function Paths() {
+  local sha="${1:-HEAD}"
+  local only="${2:-}"
 
   local preview="git notes show {2} 2>/dev/null | bat --plain --color=always --language=md || echo no notes"
   local display="git show {2} | bat --plain --color=always --file-name={3..}"
   local annotate="git -c core.commentString='::' notes add -e {2}"
+  local all="git notes-manager paths-list $sha"
+  local noted="git notes-manager paths-list $sha --only"
 
   local magenta=$(tput setaf 5) # see terminfo
   local normal=$(tput sgr0) # see terminfo
   local nl=$'\n'
-  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview, ${magenta}C-U${normal} all, ${magenta}C-I${normal} only noted"
   local header2="∷ Actions: ${magenta}Enter${normal} display selected, ${magenta}A-Enter${normal} annotate selected"
   local header="${header1}${nl}${header2}"
 
-  ListPaths \
+  ListPaths "$sha" "$only" \
   | fzf \
       --ansi \
       --reverse \
@@ -82,6 +93,8 @@ function Commit() {
       --preview "$preview" \
       --with-nth "1,3.." \
       --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+      --bind "ctrl-u:reload($all)" \
+      --bind "ctrl-i:reload($noted)" \
       --bind "alt-enter:execute($annotate)" \
       --bind "enter:execute($display)"
 
@@ -91,16 +104,20 @@ function Commit() {
 
 function ListCommits() {
   local sha="${1:-HEAD}"
-  AddIndicators \
+  local only="${2:-}"
+
+  AddIndicators "$only" \
     <(ListNoteTargets) \
     <(git log --pretty="%H %h %s" "$sha")
 }
 
 function ListPaths() {
   local sha="${1:-HEAD}"
-  AddIndicators \
+  local only="${2:-}"
+
+  AddIndicators "$only" \
     <(ListNoteTargets) \
-    <(git ls-tree -r -t --format="%(objectname) %(path)" $sha)
+    <(git ls-tree -r -t --format="%(objectname) %(path)" "$sha")
 }
 
 function ListNoteTargets() {
@@ -108,9 +125,17 @@ function ListNoteTargets() {
 }
 
 function AddIndicators() {
-  awk -v onIndicator="🟢" -v offIndicator="⚪️" '
+  local only="$([ "${1:-}" = "--only" ] && echo 1 || echo 0)"
+  shift
+
+  awk -v onIndicator="🟢" -v offIndicator="⚪️" -v only="$only" '
     NR==FNR { seen[$1]=1; next }
-    { if ($1 in seen) print onIndicator, $0; else print offIndicator, $0; }
+    {
+      if ($1 in seen) print onIndicator, $0;
+      else {
+        if (!only) print offIndicator, $0;
+      }
+    }
   ' "$@"
 }
 
