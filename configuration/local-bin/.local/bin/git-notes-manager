@@ -4,6 +4,8 @@
 #   git-notes-manager - interactively browse and manage git notes
 #
 # USAGE
+#   git notes-manager
+#   git notes-manager refs
 #   git notes-manager commits SHA [--only]
 #   git notes-manager commits-list SHA [--only]
 #   git notes-manager paths SHA [--only]
@@ -20,10 +22,11 @@ set -o pipefail
 #set -o xtrace
 
 function Main() {
-  local subcommand="${1:-commits}"
+  local subcommand="${1:-refs}"
   shift
 
   case ${subcommand} in
+    refs) Refs "$@" ;;
     commits) Commits "$@" ;;
     commits-list) ListCommits "$@" ;;
     paths) Paths "$@" ;;
@@ -38,6 +41,28 @@ magenta=$(tput setaf 5) # see terminfo
 normal=$(tput sgr0) # see terminfo
 nl=$'\n'
 
+function Refs() {
+  local ref="${1:-$(git rev-parse --abbrev-ref HEAD)}"
+
+  local header1="∷ Display: ${magenta}C-/${normal} toggle preview"
+  local header2="∷ Actions: ${magenta}Enter${normal} explore"
+
+  ListRefs | fzf \
+    --ansi \
+    --reverse \
+    --no-sort \
+    --prompt "Ref> " \
+    --query "${ref}" \
+    --header "${header1}${nl}${header2}" \
+    --preview "git lg {2}" \
+    --with-nth "2.." \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --bind "enter:execute(git notes-manager commits {1})"
+
+  # Force happy exit code (expect to quit fzf with Ctrl-C)
+  return -1
+}
+
 function Commits() {
   local sha="${1:-HEAD}"
   local only="${2:-}"
@@ -51,11 +76,10 @@ function Commits() {
     --no-sort \
     --prompt "Commit> " \
     --header "${header1}${nl}${header2}" \
-    --nth "3.." \
     --with-nth "1,3.." \
     --preview "git notes-manager note {2}" \
-    --bind "ctrl-u:reload(git notes-manager commits-list $sha)" \
-    --bind "ctrl-i:reload(git notes-manager commits-list $sha --only)" \
+    --bind "ctrl-u:change-prompt(Commits> )+reload(git notes-manager commits-list $sha)" \
+    --bind "ctrl-i:change-prompt(Commits [noted]> )+reload(git notes-manager commits-list $sha --only)" \
     --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
     --bind "alt-enter:execute(git notes-manager edit {2})" \
     --bind "enter:execute(git notes-manager paths {2})"
@@ -80,8 +104,8 @@ function Paths() {
     --with-nth "1,3.." \
     --preview "git notes-manager note {2}" \
     --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-    --bind "ctrl-u:reload(git notes-manager paths-list $sha)" \
-    --bind "ctrl-i:reload(git notes-manager paths-list $sha --only)" \
+    --bind "ctrl-u:change-prompt(Commits> )+reload(git notes-manager paths-list $sha)" \
+    --bind "ctrl-i:change-prompt(Commits [noted]> )+reload(git notes-manager paths-list $sha --only)" \
     --bind "alt-enter:execute(git notes-manager edit {2})" \
     --bind "enter:execute(git notes-manager path {2} {3..})"
 
@@ -113,6 +137,10 @@ function EditNote() {
     notes add \
     -e \
     "$sha"
+}
+
+function ListRefs() {
+  git branch --list --all --format "%(objectname) %(refname)"
 }
 
 function ListCommits() {
