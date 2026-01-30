@@ -147,18 +147,16 @@ function ListCommits() {
   local sha="${1:-HEAD}"
   local only="${2:-}"
 
-  AddIndicators "$only" \
-    <(ListNoteTargets) \
-    <(git log --pretty="%H %h %s" "$sha")
+  git log --pretty="%H %h %s" "$sha" \
+  | AddIndicators "$only" <(ListNoteTargets) -
 }
 
 function ListPaths() {
   local sha="${1:-HEAD}"
   local only="${2:-}"
 
-  AddIndicators "$only" \
-    <(ListNoteTargets) \
-    <(git ls-tree -r -t --format="%(objectname) %(path)" "$sha")
+  git ls-tree -r -t --format="%(objectname) %(path)" "$sha" \
+  | AddIndicators "$only" <(ListNoteTargets) -
 }
 
 function ListNoteTargets() {
