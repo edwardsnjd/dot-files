@@ -2,7 +2,7 @@
 
 Personal config files and scripts for automatically installing my daily driver tooling.
 
-This is all very specific to my workflow and preferences.  See `README.md` files scattered around this repo for some more detail on the individual pieces.
+This is all very specific to my workflow and preferences.  See `README.md` files scattered around this repo for some more detail on the individual pieces. In particular there [notes on my local bin scripts](configuration/local-bin/README.md), including lots of little git/tmux quality of life things that I use daily.
 
 ## Dependencies
 
