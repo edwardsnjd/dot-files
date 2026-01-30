@@ -1,0 +1,88 @@
+--langdef=fsharp
+--langmap=fsharp:.fs.fsi.fsx
+
+# Kinds
+--kinddef-fsharp=m,module,modules
+--kinddef-fsharp=t,type,types
+--kinddef-fsharp=f,function,functions
+--kinddef-fsharp=v,value,values
+--kinddef-fsharp=c,class,classes
+--kinddef-fsharp=i,interface,interfaces
+--kinddef-fsharp=r,record,records
+--kinddef-fsharp=u,union,discriminated unions
+--kinddef-fsharp=e,exception,exceptions
+--kinddef-fsharp=M,member,members
+--kinddef-fsharp=p,property,properties
+
+# Modules
+--regex-fsharp=/^module[ \t]+([A-Z][a-zA-Z0-9_']*)/\1/m/
+
+# Nested modules
+--regex-fsharp=/^[ \t]+module[ \t]+([A-Z][a-zA-Z0-9_']*)/\1/m/
+
+# Types (type aliases, abbreviations)
+--regex-fsharp=/^type[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/t/
+
+# Private types
+--regex-fsharp=/^type[ \t]+private[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/t/
+
+# Internal types
+--regex-fsharp=/^type[ \t]+internal[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/t/
+
+# Let bindings (top-level functions and values)
+--regex-fsharp=/^let[ \t]+([a-z_][a-zA-Z0-9_']*)/\1/f/
+
+# Let rec bindings (recursive functions)
+--regex-fsharp=/^let[ \t]+rec[ \t]+([a-z_][a-zA-Z0-9_']*)/\1/f/
+
+# Let inline bindings
+--regex-fsharp=/^let[ \t]+inline[ \t]+([a-z_][a-zA-Z0-9_']*)/\1/f/
+
+# Private let bindings
+--regex-fsharp=/^let[ \t]+private[ \t]+([a-z_][a-zA-Z0-9_']*)/\1/f/
+
+# Internal let bindings
+--regex-fsharp=/^let[ \t]+internal[ \t]+([a-z_][a-zA-Z0-9_']*)/\1/f/
+
+# Mutable values
+--regex-fsharp=/^let[ \t]+mutable[ \t]+([a-z_][a-zA-Z0-9_']*)/\1/v/
+
+# And bindings (for mutual recursion)
+--regex-fsharp=/^and[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/f/
+
+# Classes
+--regex-fsharp=/^type[ \t]+([A-Z][a-zA-Z0-9_']*)[ \t]*\(/\1/c/
+
+# Interfaces
+--regex-fsharp=/^type[ \t]+([A-Z][a-zA-Z0-9_']*)[ \t]*=[ \t]*interface/\1/i/
+
+# Records
+--regex-fsharp=/^type[ \t]+([A-Z][a-zA-Z0-9_']*)[ \t]*=[ \t]*\{/\1/r/
+
+# Discriminated unions
+--regex-fsharp=/^type[ \t]+([A-Z][a-zA-Z0-9_']*)[ \t]*=[ \t]*$/\1/u/
+--regex-fsharp=/^type[ \t]+([A-Z][a-zA-Z0-9_']*)[ \t]*=[ \t]*\|/\1/u/
+
+# Exceptions
+--regex-fsharp=/^exception[ \t]+([A-Z][a-zA-Z0-9_']*)/\1/e/
+
+# Member definitions (methods in classes/types)
+--regex-fsharp=/^[ \t]+member[ \t]+[a-zA-Z_]+\.([a-zA-Z_][a-zA-Z0-9_']*)/\1/M/
+
+# Static members
+--regex-fsharp=/^[ \t]+static[ \t]+member[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/M/
+
+# Override members
+--regex-fsharp=/^[ \t]+override[ \t]+[a-zA-Z_]+\.([a-zA-Z_][a-zA-Z0-9_']*)/\1/M/
+
+# Abstract members
+--regex-fsharp=/^[ \t]+abstract[ \t]+member[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/M/
+
+# Abstract members (short form)
+--regex-fsharp=/^[ \t]+abstract[ \t]+([a-zA-Z_][a-zA-Z0-9_']*)/\1/M/
+
+# Default members
+--regex-fsharp=/^[ \t]+default[ \t]+[a-zA-Z_]+\.([a-zA-Z_][a-zA-Z0-9_']*)/\1/M/
+
+# Properties with get/set
+--regex-fsharp=/^[ \t]+member[ \t]+[a-zA-Z_]+\.([A-Z][a-zA-Z0-9_']*)[ \t]+with[ \t]+get/\1/p/
