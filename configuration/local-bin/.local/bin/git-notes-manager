@@ -60,7 +60,7 @@ function Refs() {
     --bind "enter:execute(git notes-manager commits {1})"
 
   # Force happy exit code (expect to quit fzf with Ctrl-C)
-  return -1
+  return 0
 }
 
 function Commits() {
