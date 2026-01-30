@@ -4,18 +4,29 @@
 #   git-notes-manager - interactively browse and manage git notes
 #
 # USAGE
-#   git notes-manager
-#   git notes-manager refs [query]
-#   git notes-manager commits SHA [--only]
-#   git notes-manager commits-list SHA [--only]
-#   git notes-manager paths SHA [--only]
-#   git notes-manager paths-list SHA [--only]
-#   git notes-manager note SHA
-#   git notes-manager edit SHA
-#   git notes-manager object SHA PATH
+#   git notes-manager [<command>] [<args>...]
 #
-# SYNOPSIS
-#   SHA - SHA to show
+# OPTIONS
+#   If no command is provided, defaults to 'refs'.
+#
+#   <command>:
+#     refs         [<query>]       - interactively browse refs to explore
+#     commits      <sha> [--only]  - interactively browse commits from a given SHA
+#     commits-list <sha> [--only]  - list commits from a given SHA
+#     paths        <sha> [--only]  - interactively browse a commit's tree
+#     paths-list   <sha> [--only]  - list a commit's tree
+#     note                         - show the note for a given commit or object
+#     edit                         - edit the note for a given commit or object
+#     object       <sha> <path>    - show the content of a given object
+#
+#   <args>:
+#     <query>   - optional initial query
+#     <sha>     - SHA of a git object (e.g. commit, blob)
+#     <path>    - path of the object
+#     --only    - if provided, only show commits with notes
+#
+# DEPENDENCIES
+#   awk, bat, cut, fzf, git, sort, tput
 
 set -o nounset
 #set -o errexit
