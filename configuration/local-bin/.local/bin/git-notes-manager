@@ -107,7 +107,7 @@ function Paths() {
     --bind "ctrl-u:change-prompt(Commits> )+reload(git notes-manager paths-list $sha)" \
     --bind "ctrl-i:change-prompt(Commits [noted]> )+reload(git notes-manager paths-list $sha --only)" \
     --bind "alt-enter:execute(git notes-manager edit {2})" \
-    --bind "enter:execute(git notes-manager path {2} {3..})"
+    --bind "enter:execute(git notes-manager object {2} {3..})"
 
   # Force happy exit code (expect to quit fzf with Ctrl-C)
   return 0
@@ -126,7 +126,7 @@ function ShowObject() {
   local path="${2:?Missing object path}"
 
   git show "$sha" \
-  | bat --plain --color=always --file-name="$path"
+  | bat --plain --color=always --file-name="$path" --pager='less -+F -~ +g'
 }
 
 function EditNote() {
