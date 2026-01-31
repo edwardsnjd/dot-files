@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# NAME
+#   llm-coder - A command-line tool to interact with LLMs for coding assistance.
+#
+# SYNOPSIS
+#  llm-coder [PROMPT] < input_file
+#
+# EXAMPLE
+#  llm-coder < input_file "Generate unit tests for the provided code."
+#    Process the input as requested.
+#
+#  llm-coder < input_file
+#    Interactively prompt for user instructions to process the input.
+#
+# DEPENDENCIES
+#   - ollama: Command-line interface for interacting with LLMs.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local userPrompt=$(GetUserPrompt "$@")
+
+  if [ -z "$userPrompt" ]; then
+    echo "Error: No prompt provided." >&2
+    exit 1
+  fi
+
+  BuildPrompt "$userPrompt" "$(cat)" | ollama run $MODEL
+}
+
+function GetUserPrompt() {
+  local userPrompt="${1:-}"
+
+  if [ -z "$userPrompt" ]; then
+    # NOTE: Use /dev/tty to read input because we expect
+    # stdin to be redirected from a file or pipe.
+    echo ""
+    read -e -p "Prompt> " userPrompt < /dev/tty
+  fi
+
+  echo "$userPrompt"
+}
+
+function BuildPrompt() {
+  cat <<-EOF
+		You are a helpful programming assistant. Please follow the user's instructions carefully.
+		
+		User Instructions:
+		
+		$1
+		
+		Input:
+		
+		$2
+		
+		Again, the user instructions:
+		
+		$1
+	EOF
+}
+
+Main "$@"
