@@ -345,6 +345,18 @@ xnoremap <leader>rI y:'> mark j<Cr>N"_cgn<C-r>0<Esc>:'[,'j d<Cr>
 nnoremap <leader>re :call lsp#enable()<CR>
 nnoremap <leader>rd :call lsp#disable()<CR>
 
+" - Code assistance - send buffer/selection to local llm
+" llm-filter - precanned actions
+nnoremap <leader>rf :%w ! llm-filter<CR>
+vnoremap <leader>rf : w ! llm-filter<CR>
+nnoremap <leader>rF :%  ! llm-filter<CR>
+vnoremap <leader>rF :   ! llm-filter<CR>
+" llm-coder - dynamic actions
+nnoremap <leader>rc :%w ! llm-coder<CR>
+vnoremap <leader>rc : w ! llm-coder<CR>
+nnoremap <leader>rC :%  ! llm-coder<CR>
+vnoremap <leader>rC :   ! llm-coder<CR>
+
 " Special non-leader mappings:
 
 " - Insert placeholder
@@ -392,7 +404,7 @@ function! <SID>CopilotToggle()
   let b:copilot_enabled = getbufvar(bufnr('%'), 'copilot_enabled', 0) ? v:false : v:true
   echo b:copilot_enabled ? 'Copilot enabled' : 'Copilot disabled'
 endfunction
-noremap <Space>zt <Cmd>call <SID>CopilotToggle()<CR>
+noremap <leader>zt <Cmd>call <SID>CopilotToggle()<CR>
 
 " Quality of life copilot keymaps
 inoremap <C-l> <Cmd>call copilot#Next()<CR>
