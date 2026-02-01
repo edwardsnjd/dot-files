@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# openrouter - Check OpenRouter token balance
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+OPENROUTER_API_URL="https://openrouter.ai/api/v1"
+
+function OpenRouter() {
+  if [[ -z "$OPENROUTER_API_KEY" ]]; then
+    echo "Error: Set OPENROUTER_API_KEY environment variable" >&2
+    exit 1
+  fi
+
+  CurrentBalance
+}
+
+function CurrentBalance() {
+  CallApi "credits" | jq '.data.total_credits - .data.total_usage'
+}
+
+function CallApi() {
+  local path="$1"
+
+  local url="$OPENROUTER_API_URL/$path"
+  curl -s -H "Authorization: Bearer $OPENROUTER_API_KEY" "$url"
+}
+
+OpenRouter "$@"
