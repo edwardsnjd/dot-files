@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+# NAME
+#   annotate - Display a source file with annotations
+#
+# SYNOPSIS
+#   annotate PATH ANNOTATIONS [FORMAT]
+#
+# OPTIONS
+#  PATH        - The path of the file to annotate
+#  ANNOTATIONS - The annotations file path
+#  FORMAT      - The output format: inline (default), side, diff
+#
+# ANNOTATIONS FILE FORMAT
+#   Notes are labelled annotation of the object content, using this format:
+#     <from>:<to>:<note>
+#     <spaces><note continuation>
+#
+# DEPENDENCIES
+#  GNU tools - text processing
+#  bat - syntax highlighting
+#  sdiff - side-by-side diffs
+#  delta - colored diffs
+#  less - paging
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local target="${1:?Missing target path}"
+  local annotations="${2:?Missing annotations path}"
+  local format="${3:-inline}"
+
+  case "$format" in
+    --inline|inline)
+      bat --color=always --plain "$target" \
+      | PrintAnnotations "$annotations" "inline" \
+      | less -R -+S
+      ;;
+    --side|side)
+      sdiff \
+        --left \
+        --width=$(tput cols) \
+        "$target" \
+        <(PrintAnnotations "$annotations" "replace" < "$target") \
+      | bat --color=always --plain --file-name="$target"
+      ;;
+    --diff|diff)
+      diff \
+        --width=$(tput cols) \
+        --unified=10000 \
+        "$target" \
+        <(PrintAnnotations "$annotations" "replace" < "$target") \
+      | delta \
+        --no-gitconfig \
+        --minus-style="syntax #201040" \
+        --plus-style="auto italic #000050" \
+        --zero-style="syntax" \
+        --commit-style="omit" \
+        --file-style="omit" \
+        --hunk-header-style="omit"
+      ;;
+    *)
+      echo "Unknown format: $format" >&2
+      exit 1
+      ;;
+  esac
+}
+
+function PrintAnnotations() {
+  local annotations="${1:?Missing annotations path}"
+  local format="${2:-inline}"
+  local padding="${3:-}"
+
+  awk \
+    -F':' \
+    -v format="$format" \
+    -v padding="$padding" \
+    -v linenums="0" \
+    -v columns="$(tput cols)" \
+    -v magenta="$(tput setaf 5)" \
+    -v reset="$(tput sgr0)" \
+    '
+    NR == FNR {
+      if (match($0, /^[0-9]+:[0-9]+:/)) {
+        // Start of note
+        from = $1
+        to = $2
+        note = substr($0, index($0,$3));
+
+        notesByStart[from] = note
+        notesByEnd[to] = note
+        for (i = from; i <= to; i++) { annotated[i] = 1; }
+      } else {
+        // continuation line
+        gsub(/^[ \t]+/, "", $0);
+        notesByStart[from] = notesByStart[from] "\n" $0
+        notesByEnd[to] = notesByEnd[to] "\n" $0
+      }
+      next
+    }
+
+    format == "inline" {
+      if (linenums) { linePrefix = FNR "\t" }
+      if (FNR in annotated) { indicator = magenta "⇒" reset } else { indicator = " " }
+      print linePrefix indicator "   " $0
+
+      if (linenums) { notePrefix = "\t" }
+      if (FNR in notesByEnd) {
+        // Header line
+        printf notePrefix "┏"; for (i = 1; i <= columns-1; i++) { printf "━" }; printf "\n"
+
+        // Body lines
+        split(notesByEnd[FNR], noteLines, "\n")
+        for (i in noteLines) { print notePrefix "┃ " padding noteLines[i] }
+
+        // Footer line
+        printf notePrefix "┗"; for (i = 1; i <= columns-1; i++) { printf "━" }; printf "\n"
+      }
+    }
+
+    format == "replace" {
+      if (FNR in annotated) { } else { print }
+      if (FNR in notesByStart) {
+        split(notesByStart[FNR], noteLines, "\n")
+        for (i in noteLines) { print padding noteLines[i] }
+      }
+    }
+  ' "$annotations" -
+}
+
+Main "$@"
