@@ -15,6 +15,7 @@
 #     commits-list <sha> [--only]  - list commits from a given SHA
 #     paths        <sha> [--only]  - interactively browse a commit's tree
 #     paths-list   <sha> [--only]  - list a commit's tree
+#     paths-export <sha>           - list a commit's tree with associated notes
 #     note                         - show the note for a given commit or object
 #     edit                         - edit the note for a given commit or object
 #     object       <sha> <path>    - show the content of a given object
@@ -43,6 +44,7 @@ function Main() {
     commits-list) ListCommits "$@" ;;
     paths) Paths "$@" ;;
     paths-list) ListPaths "$@" ;;
+    paths-export) ExportPaths "$@" ;;
     note) ShowNote "$@" ;;
     edit) EditNote "$@" ;;
     object) ShowObject "$@" ;;
@@ -165,6 +167,17 @@ function ListPaths() {
 
   git ls-tree -r -t --format="%(objectname) %(path)" "$sha" \
   | AddIndicators "$only" <(ListNoteTargets) -
+}
+
+function ExportPaths() {
+  ListPaths "$@" \
+  | cut -d' ' -f2- \
+  | while read sha path; do
+      echo "# $path"
+      echo "($sha)"
+      echo
+      git notes show $sha | cat
+    done
 }
 
 function ListNoteTargets() {
