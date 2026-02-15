@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+# NAME
+#   llm-completions - A command-line tool to interact with LLMs for coding completions.
+#
+# SYNOPSIS
+#   llm-completions < CODE
+#
+# USAGE
+#   CODE - inline code with special marker `<@CURSOR@>`
+#
+# DEPENDENCIES
+#   - ollama: Command-line interface for interacting with LLMs.
+#   - $MODEL: Environment variable for model (default: codellama:7b-code)
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+DEFAULT_MODEL="codellama:7b-code"
+SELECTED_MODEL="${MODEL:-$DEFAULT_MODEL}"
+
+Main() {
+  BuildPrompt $SELECTED_MODEL \
+    | ollama run $SELECTED_MODEL \
+    | sed -E 's/<EOT>//'
+}
+
+function BuildPrompt() {
+  local model="${1:?Missing model}"
+
+  case "$model" in
+    "codellama:7b-code" | "codellama:13b-code") BuildLlamaCodePrompt ;;
+    *) BuildDefaultPrompt ;;
+  esac
+}
+
+function BuildLlamaCodePrompt() {
+  sed -E '1s/^/<PRE> /; s/<@CURSOR@>/ <SUF>/;' && echo -n " <MID>"
+}
+
+function BuildDefaultPrompt() {
+  cat <<-EOF
+		Complete the given code snippet at the position of the marker <@CURSOR@>.
+		
+		STRICT RULES:
+		- Only provide the code completion without any explanations or comments.
+		- Do not include the marker <@CURSOR@> in the completion.
+		- Do not include the prefix or suffix in your response, only the completion.
+		- Only reply with code completion to the end of the line.
+		
+		EXAMPLES:
+		For input 'const add = (a, b) => <@CURSOR@>; // Adds' the output should be 'a + b'.
+		For input 'const mult = (a, b) => <@CURSOR@>;' the output should be 'a * b'.
+		
+		CODE TO COMPLETE:
+		$(cat)
+	EOF
+}
+
+Main "$@"
