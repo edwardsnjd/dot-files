@@ -20,12 +20,8 @@ let g:loaded_llm_complete = 1
 " External configuration
 " ----------------------
 
-if !exists('g:llm_complete_script')
-  let g:llm_complete_script = 'llm-completions'
-endif
-if !exists('g:llm_complete_model')
-  let g:llm_complete_model = 'codellama:7b-code'
-endif
+let g:llm_complete_script = get(g:, 'llm_complete_script', 'llm-completions')
+let g:llm_complete_model = get(g:, 'llm_complete_model', 'codellama:7b-code')
 
 " -------------------------
 " Enable/disable per buffer
@@ -113,13 +109,13 @@ function! s:EnsureGhostTextProperty()
   try
     call prop_type_add(s:prop_type_name, {
           \ 'highlight': 'Comment',
-          \ 'priority': 100
+          \ 'priority': 100,
           \ })
-    let s:prop_type_defined = 1
   catch /E969/
     " Property type already exists
-    let s:prop_type_defined = 1
   endtry
+
+  let s:prop_type_defined = 1
 endfunction
 
 function! s:DisplayInlineGhostText(suggestion)
@@ -134,7 +130,7 @@ function! s:RemoveGhostText(suggestion)
   call prop_remove({
         \ 'type': s:prop_type_name,
         \ 'bufnr': a:suggestion.bufnr,
-        \ 'all': 1
+        \ 'all': 1,
         \ })
 endfunction
 
@@ -147,10 +143,6 @@ function! s:NextSuggestion()
   call s:RequestSuggestion()
 endfunction
 
-function! s:BufferHasSuggestion()
-  return exists('b:llm_complete_suggestion')
-endfunction
-
 function! s:DisplaySuggestion(suggestion)
   if empty(a:suggestion)
     return
@@ -160,9 +152,9 @@ function! s:DisplaySuggestion(suggestion)
 
   let b:llm_complete_suggestion = {
         \ 'lines': suggestion_lines,
-        \ 'bufnr' : bufnr('%'),
-        \ 'line': line('.'),
-        \ 'col': col('.'),
+        \ 'bufnr': bufnr('%'),
+        \ 'line':  line('.'),
+        \ 'col':   col('.'),
         \ }
 
   if len(suggestion_lines) == 1
@@ -186,7 +178,7 @@ function! s:DisplayPopupGhostText(suggestion)
 endfunction
 
 function! s:ClearSuggestion()
-  if s:BufferHasSuggestion()
+  if exists('b:llm_complete_suggestion')
     try
       call s:ClosePopup()
       call s:RemoveGhostText(b:llm_complete_suggestion)
@@ -200,7 +192,7 @@ endfunction
 
 " Accept current suggestion
 function! s:AcceptSuggestion()
-  if !s:BufferHasSuggestion()
+  if !exists('b:llm_complete_suggestion')
     return
   endif
 
