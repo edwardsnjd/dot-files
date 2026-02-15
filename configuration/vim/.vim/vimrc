@@ -421,6 +421,13 @@ function! <SID>AirlineInit()
 endfunction
 autocmd User AirlineAfterInit call <SID>AirlineInit()
 
+" - Local complete
+noremap <leader>Zt  <Cmd>AICompleteToggle<CR>
+inoremap <C-x><C-u> <Plug>(AICompleteSuggest)
+inoremap <C-l>      <Plug>(AICompleteSuggest)
+inoremap <C-y>      <Plug>(AICompleteAccept)
+inoremap <C-e>      <Plug>(AICompleteDismiss)
+
 " Plugins (managed by `vim-plugin`)
 " - Bootstrap if not installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
