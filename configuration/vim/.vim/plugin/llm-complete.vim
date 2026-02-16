@@ -4,12 +4,11 @@
 " Description:
 "  - Produces a suggested completion from the current cursor
 "  position by sending it through an external command.
-"  - Displays suggestion as virtual text if one line or a popup
-"  window if multiple lines.
+"  - Displays suggestion as virtual text.
 "
 " Dependencies:
 " - Vim 8.0+ with +textprop feature.
-" - Shell command for a completion (default: llm-completions)
+" - Shell command for a completion (default: llm-completions).
 
 if exists('g:loaded_llm_complete')
   finish
@@ -33,6 +32,7 @@ function! s:EnableCurrentBuffer()
   augroup VimAIComplete
     autocmd! * <buffer>
     autocmd InsertLeave <buffer> call s:ClearSuggestion()
+    autocmd TextChangedI <buffer> call s:ClearSuggestion()
   augroup END
 
   call s:EnsureGhostTextProperty()
@@ -51,40 +51,6 @@ function! s:ToggleCurrentBuffer()
   else
     call s:EnableCurrentBuffer()
   endif
-endfunction
-
-" -----------------------
-" Popup window management
-" -----------------------
-
-let s:popup_winid = -1
-
-function! s:CreatePopup(display_lines)
-  let s:popup_winid = popup_create(a:display_lines, {
-        \ 'line': 'cursor+1',
-        \ 'col': 1,
-        \ 'pos': 'topleft',
-        \ 'wrap': 0,
-        \ 'highlight': 'Comment',
-        \ 'border': [],
-        \ 'padding': [0, 0, 0, 0],
-        \ 'zindex': 50,
-        \ 'fixed': 1,
-        \ 'minwidth': 40
-        \ })
-endfunction
-
-function! s:ClosePopup()
-  if s:popup_winid == -1
-    return
-  endif
-
-  try
-    call popup_close(s:popup_winid)
-  catch
-    " Popup might already be closed
-  endtry
-  let s:popup_winid = -1
 endfunction
 
 " ---------------------
@@ -124,6 +90,15 @@ function! s:DisplayInlineGhostText(suggestion)
         \ 'bufnr': a:suggestion.bufnr,
         \ 'text': a:suggestion.lines[0],
         \ })
+
+  for i in range(1, len(a:suggestion.lines) - 1)
+    call prop_add(a:suggestion.line, 0, {
+          \ 'type': s:prop_type_name,
+          \ 'bufnr': a:suggestion.bufnr,
+          \ 'text': a:suggestion.lines[i],
+          \ 'text_align': 'below',
+          \ })
+  endfor
 endfunction
 
 function! s:RemoveGhostText(suggestion)
@@ -157,31 +132,12 @@ function! s:DisplaySuggestion(suggestion)
         \ 'col':   col('.'),
         \ }
 
-  if len(suggestion_lines) == 1
-    call s:DisplayInlineGhostText(b:llm_complete_suggestion)
-  else
-    call s:DisplayPopupGhostText(b:llm_complete_suggestion)
-  endif
-endfunction
-
-function! s:DisplayPopupGhostText(suggestion)
-  " Build display lines: first line includes existing text
-  let current_line_text = getline(suggestion.line)
-  let before_cursor = current_line_text[:a:suggestion.col-2]
-  let first_line = before_cursor . a:suggestion.lines[0]
-  let display_lines = [first_line]
-  for i in range(1, len(a:suggestion.lines) - 1)
-    call add(display_lines, a:suggestion.lines[i])
-  endfor
-
-  " Create popup window positioned at current screen line
-  call s:CreatePopup(display_lines)
+  call s:DisplayInlineGhostText(b:llm_complete_suggestion)
 endfunction
 
 function! s:ClearSuggestion()
   if exists('b:llm_complete_suggestion')
     try
-      call s:ClosePopup()
       call s:RemoveGhostText(b:llm_complete_suggestion)
     catch
       " Silently fail
@@ -198,6 +154,7 @@ function! s:AcceptSuggestion()
   endif
 
   let suggestion = b:llm_complete_suggestion
+  call s:ClearSuggestion()
 
   if len(suggestion.lines) > 0
     " Get current suggestion line content
@@ -209,15 +166,18 @@ function! s:AcceptSuggestion()
     let new_lines = copy(suggestion.lines)
     let new_lines[0] = before_cursor . new_lines[0]
     let new_lines[-1] = new_lines[-1] . after_cursor
-    call setline(suggestion.line, new_lines)
+
+    " Set the current line (setline), insert any other lines
+    call setline(suggestion.line, new_lines[0])
+    if len(new_lines) > 1
+      call append(suggestion.line, new_lines[1:])
+    endif
 
     " Set cursor to end of last suggested content (on last line)
     let new_cursor_line = suggestion.line + len(new_lines) - 1
     let new_cursor_col = len(new_lines[-1]) - len(after_cursor) + 1
     call cursor(new_cursor_line, new_cursor_col)
   endif
-
-  call s:NextSuggestion()
 endfunction
 
 function! s:RequestSuggestion()
