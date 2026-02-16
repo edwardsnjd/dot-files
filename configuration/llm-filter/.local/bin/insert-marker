@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+# NAME
+#   insert-marker - insert a textual marker into a stream
+#
+# SYNOPSIS
+#   insert-marker [OPTIONS] < INPUT
+#
+# DESCRIPTION'
+#   There are two main modes:
+#   1. No target "--line": Full input used, marker appended to last line (unless already present)
+#   2. Target "--line": Some context around target, marker inserted on target line
+#
+# OPTIONS
+#   --marker S - if specified, set the insertion point marker to insert (default: <MARKER>)
+#   --line N - if specified, set the insertion point to line N (default: end of input)
+#   --column N - with --line, sets the insertion point to column N (default: end of line)
+#   --context N - with --line, keep N lines before and after the target line
+#   --before N - with --line, keep N lines before the target line (default: 15)
+#   --after N - with --line, keep N lines after the target line (default: 15)
+#
+# DEPENDENCIES
+#   - GNU text utils
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local marker="<MARKER>"
+  local line=
+  local column=50000
+  local before=15
+  local after=15
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --marker) marker="$2" && shift && shift ;;
+      --line) line="$2" && shift && shift ;;
+      --column) column="$2" && shift && shift ;;
+      --context) before="$2" && after="$2" && shift && shift ;;
+      --before) before="$2" && shift && shift ;;
+      --after) after="$2" && shift && shift ;;
+    esac
+  done
+
+  AddMarkerIfRequired "$marker" "$line" "$column" "$before" "$after"
+}
+
+function AddMarkerIfRequired() {
+  local marker="$1"
+  local line="$2"
+  local column="$3"
+  local before="$4"
+  local after="$5"
+
+  if [[ -n "$line" ]]; then
+    # Target specified, output context and insert the marker in target
+    local start=$((line - before))
+    local end=$((line + after))
+    [ $start -lt 1 ] && start=1
+
+    awk -v marker="$marker" \
+      -v line="$line" -v column="$column" \
+      -v start="$start" -v end="$end" \
+    '
+      NR >= start && NR <= end {
+        if (NR == line) {
+          $0 = substr($0, 1, column) marker substr($0, column + 1)
+        }
+        print
+      }
+    '
+  else
+    # No target specified, append marker to the last line
+    awk -v marker="$marker" \
+    '
+      BEGIN { foundMarker = 0 }
+      { if (index($0, marker) > 0) { foundMarker = 1 } }
+
+      NR > 1 { print prev }
+      { prev = $0 }
+      END {
+        if (foundMarker == 1) { print prev } else { print prev marker }
+      }
+    '
+  fi
+}
+
+Main "$@"
