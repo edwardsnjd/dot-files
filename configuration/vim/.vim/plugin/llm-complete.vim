@@ -166,7 +166,8 @@ endfunction
 
 function! s:DisplayPopupGhostText(suggestion)
   " Build display lines: first line includes existing text
-  let before_cursor = getline(a:suggestion.line)[:a:suggestion.col-2]
+  let current_line_text = getline(suggestion.line)
+  let before_cursor = current_line_text[:a:suggestion.col-2]
   let first_line = before_cursor . a:suggestion.lines[0]
   let display_lines = [first_line]
   for i in range(1, len(a:suggestion.lines) - 1)
@@ -199,25 +200,21 @@ function! s:AcceptSuggestion()
   let suggestion = b:llm_complete_suggestion
 
   if len(suggestion.lines) > 0
-    " Get current line content
+    " Get current suggestion line content
     let current_line_text = getline(suggestion.line)
     let before_cursor = current_line_text[:suggestion.col-2]
     let after_cursor = current_line_text[suggestion.col-1:]
 
-    if len(suggestion.lines) == 1
-      call setline(suggestion.line, before_cursor . suggestion.lines[0] . after_cursor)
-      call cursor(suggestion.line, suggestion.col + len(suggestion.lines[0]))
-    else
-      call setline(suggestion.line, before_cursor . suggestion.lines[0])
+    " Build list of new lines to replace current target line
+    let new_lines = copy(suggestion.lines)
+    let new_lines[0] = before_cursor . new_lines[0]
+    let new_lines[-1] = new_lines[-1] . after_cursor
+    call setline(suggestion.line, new_lines)
 
-      let remaining_lines = suggestion.lines[1:]
-      let remaining_lines[-1] .= after_cursor
-      call append(suggestion.line, remaining_lines)
-
-      let last_line_num = suggestion.line + len(remaining_lines)
-      let last_line_text = getline(last_line_num)
-      call cursor(last_line_num, len(last_line_text) - len(after_cursor) + 1)
-    endif
+    " Set cursor to end of last suggested content (on last line)
+    let new_cursor_line = suggestion.line + len(new_lines) - 1
+    let new_cursor_col = len(new_lines[-1]) - len(after_cursor) + 1
+    call cursor(new_cursor_line, new_cursor_col)
   endif
 
   call s:NextSuggestion()
