@@ -40,7 +40,8 @@ function BuildPrompt() {
 }
 
 function BuildLlamaCodePrompt() {
-  sed -E '1s/^/<PRE> /; s/<@CURSOR@>/ <SUF>/;' && echo -n " <MID>"
+  sed -E '1s/^/<PRE> /; s/<@CURSOR@>/ <SUF> /;'
+  printf " <MID>"
 }
 
 function BuildDefaultPrompt() {
