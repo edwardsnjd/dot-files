@@ -31,7 +31,10 @@ function BuildPrompt() {
   local model="${1:?Missing model}"
 
   case "$model" in
-    "codellama:7b-code" | "codellama:13b-code") BuildLlamaCodePrompt ;;
+    "codellama:7b-code" \
+      | "codellama:13b-code" \
+      | "codellama-13b-code:latest" \
+      ) BuildLlamaCodePrompt ;;
     *) BuildDefaultPrompt ;;
   esac
 }
