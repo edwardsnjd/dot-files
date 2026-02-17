@@ -41,6 +41,10 @@ function! s:EnableCurrentBuffer()
 endfunction
 
 function! s:DisableCurrentBuffer()
+  augroup VimAIComplete
+    autocmd! * <buffer>
+  augroup END
+  call s:ClearSuggestion()
   let b:llm_complete_enabled = 0
   echo "AI autocomplete disabled"
 endfunction
