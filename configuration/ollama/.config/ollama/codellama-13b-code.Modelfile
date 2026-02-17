@@ -1,0 +1,6 @@
+FROM codellama:13b-code
+
+PARAMETER temperature 0.15
+PARAMETER repeat_penalty 1.2
+PARAMETER repeat_last_n 256
+PARAMETER num_predict 64
