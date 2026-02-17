@@ -213,8 +213,8 @@ function! s:GetBufferContextAroundCursor()
   let line = line('.')
   let col = col('.') - 1
 
-  let start_line = max([1, line - 20])
-  let end_line = min([line('$'), line + 5])
+  let start_line = max([1, line - 25])
+  let end_line = min([line('$'), line + 10])
   let lines = getline(start_line, end_line)
 
   " Insert cursor marker at current position
