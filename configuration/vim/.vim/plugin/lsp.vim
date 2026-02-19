@@ -153,7 +153,15 @@ elseif executable('lsp-rust')
         \ })
 endif
 
-if executable('kotlin-language-server')
+if executable('kotlin-lsp')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'kotlin-lsp',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-lsp --stdio']},
+        \ 'initialization_options': {
+        \ },
+        \ 'whitelist': ['kotlin']
+        \ })
+elseif executable('kotlin-language-server')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'kotlin-language-server',
         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-language-server']},
