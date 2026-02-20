@@ -1,23 +1,21 @@
-" Provides support for finding imported modules via an external script and
-" caching the results for performance.
-"
-" Vim's includeexpr is called on each line but scheme modules are imported
-" using a syntax that can span multiple lines.  The work around is to use an
-" external script to parse the whole buffer and find all the imports, then
-" cache the results in a buffer variable.
-"
-" DEPENDENCIES:
-" - scheme-imports.scm: command to find imports from scheme on stdin
+" KNOWN ISSUES:
+" - Doesn't support includes defined across multiple lines.  Vim's includeexpr
+"   is called on each line but scheme modules are imported using a syntax that
+"   can span multiple lines.
 
-setlocal include=^\\s*(use-modules
-setlocal includeexpr=s:SchemeIncludeExpr(v:fname)
+let &l:include =
+      \ '\v' .
+      \ '(' . '\(load\s+"\zs[^"]*\ze"'           . ')|' .
+      \ '(' . '\(load-from-path\s+"\zs[^"]+\ze"' . ')|' .
+      \ '(' . '\(use-modules\s+\(\zs[^()]+\ze\)' . ')|' .
+      \ '(' . '#:use-module\s+\(\zs[^()]+\ze\)'  . ')'
+setlocal includeexpr=s:SchemeIncludeExpr()
 setlocal suffixesadd=.scm
-setlocal define=define
 
-function! s:SchemeIncludeExpr(fname) abort
+function! s:SchemeIncludeExpr() abort
   let index = s:SchemeModuleIndex()
-  let key = s:SchemeModuleKey()
-  return has_key(index, key) ? index[key] : a:fname
+  let key = s:SchemeModuleKey(v:fname)
+  return has_key(index, key) ? index[key] : v:fname
 endfunction
 
 " Build and cache an index of all the imported modules in this buffer.
@@ -62,23 +60,12 @@ function! s:BuildModuleMap() abort
   return index
 endfunction
 
-" Try to find a module key to look up from the current line
-function! s:SchemeModuleKey() abort
-  let line = getline('.')
-  let col = col('.')
-  let before = strpart(line, 0, col)
-  let open_pos = strridx(before, '(')
-  let close_pos = match(line, ')', col - 1)
-
-  let parts = []
-  if open_pos >= 0 && close_pos > open_pos
-    " Example line: (acceptance-tests basic-file-serving)
-    let sexp = strpart(line, open_pos + 1, close_pos - open_pos - 1)
-    let parts = split(sexp)
-  endif
-
-  return empty(parts) ? expand('<cword>') : join(parts, '.')
+" Try to find a module key to look up from the matched include
+function! s:SchemeModuleKey(fname) abort
+  " Example line: acceptance-tests basic-file-serving
+  let parts = split(a:fname)
+  return join(parts, '.')
 endfunction
 
 " Restore default values
-let b:undo_ftplugin = "setlocal"
+let b:undo_ftplugin = "setlocal include< includeexpr< suffixesadd<"
