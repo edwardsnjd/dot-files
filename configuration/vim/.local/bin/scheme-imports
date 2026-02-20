@@ -1,0 +1,93 @@
+#! /usr/bin/env -S guile \
+-e main -s
+!#
+
+;; Usage:
+;;   scheme-imports < scheme
+;;
+;; Output:
+;;   List of modules and load targets, one per line.
+;;
+;; Example:
+;;   echo "(use-modules foo bar (srfi srfi-1)) (load \"baz.scm\")" | scheme-imports
+;;
+;; Output:
+;;   foo
+;;   bar
+;;   (srfi srfi-1)
+;;   "baz.scm"
+
+(define (read-all port)
+  (let loop ((forms '()))
+    (let ((x (read port)))
+      (if (eof-object? x)
+        (reverse forms)
+        (loop (cons x forms))))))
+
+; define-module #:use-module ...
+
+(define (define-module-form? form)
+  (and (pair? form)
+       (eq? (car form) 'define-module)))
+
+(define (extract-define-module-uses form)
+  (if (not (define-module-form? form))
+    '()
+    (let loop ((args (cddr form)) (uses '()))
+      (cond
+        ((null? args) (reverse uses))
+        ((and (pair? args)
+              (pair? (cdr args))
+              (keyword? (car args))
+              (eq? (keyword->symbol (car args)) 'use-module))
+         (loop (cddr args)
+               (cons (cadr args) uses)))
+        (else
+          (loop (cdr args) uses))))))
+
+;; use-modules / use-modules*
+
+(define (use-modules-form? form)
+  (and (pair? form)
+       (memq (car form) '(use-modules use-modules*))))
+
+(define (extract-use-modules form)
+  (if (use-modules-form? form)
+    (cdr form)
+    '()))
+
+;; load / load-from-path (optional)
+
+(define (load-form? form)
+  (and (pair? form)
+       (memq (car form) '(load load-from-path))))
+
+(define (extract-loads form)
+  (if (load-form? form)
+    (cdr form)
+    '()))
+
+;; Utils
+
+(define (uniq xs)
+  (let loop ((seen '()) (rest xs) (out '()))
+    (if (null? rest)
+      (reverse out)
+      (let ((x (car rest)))
+        (if (member x seen)
+          (loop seen (cdr rest) out)
+          (loop (cons x seen) (cdr rest) (cons x out)))))))
+
+;; Entry point
+
+(define (main args)
+  (let* ((forms   (read-all (current-input-port)))
+         (mods    (apply append (map extract-use-modules forms)))         ; list of use-module targets
+         (dmods   (apply append (map extract-define-module-uses forms)))  ; list of define-module targets
+         (loads   (apply append (map extract-loads forms)))               ; list of load targets
+         (result  (uniq (append mods dmods loads))))
+    (for-each
+      (lambda (m)
+        (write m)
+        (newline))
+      result)))
