@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+# NAME
+#   pdf-to-text - An opinionated wrapper around pdftotext
+#
+# SYNOPSIS
+#   pdf-to-text [options] <pdf-file>
+#
+# DESCRIPTION
+#   Outputs the text content of a PDF to standard output.
+#
+# OPTIONS
+#   The options are passed directly to pdftotext.
+#
+# DEPENDENCIES
+#  - pdftotext: A command-line utility for converting PDF files to text.
+
+exec pdftotext "$@" -
