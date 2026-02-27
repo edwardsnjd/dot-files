@@ -496,6 +496,14 @@ Utility to inflate (decompress) git objects.
 
 Example: `./inflate .git/objects/ab/cdef...`
 
+### annotate
+
+Display source files with inline annotations.
+
+Example: `./annotate main.go notes.txt`
+
+Example: `./annotate main.go notes.txt side`
+
 ### list-keys
 
 List SSH and GPG keys on the system.
@@ -507,6 +515,12 @@ Example: `./list-keys`
 Interactive picker for running npm scripts.
 
 Example: `./npm-run`
+
+### openrouter
+
+Check OpenRouter API token balance.
+
+Example: `OPENROUTER_API_KEY=sk-... ./openrouter`
 
 ### nostr-subscribe
 
@@ -777,6 +791,12 @@ Example: `./img-to-pdf page1.jpg page2.jpg`
 Perform OCR to convert images to editable text.
 
 Example: `./img-to-text screenshot.png`
+
+### pdf-to-text
+
+Convert PDF documents to plain text.
+
+Example: `./pdf-to-text document.pdf`
 
 ### pie-bar
 
