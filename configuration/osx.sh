@@ -71,4 +71,5 @@ stow --target="${HOME}" \
   llm-filter \
   gh \
   wezterm \
-  info
+  info \
+  ghostty
