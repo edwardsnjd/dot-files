@@ -4,3 +4,7 @@ keymap ss SELECT_MENU
 keymap sd COMMAND "TAB_GOTO https://duckduckgo.com/lite/; NEXT_LINK; GOTO_LINK"
 keymap sg COMMAND "TAB_GOTO https://google.com; GOTO_LINE 6; NEXT_LINK; GOTO_LINK"
 keymap sw COMMAND "TAB_GOTO https://wikipedia.org; GOTO_LINE 15; NEXT_LINK; GOTO_LINK"
+
+# Vi like half-page scrolling
+keymap ^D NEXT_HALF_PAGE
+keymap ^U PREV_HALF_PAGE
