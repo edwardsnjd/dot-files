@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# NAME
+#   web-search - Simple CLI access to web search
+#
+# SYNOPSIS
+#   web-search < QUERY
+#   web-search QUERY...
+#
+# DEPENDENCIES
+#   curl - Make the request
+#
+# ENVIRONMENT
+#   PERPLEXITY_API_KEY - API key for search API
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local key="${PERPLEXITY_API_KEY:?PERPLEXITY_API_KEY environment variable required}"
+
+  ProduceAllInput "$*" \
+  | ToSearchPayload \
+  | curl \
+    --silent \
+    --request POST \
+    --url "https://api.perplexity.ai/search" \
+    --header "Authorization: Bearer $key" \
+    --header "Content-Type: application/json" \
+    --data @- \
+  | FormatAsMarkdown
+}
+
+ProduceAllInput() {
+  # Print all std if not interactive
+  ! [ -t 0 ] && cat
+  # Print all arguments
+  echo "$*"
+}
+
+ToSearchPayload() {
+  cat <<-EOF
+	{
+	  "query": "$(cat)",
+	  "max_results": 3,
+	  "max_tokens_per_page": 100
+	}
+	EOF
+}
+
+FormatAsMarkdown() {
+  jq --raw-output '
+    .results
+     | to_entries
+     | map(
+         . as $e
+         |
+           "# [\($e.value.title)](\($e.value.url))\n\n" +
+           "\($e.value.snippet)\n\n" +
+           "Result: Date=\($e.value.date), Updated=\($e.value.last_updated)\n"
+       )
+     | join("\n---\n\n")
+  '
+}
+
+Main "$@"

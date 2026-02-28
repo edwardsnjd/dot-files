@@ -834,6 +834,12 @@ Save a URL to your Pocket account.
 
 Example: `./save-to-pocket "https://example.com"`
 
+### web-search
+
+Perform web searches using the Perplexity API.
+
+Example: `PERPLEXITY_API_KEY=sk-... web-search "what is the capital of France"`
+
 ---
 
 ## Miscellaneous
