@@ -72,4 +72,5 @@ stow --target="${HOME}" \
   gh \
   wezterm \
   info \
-  ghostty
+  ghostty \
+  agents
