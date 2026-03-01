@@ -126,6 +126,7 @@ function render_svg() {
 
 function render_markdown() {
   if [[ -x $(command -v glow) ]]; then
+    CLICOLOR_FORCE=1 \
     glow \
       --width "${2:-$(( $(tput cols) - 4 ))}" \
       --style "$XDG_CONFIG_HOME/glow/dark-tight.json" \
