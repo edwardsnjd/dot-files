@@ -14,10 +14,15 @@ Ensure that every main executable script under `configuration/local-bin/.local/b
 
 ## How to check
 
-1. List all the scripts under `configuration/local-bin/.local/bin/` (ignore file extensions, most use a shebang)
-2. Read `configuration/local-bin/README.md`
-3. Check that all the scripts are mentioned in the readme.
-4. Check that all the scripts have a reasonable description and example.
+Check for any missing headings in the README (but use judgement to ignore any libraries):
+
+```bash
+find configuration/local-bin/.local/bin/ \
+| sed 's|configuration/local-bin/.local/bin/|### |' \
+| while read expectedHeading ; do
+    grep -qE "^${expectedHeading}" configuration/local-bin/README.md || echo "MISSING HEADING: ${expectedHeading}"
+  done
+```
 
 ## Format of documentation
 
