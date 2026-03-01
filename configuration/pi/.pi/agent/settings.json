@@ -1,0 +1,23 @@
+{
+  "lastChangelogVersion": "0.55.3",
+  "defaultProvider": "openrouter",
+  "defaultModel": "minimax/minimax-m2.5",
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": true,
+  "enabledModels": [
+    "openrouter/anthropic/claude-opus-4.6",
+    "openrouter/anthropic/claude-sonnet-4.6",
+    "ollama/ministral-3-ctx:latest",
+    "openrouter/minimax/minimax-m2.5"
+  ],
+  "theme": "night-owl",
+  "collapseChangelog": true,
+  "quietStartup": false,
+  "editorPaddingX": 2,
+  "skills": [
+    "-../../.agents/skills/web-search/SKILL.md",
+    "+../../.agents/skills/loading-context/SKILL.md"
+  ],
+  "autocompleteMaxVisible": 10,
+  "doubleEscapeAction": "tree"
+}
