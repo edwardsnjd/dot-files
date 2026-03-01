@@ -52,8 +52,6 @@ This repository contains configuration files (dotfiles) and a collection of util
   - `DEPENDENCIES`: List of external tools.
   - `ENVIRONMENT`: Any required or optional environment variables.
   - `EXAMPLE`: Clear usage examples.
-- **Help Generation**: Use the `UsageSedScript` pattern found in `largest-outline.sh` to parse and display the header as help text.
-- **Section Extraction**: Large scripts often embed secondary logic (AWK scripts, JQ filters) in a commented section at the bottom. Use the `GetSection` helper function with `sed` to extract these sections at runtime.
 - **Variable Scope**: Always use `local` for variables within functions to avoid namespace pollution.
 - **Conditionals**: Prefer `[[ ... ]]` over `[ ... ]`. Use `[[ -z $var ]]` for empty checks.
 - **Argument Parsing**: Use a `while` loop with `case` for flag parsing in the `Main` or specific command functions.
@@ -63,6 +61,23 @@ This repository contains configuration files (dotfiles) and a collection of util
   - `sed`: Use for line manipulation and text replacement.
   - `jq`: Use for all JSON processing.
   - `fzf`: Use for interactive selection interfaces.
+- **Index all scripts in README**:
+  - Ensure that every main executable script under `configuration/local-bin/.local/bin/` is documented in `configuration/local-bin/README.md`. There are some libraries in that directory but only the top level executable scripts should be documented.
+  - The scripts should be grouped by purpose.  Each group has a second level markdown heading.
+  - Each script should have:
+    - a third level markdown heading
+    - a short sentence describing its behaviour
+    - an example of how to invoke it
+  - Example
+    ```markdown
+    ## {GROUP NAME}
+
+    ### {SCRIPT NAME}
+
+    {SCRIPT DESCRIPTION}.
+
+    Example: `{SCRIPT INVOCATION WITH ARGUMENTS}`
+    ```
 
 ### JavaScript / Node.js
 - **Imports**: Use ESM `import`/`export`.
