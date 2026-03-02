@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Use-Tusk/fence/main/docs/schema/fence.schema.json",
+  // See: https://github.com/Use-Tusk/fence/blob/main/internal/templates/code.json
+  // See: https://github.com/Use-Tusk/fence/blob/main/internal/templates/code-strict.json
+  "extends": "code-strict",
+  "network": {
+    "allowedDomains": ["api.perplexity.ai"]
+  },
+  "filesystem": {
+    // code-strict has denyDefaultRead so we have to explicitly enable
+    // any reads we need.
+    // NB: Include the actual file locations for any symlinks too.
+    "allowRead": [
+      // Allow agents to read their config
+      "~/.agents",
+      "~/.pi",
+      // Dot files are symlinked to $HOME
+      "~/repos/dot-files/configuration/agents/.agents",
+      "~/repos/dot-files/configuration/pi/.pi",
+    ],
+    "allowWrite": [
+      // pi agent writes sessions etc.
+      "~/.pi",
+    ],
+  }
+}

@@ -74,4 +74,5 @@ stow --target="${HOME}" \
   info \
   ghostty \
   agents \
-  pi
+  pi \
+  fence
