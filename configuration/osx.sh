@@ -10,7 +10,7 @@ function speed_up_keys() {
 
 function link_os_bins() {
   local target=~/.local/bin/airport
-  if [[ ! -s "$target" ]]; then
+  if [[ ! -L "$target" ]]; then
     echo "Linking airport to $target"
     ln -s \
       /System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport \
