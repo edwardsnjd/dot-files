@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+function DockerIcalToJson {
+  docker run \
+    --rm \
+    --volume "$PWD:/data" \
+    --interactive \
+    ical-to-json \
+    "$@"
+}
+
+DockerIcalToJson "$@"
