@@ -18,9 +18,9 @@ Check for any missing headings in the README (but use judgement to ignore any li
 
 1. Run the validation script: `scripts/find-missing-headings`
 2. For each missing heading that looks like a script:
-    a. Find the corresponding script
-    b. Read it
-    c. Add its documentation section to the README (see below for template)
+    1. Find the corresponding script
+    2. Read it
+    3. Add its documentation section to the README (see below for template)
 
 Note:
 - Most scripts have no file extension.
