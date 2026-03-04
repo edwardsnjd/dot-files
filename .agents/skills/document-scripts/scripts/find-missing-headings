@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+find configuration/local-bin/.local/bin/ \
+| sed 's|configuration/local-bin/.local/bin/|### |' \
+| while read expectedHeading ; do
+    grep -qE "^${expectedHeading}" configuration/local-bin/README.md || echo "MISSING HEADING: ${expectedHeading}"
+  done
