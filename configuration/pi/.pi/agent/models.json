@@ -1,0 +1,40 @@
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "models": [
+        { "id": "codellama:7b-code" },
+        { "id": "codellama:13b" },
+        { "id": "codellama:7b" },
+        { "id": "qwen3:8b" },
+        { "id": "deepseek-r1:8b" },
+        { "id": "ministral-3-3b-ctx:latest" },
+        { "id": "ministral-3-ctx:latest" },
+        { "id": "ministral-3:3b" },
+        { "id": "ministral-3:latest" }
+      ]
+    },
+    "inceptionlabs": {
+      "baseUrl": "https://api.inceptionlabs.ai/v1",
+      "api": "openai-completions",
+      "apiKey": "INCEPTION_API_KEY",
+      "models": [
+        {
+          "id": "mercury-2",
+          "name": "Mercury 2",
+          "reasoning": true,
+          "contextWindow": 128000,
+          "compat": { "supportsDeveloperRole": false },
+          "cost": {
+            "input": 0.25,
+            "output": 0.75,
+            "cacheRead": 0.025,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    }
+  }
+}
