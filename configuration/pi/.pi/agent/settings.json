@@ -5,15 +5,16 @@
   "defaultThinkingLevel": "medium",
   "hideThinkingBlock": true,
   "enabledModels": [
+    "ollama/ministral-3-ctx:latest",
+    "inceptionlabs/mercury-2",
+    "openrouter/minimax/minimax-m2.5",
     "openrouter/anthropic/claude-opus-4.6",
     "openrouter/anthropic/claude-sonnet-4.6",
-    "ollama/ministral-3-ctx:latest",
-    "openrouter/minimax/minimax-m2.5",
-    "inceptionlabs/mercury-2"
+    "openrouter/anthropic/claude-haiku-4.5"
   ],
   "theme": "night-owl",
   "collapseChangelog": true,
-  "quietStartup": false,
+  "quietStartup": true,
   "editorPaddingX": 2,
   "skills": [
     "-../../.agents/skills/web-search/SKILL.md",
