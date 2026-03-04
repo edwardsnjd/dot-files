@@ -4,7 +4,10 @@
   // See: https://github.com/Use-Tusk/fence/blob/main/internal/templates/code-strict.json
   "extends": "code-strict",
   "network": {
-    "allowedDomains": ["api.perplexity.ai"]
+    "allowedDomains": [
+      "api.perplexity.ai",
+      "api.inceptionlabs.ai",
+    ]
   },
   "filesystem": {
     // code-strict has denyDefaultRead so we have to explicitly enable
