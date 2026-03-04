@@ -298,11 +298,15 @@ Example: `./weather-forecast "London"`
 
 ### workflowy
 
-CLI integration for the Workflowy API.
+CLI integration to add to Workflowy via its API.
 
-Example: `./workflowy list`
+Example: `echo 'Remember the milk' | ./workflowy`
 
----
+### docker-ical-to-json
+
+Converts an ICS calendar file into JSON.
+
+Example: `./docker-ical-to-json < cal.ics > cal.json`
 
 ## Text & Data Processing
 
