@@ -4,7 +4,7 @@
 #   git-file-commits - opinionated git log to show renames
 #
 # USAGE
-#   git file-commits <path>
+#   git file-commits <path> [<tformat>]
 #
 # OUTPUT
 #   One line per commit:
@@ -12,11 +12,10 @@
 
 function ListCommitsAndPaths() {
   local path="${1:?Must supply the path to browse}"
-
-  local pretty="tformat:COMMIT %C(yellow)%h%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+  local tformat="${2:-%C(yellow)%h%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)}"
 
   git log \
-    --pretty="$pretty" \
+    --pretty="tformat:COMMIT $tformat" \
     --date=short \
     --name-status \
     --color \
