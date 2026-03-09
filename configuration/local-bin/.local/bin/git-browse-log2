@@ -7,13 +7,22 @@
 #   git browse-log2 [git lg options]
 
 function GitBrowseLog2 {
-  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs git show --color --stat --patch | less -c -+F -+X"
+  local pretty="format:%C(brightblack)⟨%C(reset)%C(yellow)%h%C(reset)%C(brightblack)⟩%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%aN>%C(red)%d%C(reset)"
+  local preview="[ -n '{2}' ] && git show --color --stat --patch {2} | less -c -+F -+X"
 
-  git lg -n5000 "$@" \
+  git log \
+    --graph \
+    --color \
+    --pretty="$pretty" \
+    --date=short \
+    --decorate \
+    "$@" \
     | fzf \
       --ansi \
       --layout=reverse-list \
       --no-sort \
+      --delimiter="⟨|⟩" \
+      --accept-nth="2" \
       --bind="enter:execute($preview)"
 }
 

@@ -7,8 +7,8 @@
 #   git-browse-log [git log args]
 
 function GitBrowseLog {
-  local pretty="format:%C(yellow)%h%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%aN>%C(red)%d%C(reset)"
-  local preview="echo {} | grep -Eo '[a-f0-9]{7,}' | head -1 | xargs git show --color --stat --patch | less -c -+F -+X"
+  local pretty="format:%C(brightblack)⟨%C(reset)%C(yellow)%h%C(reset)%C(brightblack)⟩%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%aN>%C(red)%d%C(reset)"
+  local preview="[ -n '{2}' ] && git show --color --stat --patch {2} | less -c -+F -+X"
 
   git log \
     --graph \
@@ -21,10 +21,10 @@ function GitBrowseLog {
       --ansi \
       --layout=reverse-list \
       --no-sort \
+      --delimiter="⟨|⟩" \
       --preview="$preview" \
-      --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
-    | grep -Eo '[a-f0-9]{7,}' \
-    | head -1
+      --accept-nth="2" \
+      --bind "ctrl-/:change-preview-window(bottom|hidden|default)"
 }
 
 GitBrowseLog "$@"
