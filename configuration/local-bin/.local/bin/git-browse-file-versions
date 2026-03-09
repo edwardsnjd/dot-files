@@ -9,7 +9,7 @@
 function GitBrowseFileVersions() {
   local path="${1:?Must supply the path to browse}"
 
-  ListCommitsAndPaths $path | SelectGitCommit | while read sha p; do
+  ListCommitsAndPaths "$path" | SelectGitCommit | while read sha p; do
     echo "# git show $sha:$p"
     git show "$sha:$p" | bat --style=header --file-name="$sha:$p"
   done
@@ -44,12 +44,12 @@ function ListCommitsAndPaths() {
     --name-status \
     --color \
     --follow \
-    -- $path \
+    -- "$path" \
   | sed -E '/^$/d' \
   | awk -v current="$path" '
-    $1 == "COMMIT" { $1 = current; print }
     # Rename status lines look like: R<score> old_path new_path
     $1 ~ /^R/ { current = $2 }
+    $1 == "COMMIT" { $1 = current; print }
   '
 }
 
