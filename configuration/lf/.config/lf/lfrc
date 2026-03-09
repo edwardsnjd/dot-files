@@ -34,31 +34,42 @@ set incsearch
 set incfilter
 
 # Leave some space at the top and the bottom of the screen
-set scrolloff 10
+set scrolloff 8
 
 # Kill server as final client closes (so refreshes config)
 # set autoquit
 
 # Use custom preview script
 set preview
-set sixel
 set previewer render
 map i $paginate $f
 map I $render $f
 
 # Columns
+cmd layout_narrow ${{
+    lf -remote "send $id set nopreview"
+    lf -remote "send $id set ratios 1:2"
+}}
+cmd layout_mid ${{
+    lf -remote "send $id set preview"
+    lf -remote "send $id set ratios 1:2:3"
+}}
+cmd layout_wide ${{
+    lf -remote "send $id set preview"
+    lf -remote "send $id set ratios 1:1:2:4"
+}}
 cmd auto_cols ${{
     w=$(tput cols)
     if [ $w -le 80 ]; then
-        lf -remote "send $id set nopreview"
-        lf -remote "send $id set ratios 1:3"
-    elif [ $w -ge 160 ]; then
-        lf -remote "send $id set ratios 1:1:3:3"
+        lf -remote "send $id layout_narrow"
+    elif [ $w -le 160 ]; then
+        lf -remote "send $id layout_mid"
     else
-        lf -remote "send $id set ratios 1:2:2"
+        lf -remote "send $id layout_wide"
     fi
 }}
-auto_cols
+# Run once after the first full draw, and subsequently on resize/redraw
+on-init auto_cols
 
 # Integrations (see https://github.com/gokcehan/lf/wiki/Integrations)
 
