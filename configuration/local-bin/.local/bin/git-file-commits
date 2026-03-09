@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-file-commits - opinionated git log to show renames
+#
+# USAGE
+#   git file-commits <path>
+#
+# OUTPUT
+#   One line per commit:
+#    <PATH> <HASH> ...
+
+function ListCommitsAndPaths() {
+  local path="${1:?Must supply the path to browse}"
+
+  local pretty="tformat:COMMIT %C(yellow)%h%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%an>%C(red)%d%C(reset)"
+
+  git log \
+    --pretty="$pretty" \
+    --date=short \
+    --name-status \
+    --color \
+    --follow \
+    -- $path \
+  | sed -E '/^$/d' \
+  | awk -v current="$path" '
+    $1 == "COMMIT" { $1 = current; print }
+    # Rename status lines look like: R<score> old_path new_path
+    $1 ~ /^R/ { current = $2 }
+  '
+}
+
+ListCommitsAndPaths "$@"
