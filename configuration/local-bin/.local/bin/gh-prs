@@ -1,88 +1,102 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
 # NAME
-#   gh-prs - opinionated listing of Github PRs
+#   gh-prs - list Github PRs
 #
-# SYNOPSIS
-#   gh-prs [...gh pr args]
+# USAGE
+#   gh-prs REPO [AUTHOR]
+#
+# EXAMPLE
+#   gh-prs owner/repo foobar
 #
 # OUTPUT
 #   TSV with the columns:
-#    - id = PR ID
-#    - title = title
-#    - state = OPEN | CLOSED | MERGED
-#    - author = PR author
-#    - createdAt = ISO8601
-#    - createdAt_s = seconds since epoch
-#    - createdAt_Y = YYYY
-#    - createdAt_Ym = YYYY-mm
-#    - createdAt_YV = YYYY-wWW
-#    - createdAt_u = DOTW
-#    - closedAt... = (as createdAt)
-#    - duration = duration in seconds | null
-#    - reviews_count = total reviews
-#    - reviews_authors = review authors
+#     repo
+#     number
+#     author
+#     title
+#     body
+#     createdAt
+#     mergedAt
+#     closedAt
+#     state
+#     comments
+#     reviews
+#     commits
+#     changedFiles
+#     additions
+#     deletions
 
 set -o nounset
 set -o errexit
 set -o pipefail
 #set -o xtrace
 
-gh pr list \
-  --json "id,author,state,title,createdAt,closedAt,reviews,comments" \
-  --jq '
-def parseTs: .[0:19] + "Z" | fromdate;
-def formatTs($f): parseTs | strftime($f);
-def safeFormatTs($f): if . then parseTs | strftime($f) else null end;
-def duration: (.closedAt | parseTs) - (.createdAt | parseTs);
-def safeDuration: if .closedAt then duration else null end;
+function Main() {
+  local repo="${1:?Requires repo e.g. owner/repo}"
+  local author="${2:-}"
 
-( [ "id"
-  , "state"
-  , "title"
-  , "author"
-  , "createdAt"
-  , "createdAt_s"
-  , "createdAt_Y"
-  , "createdAt_Ym"
-  , "createdAt_YV"
-  , "createdAt_u"
-  , "closedAt"
-  , "closedAt_s"
-  , "closedAt_Y"
-  , "closedAt_Ym"
-  , "closedAt_YV"
-  , "closedAt_u"
-  , "duration"
-  , "reviews_count"
-  , "reviews_authors"
-  , "comments_count"
-  , "comments_authors"
-  ]
-, ( map(
-    [ .id
-    , .state
-    , .title
-    , .author.login
-    , .createdAt
-    , (.createdAt | formatTs("%s"))
-    , (.createdAt | formatTs("%Y"))
-    , (.createdAt | formatTs("%Y-%m"))
-    , (.createdAt | formatTs("%Y-w%V"))
-    , (.createdAt | formatTs("%u"))
-    , .closedAt
-    , (.closedAt | safeFormatTs("%s"))
-    , (.closedAt | safeFormatTs("%Y"))
-    , (.closedAt | safeFormatTs("%Y-%m"))
-    , (.closedAt | safeFormatTs("%Y-w%V"))
-    , (.closedAt | safeFormatTs("%u"))
-    , safeDuration
-    , (.reviews | length)
-    , (.reviews | map(.author.login) | join(","))
-    , (.comments | length)
-    , (.comments | map(.author.login) | join(","))
-    ]
-    ) | .[] )
-) | @tsv
-  ' \
-  "$@"
+  local repoQuery="repo:${repo}"
+  local authorQuery="$([ -n "$author" ] && printf "author:$author")"
+
+  echo "repo	number	author	title	body	createdAt	mergedAt	closedAt	state	comments	reviews	commits	changedFiles	additions	deletions"
+
+  gh api graphql \
+    --paginate \
+    --raw-field query="$(QueryGQL)" \
+    --field searchQuery="is:pr ${repoQuery} ${authorQuery}" \
+    --jq '
+      .data.search.nodes[] | [
+        .repository.nameWithOwner,
+        .number,
+        .author.login,
+        .title,
+        (.body | length),
+        .createdAt, .mergedAt, .closedAt,
+        .state,
+        .comments.totalCount,
+        .reviews.totalCount,
+        .commits.totalCount,
+        .changedFiles, .additions, .deletions
+      ] | @tsv
+    '
+}
+
+function QueryGQL() {
+  cat <<- "GQL"
+	query($searchQuery: String!, $endCursor: String) {
+	  search(
+	    type: ISSUE
+	    query: $searchQuery
+	    after: $endCursor
+	    first: 25
+	  ) {
+	    pageInfo {
+	      hasNextPage
+	      endCursor
+	    }
+	    nodes {
+	      ... on PullRequest {
+	        repository { nameWithOwner }
+	        number
+	        author { login }
+	        title
+	        body
+	        createdAt
+	        mergedAt
+	        closedAt
+	        state
+	        comments { totalCount }
+	        reviews { totalCount }
+	        commits { totalCount }
+	        changedFiles
+	        additions
+	        deletions
+	      }
+	    }
+	  }
+	}
+	GQL
+}
+
+Main "$@"
