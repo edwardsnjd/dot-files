@@ -98,7 +98,7 @@ siteconf_file ~/.w3m/siteconf
 user_agent 
 no_referer 0
 accept_language en;q=1.0
-accept_encoding gzip, compress, bzip, bzip2, deflate
+accept_encoding gzip, compress, bzip, bzip2, deflate, identity;q=0
 accept_media text/html, text/*;q=0.5, image/*
 argv_is_url 1
 retry_http 1
