@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+# NAME
+#   dot-helper - Opinionated `dot` wrapper for converting between .dot and .png
+#
+# SYNOPSIS
+#   dot-helper [COMMAND]
+#
+# POSITIONAL ARGUMENTS
+#   COMMAND: (default: png)
+#     - png: Convert .dot to .png
+#     - dot: Convert .png to .dot
+#
+# EXAMPLES
+#   dot-helper png < foo.dot > foo.png
+#   dot-helper dot < foo.png > foo.dot
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+tmp=$(mktemp)
+function cleanup() {
+  rm -f "$tmp"
+}
+trap cleanup EXIT
+
+function Main() {
+  local command="${1:-png}"
+  local path="${2:-/dev/stdin}"
+
+  case "$command" in
+    png)
+      # Write the input to `tmp` so we can read it twice
+      cat "$path" > "$tmp"
+      dot -Tpng "$tmp" | exiftool "-PNG:Source<=$tmp" - -o - ;;
+    dot)
+      exiftool -b -PNG:Source "$path" -s -s -s ;;
+    *)
+      echo "Unknown command: $command" >&2 exit 1 ;;
+  esac
+}
+
+Main "$@"
