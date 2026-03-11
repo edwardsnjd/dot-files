@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+# NAME
+#   git-function-versions2 - list git history of a function (versions)
+#
+# DESCRIPTION
+#   This takes an expensive but often helpful approach of using a BFS with
+#   git blame to find all commits that have touched a function, and then
+#   presents them in an interactive fzf interface. This is more expensive than
+#   the default `git log -L` approach, but it can find commits that the default
+#   misses, such as refactoring commits that move the function around.
+#
+# USAGE
+#   git function-versions2 <function> <path>
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function GitFunctionVersions2() {
+  local func="${1:?Must supply the function to browse}"
+  local path="${2:?Must supply the path to browse}"
+
+  ListRelevantCommits $func $path \
+  | sort -nr -t" " -k4,4 \
+  | uniq \
+  | PickCommit $func
+}
+
+# ListRelevantCommits :: func path -> [func hash path ts]
+function ListRelevantCommits() {
+  local func="${1:?Must supply the function to browse}"
+  local path="${2:?Must supply the path to browse}"
+
+  # BFS
+  local queue=()
+  declare -A visited
+
+  # Queue initial items
+  while read item; do
+    [[ -n "${visited[$item]-}" ]] && continue
+    queue+=("$item")
+  done < <(FindCommitsTouching $func HEAD $path)
+
+  # Process queue (BFS)
+  while [ ${#queue[@]} -gt 0 ]; do
+    # Dequeue first element
+    local current="${queue[0]}"
+    queue=("${queue[@]:1}")
+
+    # Skip if already visited (handles self-reference and cycles)
+    [[ -n "${visited[$current]-}" ]] && continue
+
+    # Output the current item
+    echo $current
+    visited["$current"]=1
+
+    # Queue child items
+    while read child; do
+      [[ -n "${visited[$child]-}" ]] && continue
+      queue+=("$child")
+    done < <(FindCommitsTouching $current)
+  done
+}
+
+# Gather all commits of interest for this moment.
+# FindCommitsTouching :: func hash path -> [ts sha path]
+function FindCommitsTouching() {
+  local func="$1"
+  local hash="$2"
+  local path="$3"
+
+  git blame \
+    -M \
+    -C -C \
+    --incremental \
+    -L:"$func" \
+    "$hash" \
+    -- "$path" \
+  | awk -v OFS="\t" -v f="$func" '
+    commit == ""           { commit = $1 }
+    $1 == "committer-time" { ts = $2 }
+    $1 == "filename"       { path = $2 }
+    $1 == "filename"       { print f, commit, path, ts }
+    $1 == "filename"       { commit = "" }
+  '
+}
+
+# PickCommit :: func hash path ts -> func hash path ts
+function PickCommit() {
+  local preview="git show --color=always -L:$1:{3} {2}"
+  local pretty="%C(brightblack)⟨%C(reset)%C(yellow)%h%C(reset)%C(brightblack)⟩%C(reset) %C(dim blue)%ad%C(reset) %s %C(cyan)<%aN>%C(red)%d%C(reset)"
+
+  while read func hash path ts; do
+    printf "$func\t${hash:0:10}\t$path\t$ts\t"
+    git log --color --date=short --decorate --format="$pretty" -n1 $hash
+  done \
+  | fzf \
+    --ansi \
+    --no-sort \
+    --reverse \
+    --with-nth "5.." \
+    --accept-nth "2" \
+    --preview "$preview" \
+    --bind 'ctrl-/:change-preview-window(bottom|hidden|default)'
+}
+
+GitFunctionVersions2 "$@"

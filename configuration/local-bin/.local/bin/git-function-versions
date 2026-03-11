@@ -3,6 +3,15 @@
 # NAME
 #   git-function-versions - list git history of a function (versions)
 #
+# DESCRIPTION
+#   This uses the built-in `git log -L` functionality to list all commits
+#   that have touched a function.  This is the default git approach but
+#   can miss commits that move the function around, such as refactoring
+#   commits.
+#
+# SEE ALSO
+#   git-function-versions2 - a more expensive approach using git blame
+#
 # USAGE
 #   git function-versions <path> <function>
 
