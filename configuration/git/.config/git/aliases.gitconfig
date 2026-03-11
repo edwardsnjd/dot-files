@@ -68,3 +68,6 @@
 
 	# Configure fetch for bare repos
 	config-fetch = config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+
+	# Find the merge commit that introduced the given commit
+	merged-by = "!mb() { git rev-list --ancestry-path --reverse --merges ${1}..HEAD | head -n1; }; mb"
