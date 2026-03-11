@@ -1,6 +1,6 @@
-FROM qwen3.5:latest
+FROM qwen3.5:27b
 
-# https://huggingface.co/Qwen/Qwen3.5-9B
+# https://huggingface.co/Qwen/Qwen3.5-27B
 PARAMETER temperature 0.6
 PARAMETER top_p 0.95
 PARAMETER top_k 20
@@ -10,4 +10,4 @@ PARAMETER presence_penalty 0.0
 
 # This is lower than the 128k they recommend but
 # any larger and we hit OOM
-PARAMETER num_ctx 50000
+PARAMETER num_ctx 40000
