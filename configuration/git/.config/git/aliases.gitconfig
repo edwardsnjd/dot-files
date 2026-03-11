@@ -69,5 +69,7 @@
 	# Configure fetch for bare repos
 	config-fetch = config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 
-	# Find the merge commit that introduced the given commit
+	# Find merge bubble ranges
 	merged-by = "!mb() { git rev-list --ancestry-path --reverse --merges ${1}..HEAD | head -n1; }; mb"
+	split-from = "!mb() { local m1=$(git merged-by ${1}); git merge-base ${m1}^1 ${m1}^2; }; mb"
+	bubble-for = "!b() { git lg ^$(git split-from ${1})^@ $(git merged-by ${1}); }; b"
