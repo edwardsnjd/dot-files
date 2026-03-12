@@ -8,6 +8,7 @@
  (list "aerc"
        "ansible"
        "bat"
+       "chafa"
        "curl"
        "datamash"
        "du-dust"
