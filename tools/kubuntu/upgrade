@@ -15,7 +15,8 @@ cargo install --git https://github.com/astral-sh/uv uv
 
 # Upgrade ollama by reinstalling
 # https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-upgrade-ollama
-# curl -fsSL https://ollama.com/install.sh | sh
+curl -fsSL https://ollama.com/install.sh > ollama-install.sh
+echo "TODO: Check and run ollama-install.sh"
 
 # Record installed versions
 ./capture
