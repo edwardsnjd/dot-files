@@ -126,6 +126,12 @@ Browse historical versions of a code function.
 
 Example: `./git-function-versions MyFunctionName`
 
+### git-function-versions2
+
+List git history of a function using a BFS approach with interactive fzf.
+
+Example: `./git-function-versions2 myFunction src/file.c`
+
 ### git-graphviz
 
 Generate Graphviz visualizations of git history.
@@ -215,6 +221,12 @@ Example: `./git-worktree-switch`
 Show context around git tags.
 
 Example: `./tags-context v1.2.0`
+
+### git-file-commits
+
+Opinionated git log to show renames.
+
+Example: `./git-file-commits <path> [<tformat>]`
 
 ---
 
@@ -679,6 +691,12 @@ Example: `./ssh-hosts-status`
 CLI utility for managing WiFi connections.
 
 Example: `./wifi status`
+
+### dot-helper
+
+Opinionated `dot` wrapper for converting between .dot and .png.
+
+Example: `./dot-helper png < foo.dot > foo.png`
 
 ---
 
