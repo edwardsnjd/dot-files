@@ -16,7 +16,7 @@ Ensure that every main executable script under `configuration/local-bin/.local/b
 
 Check for any missing headings in the README (but use judgement to ignore any libraries).  Use the scripts to avoid reinventing the logic:
 
-1. Run the validation script: `scripts/find-missing-headings`
+1. Run the validation script (relative to this skill): `scripts/find-missing-headings`
 2. For each missing heading that looks like a script:
     1. Find the corresponding script
     2. Read it
