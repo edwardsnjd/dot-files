@@ -8,7 +8,7 @@ let g:loaded_outline = 1
 " that cause a line to be included in the outline
 let g:outline_filetype_keywords = {
       \ 'ruby': ['module', 'class', 'def', 'describe', 'context', 'it'],
-      \ 'kotlin': ['class', 'object', 'fun'],
+      \ 'kotlin': ['class', 'object', 'interface', 'fun'],
       \ 'vim': ['function'],
       \ 'rust': ['mod', 'fn', 'trait', 'impl'],
       \ 'javascript': ['function', 'class', 'export', 'describe', 'context', 'test', 'it'],
