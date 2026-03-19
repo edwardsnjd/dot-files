@@ -1,0 +1,5 @@
+FROM qwen3-coder:30b
+
+PARAMETER temperature 0.2
+PARAMETER repeat_penalty 1.2
+PARAMETER num_predict 80

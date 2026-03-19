@@ -35,6 +35,10 @@ function BuildPrompt() {
       | "codellama:13b-code" \
       | "codellama-13b-code:latest" \
       ) BuildLlamaCodePrompt ;;
+    "qwen3-coder:30b" \
+      | "qwen3-coder:latest" \
+      | "qwen3-coder-code:latest" \
+      ) BuildQwen3CodePrompt ;;
     *) BuildDefaultPrompt ;;
   esac
 }
@@ -42,6 +46,11 @@ function BuildPrompt() {
 function BuildLlamaCodePrompt() {
   sed -E '1s/^/<PRE> /; s/<@CURSOR@>/ <SUF> /;'
   printf " <MID>"
+}
+
+function BuildQwen3CodePrompt() {
+  sed -E '1s/^/<|fim_prefix|>/; s/<@CURSOR@>/<|fim_suffix|>/;'
+  printf "<|fim_middle|>"
 }
 
 function BuildDefaultPrompt() {
