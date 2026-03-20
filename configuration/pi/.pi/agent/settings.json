@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.58.1",
-  "defaultProvider": "openrouter",
-  "defaultModel": "inception/mercury-2",
+  "lastChangelogVersion": "0.61.0",
+  "defaultProvider": "ollama",
+  "defaultModel": "qwen3.5-coding:latest",
   "defaultThinkingLevel": "medium",
   "hideThinkingBlock": true,
   "enabledModels": [
@@ -11,7 +11,9 @@
     "openrouter/anthropic/claude-sonnet-4.6",
     "openrouter/anthropic/claude-haiku-4.5",
     "inceptionlabs/mercury-2",
-    "ollama/ministral-3-ctx:latest"
+    "ollama/ministral-3-ctx:latest",
+    "ollama/qwen3.5-coding:latest",
+    "ollama/codellama:13b"
   ],
   "theme": "night-owl",
   "collapseChangelog": true,
