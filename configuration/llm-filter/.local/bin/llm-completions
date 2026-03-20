@@ -23,7 +23,7 @@ SELECTED_MODEL="${MODEL:-$DEFAULT_MODEL}"
 
 Main() {
   BuildPrompt $SELECTED_MODEL \
-    | ollama run $SELECTED_MODEL \
+    | ollama run $SELECTED_MODEL --think=false \
     | sed -E 's/<EOT>//'
 }
 
