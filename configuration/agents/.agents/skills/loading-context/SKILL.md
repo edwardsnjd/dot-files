@@ -1,6 +1,6 @@
 ---
 name: loading-context
-description: Quickly learning the core aspects of a project
+description: Quickly learn the core aspects of a project to get context
 ---
 
 # Loading Context
