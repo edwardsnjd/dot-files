@@ -11,6 +11,7 @@
 #
 # DEPENDENCIES
 #   - ollama: Command-line interface for interacting with LLMs.
+#   - $COMPLETION_MODEL: Environment variable for model (default: codellama:7b-code)
 #   - $MODEL: Environment variable for model (default: codellama:7b-code)
 
 set -o nounset
@@ -19,12 +20,13 @@ set -o pipefail
 #set -o xtrace
 
 DEFAULT_MODEL="codellama:7b-code"
-SELECTED_MODEL="${MODEL:-$DEFAULT_MODEL}"
+SELECTED_MODEL="${COMPLETION_MODEL:-${MODEL:-DEFAULT_MODEL}}"
 
 Main() {
   BuildPrompt $SELECTED_MODEL \
     | ollama run $SELECTED_MODEL --think=false \
-    | sed -E 's/<EOT>//'
+    | sed -E 's/<EOT>//' \
+    | sed -E '/^```/d'
 }
 
 function BuildPrompt() {
@@ -33,22 +35,27 @@ function BuildPrompt() {
   case "$model" in
     "codellama:7b-code" \
       | "codellama:13b-code" \
+      | "codellama-13b-code" \
       | "codellama-13b-code:latest" \
       ) BuildLlamaCodePrompt ;;
     "qwen3-coder:30b" \
+      | "qwen3-coder" \
       | "qwen3-coder:latest" \
+      | "qwen3-coder-code" \
       | "qwen3-coder-code:latest" \
-      ) BuildQwen3CodePrompt ;;
+      | "qwen3.5-code" \
+      | "qwen3.5-code:latest" \
+      ) BuildQwenCodePrompt ;;
     *) BuildDefaultPrompt ;;
   esac
 }
 
 function BuildLlamaCodePrompt() {
-  sed -E '1s/^/<PRE> /; s/<@CURSOR@>/ <SUF> /;'
-  printf " <MID>"
+  sed -E '1s/^/<PRE>/; s/<@CURSOR@>/<SUF>/;'
+  printf "<MID>"
 }
 
-function BuildQwen3CodePrompt() {
+function BuildQwenCodePrompt() {
   sed -E '1s/^/<|fim_prefix|>/; s/<@CURSOR@>/<|fim_suffix|>/;'
   printf "<|fim_middle|>"
 }
