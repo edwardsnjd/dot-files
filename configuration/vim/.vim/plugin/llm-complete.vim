@@ -148,6 +148,24 @@ function! s:ClearSuggestion()
   endif
 endfunction
 
+" Accept current suggestion or type tab
+function! AcceptSuggestionOrTab()
+  if !exists('b:llm_complete_suggestion')
+    return "\<Tab>"
+  endif
+
+  let suggestion = b:llm_complete_suggestion
+  call s:ClearSuggestion()
+
+  call s:QueueNextSuggestion()
+
+  return
+        \ "\<C-o>:let b:old_paste=&paste\<CR>" .
+        \ "\<C-o>:set paste\<CR>" .
+        \ join(suggestion.lines, "\n") .
+        \ "\<C-o>:let &paste=b:old_paste\<CR>"
+endfunction
+
 " Accept current suggestion
 function! s:AcceptSuggestion()
   if !exists('b:llm_complete_suggestion')
