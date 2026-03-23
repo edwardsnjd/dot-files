@@ -29,7 +29,7 @@ Main() {
     exit 1
   fi
 
-  BuildPrompt "$userPrompt" "$(cat)" | ollama run $MODEL
+  BuildPrompt "$userPrompt" "$(cat)" | ollama run --think=false $MODEL
 }
 
 function GetUserPrompt() {

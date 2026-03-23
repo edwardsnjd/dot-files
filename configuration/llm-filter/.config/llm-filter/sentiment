@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-llama3:8b}"
 
-ollama run "$MODEL" <<EOF
+ollama run --think=false "$MODEL" <<EOF
 # INSTRUCTONS
 
 You are an AI sentiment analyzer. You take content in and output a terse statement about its sentiment.

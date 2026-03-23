@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-llama3:8b}"
 
-ollama run "$MODEL" <<EOF
+ollama run --think=false "$MODEL" <<EOF
 Output two SVG images of the subject that I'll specify in a moment. The goal is to generate some colouring in for children.
 
 The two images should be two versions of the same image:

@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-llama3:8b}"
 
-ollama run "$MODEL" <<EOF
+ollama run --think=false "$MODEL" <<EOF
 Act like a personal brainstorming coach.
 
 Ask me probing questions to help clarify my half-baked idea about the input.

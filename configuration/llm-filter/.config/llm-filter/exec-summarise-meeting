@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-llama3:8b}"
 
-ollama run "$MODEL" <<EOF
+ollama run --think=false "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 Turn this meeting transcript into a 3-bullet executive summary, highlighting key decisions made, followed by clearly assigned action items with owners and deadlines where mentioned.

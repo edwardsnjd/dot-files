@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-llama3:8b}"
 
-ollama run "$MODEL" <<EOF
+ollama run --think=false "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 You are a helpful AI research assistant.  Summarise the following meeting notes/transcript.
