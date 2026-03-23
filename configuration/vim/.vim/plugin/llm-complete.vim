@@ -116,7 +116,7 @@ endfunction
 
 function! s:NextSuggestion()
   call s:ClearSuggestion()
-  call s:RequestSuggestion()
+  call s:QueueNextSuggestion()
 endfunction
 
 function! s:DisplaySuggestion(suggestion)
@@ -179,15 +179,13 @@ function! s:AcceptSuggestion()
     let new_cursor_col = len(new_lines[-1]) - len(after_cursor) + 1
     call cursor(new_cursor_line, new_cursor_col)
   endif
-
-  call timer_start(0, function('s:RequestNextSuggestion'))
 endfunction
 
-function! s:RequestNextSuggestion(_timer)
-  call s:RequestSuggestion()
+function! s:QueueNextSuggestion()
+  call timer_start(5, function('s:RequestSuggestion'))
 endfunction
 
-function! s:RequestSuggestion()
+function! s:RequestSuggestion(_timer)
   if !get(b:, 'llm_complete_enabled', 0)
     return
   endif
