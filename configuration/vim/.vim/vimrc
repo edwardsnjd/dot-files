@@ -402,13 +402,19 @@ noremap <leader>gt :GitGutterBufferToggle<CR>
 let g:copilot_filetypes = { '*': v:false }
 function! <SID>CopilotToggle()
   let b:copilot_enabled = getbufvar(bufnr('%'), 'copilot_enabled', 0) ? v:false : v:true
+
+  " Quality of life copilot keymaps
+  if b:copilot_enabled
+    inoremap <buffer> <C-l> <Cmd>call copilot#Next()<CR>
+    inoremap <buffer> <C-b> <Plug>(copilot-accept-word)
+  else
+    iunmap <buffer> <C-l>
+    iunmap <buffer> <C-b>
+  endif
+
   echo b:copilot_enabled ? 'Copilot enabled' : 'Copilot disabled'
 endfunction
 noremap <leader>zt <Cmd>call <SID>CopilotToggle()<CR>
-
-" Quality of life copilot keymaps
-inoremap <C-l> <Cmd>call copilot#Next()<CR>
-inoremap <C-b> <Plug>(copilot-accept-word)
 
 " Copilot airline indicator (beware cloud!)
 function! <SID>AirlineInit()
@@ -417,16 +423,36 @@ function! <SID>AirlineInit()
   endfunction
   call airline#parts#define_function('copilot', 'GetCopilotStatus')
   call airline#parts#define_accent('copilot', 'red')
-  let g:airline_section_a = airline#section#create(['mode', 'crypt', 'paste', 'spell', 'iminsert', 'copilot'])
+
+  function! GetLocalCompletionStatus()
+    return getbufvar(bufnr('%'), 'llm_complete_enabled', 0) != 0 ? '🤖' : ''
+  endfunction
+  call airline#parts#define_function('llm', 'GetLocalCompletionStatus')
+
+  let g:airline_section_a = airline#section#create(['mode', 'crypt', 'paste', 'spell', 'iminsert', 'copilot', 'llm'])
 endfunction
 autocmd User AirlineAfterInit call <SID>AirlineInit()
 
-" " - Local complete
-" noremap <leader>Zt  <Cmd>AICompleteToggle<CR>
-" inoremap <C-x><C-u> <Plug>(AICompleteSuggest)
-" inoremap <C-l>      <Plug>(AICompleteSuggest)
-" inoremap <C-y>      <Plug>(AICompleteAccept)
-" inoremap <C-e>      <Plug>(AICompleteDismiss)
+" - Local complete
+" Disabled by default and toggle via mapping
+function! <SID>LocalCompletionToggle()
+  AICompleteToggle
+
+  " Quality of life completion keymaps
+  if b:llm_complete_enabled
+    inoremap <buffer> <C-x><C-u> <Plug>(AICompleteSuggest)
+    inoremap <buffer> <C-l>      <Plug>(AICompleteSuggest)
+    inoremap <buffer> <Tab>      <Plug>(AICompleteAccept)
+    inoremap <buffer> <C-e>      <Plug>(AICompleteDismiss)
+  else
+    iunmap <buffer> <C-l>
+    iunmap <buffer> <Tab>
+    iunmap <buffer> <C-e>
+  endif
+
+  echo b:llm_complete_enabled ? 'Local completion enabled' : 'Local completion disabled'
+endfunction
+noremap <leader>Zt <Cmd>call <SID>LocalCompletionToggle()<CR>
 
 " Plugins (managed by `vim-plugin`)
 " - Bootstrap if not installed
