@@ -36,8 +36,6 @@ function! s:EnableCurrentBuffer()
   augroup END
 
   call s:EnsureGhostTextProperty()
-
-  echo "AI autocomplete enabled"
 endfunction
 
 function! s:DisableCurrentBuffer()
@@ -46,7 +44,6 @@ function! s:DisableCurrentBuffer()
   augroup END
   call s:ClearSuggestion()
   let b:llm_complete_enabled = 0
-  echo "AI autocomplete disabled"
 endfunction
 
 function! s:ToggleCurrentBuffer()
@@ -182,6 +179,12 @@ function! s:AcceptSuggestion()
     let new_cursor_col = len(new_lines[-1]) - len(after_cursor) + 1
     call cursor(new_cursor_line, new_cursor_col)
   endif
+
+  call timer_start(0, function('s:RequestNextSuggestion'))
+endfunction
+
+function! s:RequestNextSuggestion(_timer)
+  call s:RequestSuggestion()
 endfunction
 
 function! s:RequestSuggestion()
@@ -217,8 +220,8 @@ function! s:GetBufferContextAroundCursor()
   let line = line('.')
   let col = col('.') - 1
 
-  let start_line = max([1, line - 25])
-  let end_line = min([line('$'), line + 10])
+  let start_line = max([1, line - 30])
+  let end_line = min([line('$'), line + 20])
   let lines = getline(start_line, end_line)
 
   " Insert cursor marker at current position
