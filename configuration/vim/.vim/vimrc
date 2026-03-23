@@ -440,14 +440,16 @@ function! <SID>LocalCompletionToggle()
 
   " Quality of life completion keymaps
   if b:llm_complete_enabled
-    inoremap <buffer> <C-x><C-u> <Plug>(AICompleteSuggest)
-    inoremap <buffer> <C-l>      <Plug>(AICompleteSuggest)
-    inoremap <buffer> <Tab>      <Plug>(AICompleteAccept)
-    inoremap <buffer> <C-e>      <Plug>(AICompleteDismiss)
+    inoremap <buffer> <C-x><C-u>   <Plug>(AICompleteSuggest)
+    inoremap <buffer> <C-l>        <Plug>(AICompleteSuggest)
+    inoremap <buffer> <C-y>        <Plug>(AICompleteAccept)
+    inoremap <buffer> <C-e>        <Plug>(AICompleteDismiss)
+    inoremap <buffer> <expr> <Tab> AcceptSuggestionOrTab()
   else
     iunmap <buffer> <C-l>
-    iunmap <buffer> <Tab>
+    iunmap <buffer> <C-y>
     iunmap <buffer> <C-e>
+    iunmap <buffer> <Tab>
   endif
 
   echo b:llm_complete_enabled ? 'Local completion enabled' : 'Local completion disabled'
