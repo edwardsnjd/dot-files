@@ -157,8 +157,6 @@ function! AcceptSuggestionOrTab()
   let suggestion = b:llm_complete_suggestion
   call s:ClearSuggestion()
 
-  call s:QueueNextSuggestion()
-
   return
         \ "\<C-o>:let b:old_paste=&paste\<CR>" .
         \ "\<C-o>:set paste\<CR>" .
