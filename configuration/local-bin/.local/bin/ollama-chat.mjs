@@ -47,9 +47,25 @@ function ollamaMessage(message) {
   return { ...rest, images }
 }
 
-function extractContent(line) {
-  const { message } = JSON.parse(line)
-  return message?.content ?? ''
+function extractContent() {
+  let thinking = false
+
+  return (line) => {
+    const { error, message } = JSON.parse(line)
+
+    if (!thinking && message?.thinking) {
+      console.log("[THINKING]")
+      thinking = true
+    }
+    if (thinking && message?.content) {
+      console.log("[/THINKING]")
+      console.log("")
+      thinking = false
+    }
+
+    return error ? `ERROR: ${error}`
+      : message?.thinking ?? message?.content ?? ''
+  }
 }
 
 async function send(host, chat) {
@@ -64,7 +80,7 @@ function createSendMessage(host, model) {
   return async function(messages) {
     const ollamaChat = ollamaRequest(model, messages)
     const httpResponse = await send(host, ollamaChat)
-    return readStream(httpResponse.body, extractContent)
+    return readStream(httpResponse.body, extractContent())
   }
 }
 
