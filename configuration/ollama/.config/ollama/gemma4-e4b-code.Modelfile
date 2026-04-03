@@ -1,0 +1,8 @@
+FROM gemma4:e4b
+
+# Model already uses their prefered params: https://ollama.com/library/gemma4
+
+# Overly large but allows sharing model instance with reasoning one
+PARAMETER num_ctx 50000
+# Limit prediction
+PARAMETER num_predict 32

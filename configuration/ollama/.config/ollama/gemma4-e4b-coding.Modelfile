@@ -1,0 +1,6 @@
+FROM gemma4:e4b
+
+# Model already uses their prefered params: https://ollama.com/library/gemma4
+
+# Make some space for agentic to and fro
+PARAMETER num_ctx 50000
