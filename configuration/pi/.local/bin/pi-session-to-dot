@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# NAME
+#   pi-session-to-dot - Generate Graphviz DOT from pi agent session JSONL
+#
+# SYNOPSIS
+#   pi-session-to-dot SESSION_FILE
+#   pi-session-to-dot < SESSION_FILE
+#
+# USAGE
+#   Convert a pi agent session JSONL file to a Graphviz DOT graph.
+#   The output can be piped to dot(1) to generate a visual graph.
+#
+# OPTIONS
+#   SESSION_FILE - Path to the session JSONL file
+#
+# DEPENDENCIES
+#   jq - JSON processing
+#   dot - Graphviz (for rendering)
+#
+# EXAMPLE
+#   pi-session-to-dot session.jsonl | dot -Tsvg > session.svg
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+function Main() {
+  DotNodes "$@" | DotOutline
+}
+
+function DotOutline() {
+  cat <<-EOF
+	digraph session {
+	  label="Pi Session";
+	  labelloc=t;
+	  rankdir=TB;
+	  node [shape=box];
+	
+	  $(cat)
+	}
+	EOF
+}
+
+function DotNodes() {
+  # Process each line
+  jq -r '
+  def content_size:
+    if .type == "session" then 10
+    elif .type == "model_change" then 20
+    elif .type == "thinking_level_change" then 20
+    elif .type == "message" then
+      [.message.content[] | (.text // .thinking // "") | length] | add // 0
+    else 10
+    end;
+
+  def node_label:
+    if .type == "session" then
+      "session"
+    elif .type == "model_change" then
+      "model: " + (.modelId // "unknown")[0:30]
+    elif .type == "thinking_level_change" then
+      "thinking: " + (.thinkingLevel // "unknown")
+    elif .type == "message" then
+      .message.role
+    else
+      .type
+    end;
+
+  def node_shape:
+    if .type == "message" and .message.role == "toolResult" then "ellipse"
+    elif .type == "message" and .message.role == "assistant" then "box"
+    elif .type == "message" and .message.role == "user" then "box3d"
+    else "box"
+    end;
+
+  def color_for_type:
+    if .type == "session" then "lightblue"
+    elif .type == "model_change" then "lightgreen"
+    elif .type == "thinking_level_change" then "lightyellow"
+    elif .type == "message" and .message.role == "user" then "orange"
+    elif .type == "message" and .message.role == "assistant" then "lightgray"
+    elif .type == "message" and .message.role == "toolResult" then "lightpink"
+    else "white"
+    end;
+
+  "\"" + .id + "\" [label=\"" + node_label + "\", shape=\"" + node_shape + "\", style=filled, fillcolor=\"" + color_for_type + "\", width=" + (content_size | tostring) + ", height=" + (content_size / 20 | tostring) + "];",
+
+  if .parentId != null then
+    "\"" + .parentId + "\" -> \"" + .id + "\";"
+  else
+    empty
+  end
+  ' "$@"
+}
+
+Main "$@"
