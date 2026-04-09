@@ -63,27 +63,27 @@ Use this when:
 **Generate a snippet of code**
 
 ```bash
-pi --print <<-'PROMPT'
+pi --print <<-'EOF'
 Write a JS function that validates email addresses. It should:
 - Check for proper format (user@domain.tld)
 - Reject empty strings
 - Return true/false
-PROMPT
+EOF
 ```
 
 **Investigate something small**
 
 ```bash
-pi --print <<-'PROMPT'
+pi --print <<-'EOF'
 Look for all usages of the function fooBar(...).
 Return the callgraph as a nested markdown list for ease of reading.
-PROMPT
+EOF
 ```
 
 **Complex investigation with context**
 
 ```bash
-pi --print <<-'PROMPT'
+pi --print <<-'EOF'
 You are a Field Investigator analyzing the {component} in {project}.
 
 **Prior Context:**
@@ -103,5 +103,5 @@ You are a Field Investigator analyzing the {component} in {project}.
 
 **Output:**
 {specific format required}
-PROMPT
+EOF
 ```
