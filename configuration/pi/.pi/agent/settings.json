@@ -1,23 +1,21 @@
 {
-  "lastChangelogVersion": "0.61.0",
+  "lastChangelogVersion": "0.66.1",
   "defaultProvider": "ollama",
-  "defaultModel": "qwen3.5-coding:latest",
+  "defaultModel": "qwen3.5:35b-a3b-coding-nvfp4",
   "defaultThinkingLevel": "medium",
-  "hideThinkingBlock": true,
+  "hideThinkingBlock": false,
   "enabledModels": [
-    "openrouter/inception/mercury-2",
-    "openrouter/minimax/minimax-m2.5",
-    "openrouter/anthropic/claude-opus-4.6",
-    "openrouter/anthropic/claude-sonnet-4.6",
-    "openrouter/anthropic/claude-haiku-4.5",
     "inceptionlabs/mercury-2",
     "ollama/ministral-3-ctx:latest",
     "ollama/qwen3.5-coding:latest",
-    "ollama/codellama:13b"
+    "ollama/codellama:13b",
+    "ollama/qwen3.5:35b-a3b-coding-nvfp4",
+    "ollama/gemma4:31b",
+    "ollama/gemma4:e4b"
   ],
   "theme": "night-owl",
   "collapseChangelog": true,
-  "quietStartup": true,
+  "quietStartup": false,
   "editorPaddingX": 2,
   "skills": [
     "-../../.agents/skills/web-search/SKILL.md",
