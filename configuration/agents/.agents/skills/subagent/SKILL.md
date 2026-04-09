@@ -7,101 +7,109 @@ description: Delegate a task to a new subagent so you can focus on coordination
 
 ## When to use this skill
 
-Use this when:
+- Instructed to delegate
+- Task has clear boundaries (e.g. "read these 3 files")
+- Task needs isolation (e.g. "summarise this file")
+- You can pass all required context explicitly
+- You have a constrained, specific objective
 
-- Instructed to delegate something
-- Task has well-defined boundaries (e.g. "read these 3 files")
-- Task needs to be isolated from other work (e.g. "summarise this very long file")
-- You explicitly pass all required context
-- You have a clear, constrained objective
+## When NOT to use this skill
 
-## How to delegate to a subagent
+- **Analyzing your sessions/logs** — Read files directly
+- **Batch processing** — Use iterative workflow instead
+- **"Figure out what to do"** — If you don't know, neither will they
 
-1. **Break down complex tasks into a sequence of small tasks**
-   - Act as a coordinator, and plan out a sequence of small tasks
-   - IMPORTANT: Use a subagent to help you break down the tasks!
-   - Break down any complex tasks into small tasks
-   - IMPORTANT: Only ask subagents to perform small targeted tasks, DO NOT just pass your entire complex task to a subagent
+## Critical: Zero context
 
-2. **Be clear about what needs to be done**
-   - State the goal explicitly
-   - Include any relevant context
-   - Specify any constraints or requirements
+Subagents see **nothing** from your session. You must pass:
+- Prior findings
+- File paths to examine
+- Explicit goals
 
-3. **Specify the scope**
-   - What files to touch or create
-   - What behavior to implement
-   - What not to do (out of scope)
+## Anti-patterns
 
-4. **Define acceptance criteria**
-   - How to verify the task is complete
-   - What tests or checks should pass
+- ❌ "Process all scripts" — Do ONE
+- ❌ Pass file contents in prompt — Use @file references
+- ❌ Don't validate responses — Check for errors
+- ❌ Delegate the delegation — Coordinate yourself
+- ❌ "Figure it out" — You already know the task
 
-5. **Start the agent and wait for its response**
-   - Run the bash command: `pi --print PROMPT`
-   - Where `PROMPT` completely describes the task to perform, and all required context
-      - Use bash heredoc with quoted delimiter for multiline prompts
-   - Pass ALL required context explicitly (subagents get zero context) in `PROMPT`
-   - The response of that command on stdout is the subagent's response
+## Size limits
 
-## Critical: Prompt contains all context
+Keep prompts under **~1KB**:
+- 1 specific task, not "process all items"
+- File paths, not file contents
+- 1-5 files to examine
 
-**Known Issue**: Subagents spawn with zero context. Each subagent cannot see:
-- Previous tool calls made by you
-- Files read by other subagents
-- Prior conclusions or findings
-- Any context not explicitly passed in the prompt
+## How to delegate
 
-**Required Workaround**: You must explicitly include in each subagent invocation:
-1. A "Prior Context" section with all previous findings
-2. Current project structure and key file paths
-3. Relevant code snippets (imports, method signatures)
-4. List of specific files the subagent should read
+1. Break into tiny tasks (one at a time)
+2. Write prompt with Goal, Files, Scope
+3. Run `pi --print <<-'EOF'` with your prompt
+4. Check response for errors
+5. On failure: retry once with simpler scope, or handle manually
 
-## Examples
+## Iterative workflow
 
-**Generate a snippet of code**
+For many items, process one at a time:
 
 ```bash
 pi --print <<-'EOF'
-Write a JS function that validates email addresses. It should:
-- Check for proper format (user@domain.tld)
-- Reject empty strings
+Analyze: abn
+File: configuration/local-bin/.local/bin/abn
+Goal: Add to README if missing
+EOF
+
+# Check result. If failed:
+# - Retry with narrower scope, OR
+# - Handle manually
+```
+
+## Minimal prompt template
+
+```
+**Goal:** {what to do}
+
+**Files:**
+- {path}: {why}
+
+**Scope:** {do this, not that}
+```
+
+## Examples
+
+**Find something**
+```bash
+pi --print <<-'EOF'
+Find all calls to fooBar() in the codebase.
+Return a list grouped by file.
+EOF
+```
+
+**Write something**
+```bash
+pi --print <<-'EOF'
+Write an email validator function:
+- Check format (user@domain.tld)
 - Return true/false
 EOF
 ```
 
-**Investigate something small**
-
+**Investigate with context**
 ```bash
 pi --print <<-'EOF'
-Look for all usages of the function fooBar(...).
-Return the callgraph as a nested markdown list for ease of reading.
-EOF
-```
+You are debugging the auth module.
 
-**Complex investigation with context**
+**Goal:** Find why login fails for users with 2FA.
 
-```bash
-pi --print <<-'EOF'
-You are a Field Investigator analyzing the {component} in {project}.
+**Prior:** User reports "works without 2FA, fails with it".
 
-**Prior Context:**
-- Previous investigation found: {list key findings}
-- Related files: {list of prior discovered files}
+**Files:**
+- auth/login.js: main login logic
+- auth/totp.js: 2FA handling
 
-**Files to Examine:**
-- {file1}: {why}
-- {file2}: {why}
+**Scope:** Focus on 2FA code path only.
 
-**Your Task:**
-{specific, constrained objective}
-
-**Constraints:**
-- Only look at: {allowed scope}
-- Do NOT explore: {forbidden scope}
-
-**Output:**
-{specific format required}
+**Output:** List of potential causes ranked by likelihood.
 EOF
 ```
