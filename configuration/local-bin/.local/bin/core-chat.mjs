@@ -1,11 +1,13 @@
 import { createInterface } from 'readline'
 import { readFileSync, readdirSync } from 'fs'
 import * as path from 'path'
+import { spawn } from 'child_process'
 
 const CLEAR_COMMAND = '/clear'
 const DUMP_COMMAND = '/dump'
 const FILE_COMMAND = '/file '
 const IMAGE_COMMAND = '/image '
+const VOICE_COMMAND = '/voice'
 const EXIT_COMMAND = 'exit'
 
 // Prompt management
@@ -18,7 +20,7 @@ function buildPrompt(input, output) {
 // completer :: String -> [Command[], String]
 function completer(line) {
   if (line.length === 0 || line === '/') return [
-    [CLEAR_COMMAND, DUMP_COMMAND, FILE_COMMAND, IMAGE_COMMAND],
+    [CLEAR_COMMAND, DUMP_COMMAND, FILE_COMMAND, IMAGE_COMMAND, VOICE_COMMAND],
     line,
   ]
 
@@ -26,6 +28,7 @@ function completer(line) {
   if (DUMP_COMMAND.startsWith(line)) return [[DUMP_COMMAND], line]
   if (FILE_COMMAND.startsWith(line)) return [[FILE_COMMAND], line]
   if (IMAGE_COMMAND.startsWith(line)) return [[IMAGE_COMMAND], line]
+  if (VOICE_COMMAND.startsWith(line)) return [[VOICE_COMMAND], line]
 
   if (line.startsWith(FILE_COMMAND)) {
     const fileInput = line.substring(FILE_COMMAND.length)
@@ -90,6 +93,14 @@ async function* readLines(body) {
   yield partialLine
 }
 
+function sayParagraph(text) {
+  return new Promise((resolve) => {
+    if (!text || text.trim() === '') return resolve();
+    const proc = spawn('say', [text])
+    proc.on('close', resolve)
+  })
+}
+
 export async function getUserInput(prompt) {
   const lines = []
   const images = []
@@ -131,9 +142,47 @@ function appendAssistantMessage(messages, content) {
   return [...messages, buildMessage('assistant', content)]
 }
 
+function voiceParser() {
+  let buffer = ''
+  let insideFenced = false
+
+  function* yieldParagraphs() {
+    while (buffer.includes('\n\n')) {
+      const idx = buffer.indexOf('\n\n')
+      yield buffer.slice(0, idx)
+      buffer = buffer.slice(idx + 2)
+    }
+  }
+
+  function* feed(chunk) {
+    let i = 0
+
+    while (i < chunk.length) {
+      const nextFenceIdx = chunk.indexOf('```', i)
+      const haveFence = nextFenceIdx !== -1
+
+      if (!insideFenced) {
+        buffer += haveFence ? chunk.slice(i, nextFenceIdx) : chunk.slice(i)
+        yield* yieldParagraphs()
+        if (haveFence) { yield 'Code block.' }
+      }
+
+      i = haveFence ? nextFenceIdx + 3 : i + chunk.length
+      if (haveFence) { insideFenced = !insideFenced }
+    }
+  }
+
+  function* flush() {
+    yield buffer
+  }
+
+  return { feed, flush }
+}
+
 // Main chat loop
 export async function runChatLoop(sendMessage) {
   let messages = emptyMessages()
+  let voiceOutput = false
 
   const resetChat = () => { messages = emptyMessages() }
 
@@ -143,10 +192,31 @@ export async function runChatLoop(sendMessage) {
     const chunks = await sendMessage(messages)
 
     let assistantContent = ''
+
+    const parser = voiceParser()
+
     for await (const chunk of chunks) {
+      // Gather for the conversation
       assistantContent += chunk
-      process.stdout.write(chunk)
-      process.stdout.uncork() // Flush
+
+      // Display chunk
+      const flushed = process.stdout.write(chunk)
+      if (!flushed) process.stderr.write("not flushed\n\n")
+      process.stdout.uncork()
+
+      // Voice output with code block detection
+      if (voiceOutput) {
+        for (const paragraph of parser.feed(chunk)) {
+          await sayParagraph(paragraph)
+        }
+      }
+    }
+
+    // Speak any remaining text in buffer
+    if (voiceOutput) {
+      for (const paragraph of parser.flush()) {
+        await sayParagraph(paragraph)
+      }
     }
 
     messages = appendAssistantMessage(messages, assistantContent)
@@ -169,6 +239,12 @@ export async function runChatLoop(sendMessage) {
       case CLEAR_COMMAND:
         resetChat()
         console.log('(chat has been reset)')
+        console.log()
+        break
+
+      case VOICE_COMMAND:
+        voiceOutput = !voiceOutput
+        console.log(`(voice output ${voiceOutput ? 'on' : 'off'})`)
         console.log()
         break
 
