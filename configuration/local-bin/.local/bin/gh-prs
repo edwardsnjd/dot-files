@@ -4,10 +4,10 @@
 #   gh-prs - list Github PRs
 #
 # USAGE
-#   gh-prs REPO [AUTHOR]
+#   gh-prs REPO [--author AUTHOR] [--year YEAR]
 #
 # EXAMPLE
-#   gh-prs owner/repo foobar
+#   gh-prs owner/repo --author foobar
 #
 # OUTPUT
 #   TSV with the columns:
@@ -34,17 +34,30 @@ set -o pipefail
 
 function Main() {
   local repo="${1:?Requires repo e.g. owner/repo}"
-  local author="${2:-}"
+  local year=""
+  local author=""
+
+  local otherArgs=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --author) author="$2" && shift && shift ;;
+      --year) year="$2" && shift && shift ;;
+      -*|--*) echo "Unknown option $1" >&2 && exit 1 ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+  set -- "${otherArgs[@]}" # restore positional parameters
 
   local repoQuery="repo:${repo}"
   local authorQuery="$([ -n "$author" ] && printf "author:$author")"
+  local dateQuery="$([ -n "$year" ] && printf "year:$year")"
 
   echo "repo	number	author	title	body	createdAt	mergedAt	closedAt	state	comments	reviews	commits	changedFiles	additions	deletions"
 
   gh api graphql \
     --paginate \
     --raw-field query="$(QueryGQL)" \
-    --field searchQuery="is:pr ${repoQuery} ${authorQuery}" \
+    --field searchQuery="is:pr ${repoQuery} ${authorQuery} ${dateQuery}" \
     --jq '
       .data.search.nodes[] | [
         .repository.nameWithOwner,
