@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+Main() {
+  local sha="${1:-HEAD}"
+
+  git ls-tree -r --format='%(objecttype)	%(path)' "$sha" \
+  | sed -nE 's/^blob	//p' \
+  | while read -r file; do
+    git blame --line-porcelain "$sha" -- "$file" \
+    | sed -nE 's/^author-time //p'
+  done
+}
+
+Main "$@"
