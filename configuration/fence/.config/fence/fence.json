@@ -15,11 +15,15 @@
     // NB: Include the actual file locations for any symlinks too.
     "allowRead": [
       // Allow agents to read their config
-      "~/.agents",
-      "~/.pi",
+      "~/.agents/",
+      "~/.pi/",
       // Dot files are symlinked to $HOME
-      "~/repos/dot-files/configuration/agents/.agents",
-      "~/repos/dot-files/configuration/pi/.pi",
+      "~/repos/dot-files/configuration/agents/.agents/",
+      "~/repos/dot-files/configuration/pi/.pi/",
+      "~/repos/dot-files/configuration/gh/",
+      "~/repos/edwardsnjd/dot-files/configuration/agents/.agents/",
+      "~/repos/edwardsnjd/dot-files/configuration/pi/.pi/",
+      "~/repos/edwardsnjd/dot-files/configuration/gh/",
       // Local bin
       "~/repos/dot-files/configuration/local-bin/.local/bin/web-search",
       // Chrome
@@ -27,7 +31,7 @@
     ],
     "allowWrite": [
       // pi agent writes sessions etc.
-      "~/.pi",
+      "~/.pi/",
     ],
   }
 }
