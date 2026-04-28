@@ -17,6 +17,7 @@
       // Allow agents to read their config
       "~/.agents/",
       "~/.pi/",
+      "~/.copilot/",
       // Dot files are symlinked to $HOME
       "~/repos/dot-files/configuration/agents/.agents/",
       "~/repos/dot-files/configuration/pi/.pi/",
@@ -24,6 +25,10 @@
       "~/repos/edwardsnjd/dot-files/configuration/agents/.agents/",
       "~/repos/edwardsnjd/dot-files/configuration/pi/.pi/",
       "~/repos/edwardsnjd/dot-files/configuration/gh/",
+      // Copilot
+      "~/Library/Caches/copilot/",
+      "~/.local/state/gh/",
+      "~/Library/Application Support/Microsoft/DeveloperTools/deviceid",
       // Local bin
       "~/repos/dot-files/configuration/local-bin/.local/bin/web-search",
       // Chrome
@@ -32,6 +37,8 @@
     "allowWrite": [
       // pi agent writes sessions etc.
       "~/.pi/",
+      // Copilot agent writes to cache
+      "~/Library/Caches/copilot/",
     ],
   }
 }
