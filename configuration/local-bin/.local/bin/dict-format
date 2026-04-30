@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 
-sed -nE '
+SED="$([ -x "$(command -v gsed)" ] && echo "gsed" || echo "sed")"
+
+$SED -nE '
 # 552 No match
 /^552\s+.*/ {
   s//No matches./p
