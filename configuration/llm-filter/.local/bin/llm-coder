@@ -39,7 +39,7 @@ function GetUserPrompt() {
     # NOTE: Use /dev/tty to read input because we expect
     # stdin to be redirected from a file or pipe.
     echo ""
-    read -e -p "Prompt> " userPrompt < /dev/tty
+    read -p "Prompt> " userPrompt < /dev/tty
   fi
 
   echo "$userPrompt"
