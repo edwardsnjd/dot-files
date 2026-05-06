@@ -24,7 +24,7 @@ SELECTED_MODEL="${COMPLETION_MODEL:-${MODEL:-DEFAULT_MODEL}}"
 
 Main() {
   BuildPrompt $SELECTED_MODEL \
-    | ollama run $SELECTED_MODEL --think=false \
+    | ollama run --nowordwrap $SELECTED_MODEL --think=false \
     | sed -E 's/<EOT>//' \
     | sed -E '/^```/d'
 }

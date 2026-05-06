@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-llama3:8b}"
 
-ollama run --think=false "$MODEL" <<EOF
+ollama run --nowordwrap --think=false "$MODEL" <<EOF
 You are an expert computer programming assistant.
 
 Read the input code and reply with an explanation of what it does and how it does it.

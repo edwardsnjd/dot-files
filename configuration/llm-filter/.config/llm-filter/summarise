@@ -4,7 +4,7 @@ MODEL="${MODEL:-llama3:8b}"
 
 # Prompt adapted from: https://github.com/danielmiessler/fabric/blob/main/patterns/summarize_micro/system.md
 
-ollama run --think=false "$MODEL" <<EOF
+ollama run --nowordwrap --think=false "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 You are an expert content summarizer. You take content in and output a Markdown formatted summary using the format below.
