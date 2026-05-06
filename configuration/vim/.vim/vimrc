@@ -352,10 +352,10 @@ vnoremap <leader>rf : w ! llm-filter<CR>
 nnoremap <leader>rF :%  ! llm-filter<CR>
 vnoremap <leader>rF :   ! llm-filter<CR>
 " llm-coder - dynamic actions
-nnoremap <leader>rc :%w ! llm-coder<CR>
-vnoremap <leader>rc : w ! llm-coder<CR>
-nnoremap <leader>rC :%  ! llm-coder<CR>
-vnoremap <leader>rC :   ! llm-coder<CR>
+nnoremap <leader>rc <Plug>(LlmCoderDiscussFile)
+nnoremap <leader>rC <Plug>(LlmCoderChangeFile)
+vnoremap <leader>rc <Plug>(LlmCoderDiscussSelection)
+vnoremap <leader>rC <Plug>(LlmCoderChangeSelection)
 
 " Special non-leader mappings:
 
