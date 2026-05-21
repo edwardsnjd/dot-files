@@ -96,6 +96,9 @@ export HISTTIMEFORMAT="$(tput setaf 5)%F$(tput sgr0)T$(tput setaf 4)%H:%M$(tput 
 # Tone down "other writeable" panic color
 export LS_COLORS="${LS_COLORS}:ow=07;36"
 
+# Tone down hexyle whitespace color
+export HEXYL_COLOR_ASCII_WHITESPACE="bright black"
+
 # XDG base directory spec
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
