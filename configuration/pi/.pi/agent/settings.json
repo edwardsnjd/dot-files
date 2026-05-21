@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.74.0",
+  "lastChangelogVersion": "0.75.4",
   "defaultProvider": "ollama",
   "defaultModel": "qwen3.6:35b-a3b-coding-nvfp4",
   "defaultThinkingLevel": "medium",
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "enabledModels": [
     "inceptionlabs/mercury-2",
     "ollama/ministral-3-ctx:latest",
@@ -11,7 +11,8 @@
     "ollama/codellama:13b",
     "ollama/qwen3.5:35b-a3b-coding-nvfp4",
     "ollama/gemma4-e4b-coding:latest",
-    "ollama/gemma4:31b"
+    "ollama/gemma4:31b",
+    "ollama/qwen3.6:35b-a3b-coding-nvfp4"
   ],
   "theme": "night-owl",
   "collapseChangelog": true,
@@ -23,5 +24,19 @@
   ],
   "autocompleteMaxVisible": 10,
   "doubleEscapeAction": "tree",
-  "enableSkillCommands": true
+  "enableSkillCommands": true,
+  "packages": [
+    {
+      "source": "npm:pi-nano-context",
+      "extensions": [
+        "+index.ts"
+      ]
+    }
+  ],
+  "enableInstallTelemetry": true,
+  "steeringMode": "one-at-a-time",
+  "terminal": {
+    "showTerminalProgress": true,
+    "clearOnShrink": false
+  }
 }
