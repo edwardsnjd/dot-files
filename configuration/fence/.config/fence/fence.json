@@ -5,19 +5,23 @@
   "extends": "code-strict",
   "network": {
     "allowedDomains": [
+      // Perplexity search
       "api.perplexity.ai",
+      // Mercury 2
       "api.inceptionlabs.ai",
-    ]
+      // Pi agent
+      "pi.dev",
+    ],
   },
   "filesystem": {
     // code-strict has denyDefaultRead so we have to explicitly enable
     // any reads we need.
     // NB: Include the actual file locations for any symlinks too.
     "allowRead": [
-      // Allow agents to read their config
+      // Shared agent config e.g. skills
       "~/.agents/",
+      // pi agent
       "~/.pi/",
-      "~/.copilot/",
       // Dot files are symlinked to $HOME
       "~/repos/dot-files/configuration/agents/.agents/",
       "~/repos/dot-files/configuration/pi/.pi/",
@@ -26,19 +30,24 @@
       "~/repos/edwardsnjd/dot-files/configuration/pi/.pi/",
       "~/repos/edwardsnjd/dot-files/configuration/gh/",
       // Copilot
+      "~/.copilot/",
       "~/Library/Caches/copilot/",
       "~/.local/state/gh/",
+      "~/Library/Keychains/login.keychain-db", // 😱
       "~/Library/Application Support/Microsoft/DeveloperTools/deviceid",
       // Local bin
       "~/repos/dot-files/configuration/local-bin/.local/bin/web-search",
       // Chrome
-      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      // "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     ],
-    "allowWrite": [
-      // pi agent writes sessions etc.
-      "~/.pi/",
-      // Copilot agent writes to cache
-      "~/Library/Caches/copilot/",
-    ],
-  }
+  },
+  "macos": {
+    "mach": {
+      "lookup": [
+        // Copilot
+        // "com.apple.diagnosticd",
+        // "com.apple.analyticsd",
+      ]
+    }
+  },
 }
