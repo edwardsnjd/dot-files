@@ -177,6 +177,8 @@ nnoremap <leader>d :bprevious \| bdelete #<CR>
 nnoremap <leader>o :let curbuf = bufnr('%') <bar> execute 'bufdo if bufnr("%") != ' . curbuf . ' \| bdelete \| endif'<CR>
 nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprevious<CR>
+nnoremap <leader>6 :A<CR>
+nnoremap <leader>^ :A<CR>
 
 " - Quickly execute
 nnoremap <leader><CR> :Dispatch!<CR>
@@ -543,7 +545,9 @@ function! <SID>ConfigureLspBuffer() abort
   nmap <buffer> [g <plug>(lsp-previous-diagnostic)
   nmap <buffer> ]g <plug>(lsp-next-diagnostic)
   nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gD <plug>(lsp-implementation)
   nmap <buffer> gp <plug>(lsp-peek-definition)
+  nmap <buffer> gP <plug>(lsp-peek-implementation)
   nmap <buffer> gr <plug>(lsp-references)
   nmap <buffer> gs <plug>(lsp-document-symbol-search)
   nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
