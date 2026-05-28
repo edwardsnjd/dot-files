@@ -40,6 +40,11 @@
       // Chrome
       // "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     ],
+    "allowWrite": [
+      // Pi manages state and sessions
+      "~/repos/dot-files/configuration/pi/.pi/**",
+      "~/repos/edwardsnjd/dot-files/configuration/pi/.pi/**",
+    ],
   },
   "macos": {
     "mach": {
