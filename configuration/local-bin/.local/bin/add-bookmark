@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# NAME
+#   add-bookmark - opinionated nb wrapper to add a bookmark
+#
+# USAGE
+#   add-bookmark <URL>
+#   echo URL | add-bookmark
+#   add-bookmark --comment TEXT --tags TAG1,TAG2 <URL>
+#
+# DESCRIPTION
+#   Reads a URL from stdin or argument and adds it as a bookmark to a
+#   configured nb notebook.
+#
+#   This is an opinionated wrapper. For direct access, use `nb` CLI.
+#
+# OPTIONS
+#   -c, --comment TEXT    Add a comment/description
+#   -t, --tags TAGS       Comma-separated list of tags
+#
+# EXAMPLES
+#   # Add from stdin
+#   echo "https://example.com" | add-bookmark
+#
+#   # Add from argument
+#   add-bookmark https://example.com
+#
+#   # Add with metadata
+#   add-bookmark --comment "Great article" --tags "tech,reading" https://example.com
+#
+# DEPENDENCIES
+#   nb - CLI note-taking tool (must be in PATH)
+#
+# ENVIRONMENT VARIABLES
+#   NB_DIR - Required. Path to the directory with all nb notebooks.
+#   NB_BOOKMARKS_NOTEBOOK - Optionally override the name of the notebook.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+function Main() {
+  local notebook="${NB_BOOKMARKS_NOTEBOOK:-bookmarks}"
+  local url=""
+  local comment=""
+  local tags=""
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -c|--comment) comment="$2" && shift 2 ;;
+      -t|--tags) tags="$2" && shift 2 ;;
+      *) url="$1" && shift ;;
+    esac
+  done
+
+  # If no URL provided as argument, try stdin
+  if [[ -z "$url" ]]; then
+    url=$(cat)
+  fi
+
+  # Build nb bookmark command
+  local cmd="nb ${notebook}: bookmark \"${url}\""
+
+  if [[ -n "$comment" ]]; then
+    cmd="${cmd} --comment \"${comment}\""
+  fi
+
+  if [[ -n "$tags" ]]; then
+    cmd="${cmd} --tags \"${tags}\""
+  fi
+
+  eval "$cmd"
+}
+
+Main "$@"

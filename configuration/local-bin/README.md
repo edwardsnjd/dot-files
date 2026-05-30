@@ -334,6 +334,14 @@ Example: `./workflowy-ingestion log "node-id" failed "Network timeout"`
 
 Example: `./workflowy-ingestion complete "node-id"`
 
+### add-bookmark
+
+Add a bookmark to an nb notebook with optional comment and tags.
+
+Example: `echo "https://example.com" | ./add-bookmark`
+
+Example: `./add-bookmark --comment "Great article" --tags "tech,reading" https://example.com`
+
 ### add-todo
 
 Add a task to Workflowy by reading text from stdin or file.
