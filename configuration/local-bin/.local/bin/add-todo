@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# NAME
+#   add-todo - add a task to Workflowy
+#
+# USAGE
+#   add-todo <FILE>
+#   echo IDEA | add-todo
+#
+# DESCRIPTION
+#   Reads text from stdin or file and adds it to a configured location.
+#
+#   This is an opinionated wrapper. For direct API access, use `workflowy` CLI.
+#
+# EXAMPLES
+#   # Add from stdin
+#   echo "Buy milk" | add-todo
+#
+#   # Add from file
+#   add-todo tasks.txt
+#
+# DEPENDENCIES
+#   workflowy - Generic Workflowy CLI (must be in PATH)
+#
+# ENVIRONMENT VARIABLES
+#   WORKFLOWY_SAVE_LOCATION - Required. Parent node ID for added tasks
+#   (other env vars inherited by `workflowy` CLI: WORKFLOWY_API_KEY, etc.)
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+function Main() {
+  local parentId="${WORKFLOWY_SAVE_LOCATION:?ERROR: WORKFLOWY_SAVE_LOCATION environment variable is required}"
+
+  workflowy create "$parentId" "$(cat "$@")"
+}
+
+Main "$@"

@@ -1,66 +1,96 @@
 #!/usr/bin/env bash
 
 # NAME
-#   workflowy - Add a bullet to Workflowy from the command line
+#   workflowy - Generic CLI wrapper for Workflowy API
 #
-# USAGE
-#   workflowy <FILE>
-#   echo IDEA | workflowy
+# SYNOPSIS
+#   workflowy list <parent_id>
+#   workflowy create <parent_id> <title> [note]
+#   workflowy complete <node_id>
 #
-# DEPENDENCIES
-#   curl - For the HTTP
-#   jq - To parse the response JSON
+# DESCRIPTION
+#   Generic command-line interface for Workflowy API operations.
 #
 # ENVIRONMENT VARIABLES
-#   WORKFLOWY_BASE_URL       - Override default workflowy.com URL (optional)
-#   WORKFLOWY_API_KEY        - API key (checked first) (required unless WORKFLOWY_API_KEY_FILE is provided)
-#   WORKFLOWY_API_KEY_FILE   - Path to file containing the API key (required unless WORKFLOWY_API_KEY is provided)
-#   WORKFLOWY_SAVE_LOCATION  - Parent node ID for added bullet (required)
+#   WORKFLOWY_BASE_URL      - Override default workflowy.com URL (optional)
+#   WORKFLOWY_API_KEY       - API key (checked first) (required unless WORKFLOWY_API_KEY_FILE is provided)
+#   WORKFLOWY_API_KEY_FILE  - Path to file containing the API key (required unless WORKFLOWY_API_KEY is provided)
 
 set -o nounset
 set -o errexit
 set -o pipefail
-# set -o xtrace
 
 WORKFLOWY_BASE_URL="${WORKFLOWY_BASE_URL:-https://workflowy.com}"
 WORKFLOWY_API_KEY_FILE="${WORKFLOWY_API_KEY_FILE:-${XDG_DATA_HOME}/.workflowy-api-key}"
 
-# Application
-
 function Main() {
-  EscapeNewLines "$@" | BuildJson "$(GetParentNode)" | CreateNode
-}
+  local command="${1:-}"
 
-function EscapeNewLines() {
-  cat "$@" | sed 's/$/\\n/g' | tr -d '\n'
-}
-
-# API
-
-function BuildJson() {
-  cat <<-EOF
-	{
-	  "name": "$(cat)",
-	  "note": "",
-	  "parent_id": "${WORKFLOWY_SAVE_LOCATION}"
-	}
-	EOF
+  case "$command" in
+    create) shift && CreateNode "$@" ;;
+    list) shift && ListNodes "$@" ;;
+    complete) shift && CompleteNode "$@" ;;
+    help|--help|-h) ShowHelp ;;
+    *)
+      echo "ERROR: Unknown command: '$command'" >&2
+      exit 1
+      ;;
+  esac
 }
 
 function CreateNode() {
-  curl \
-    --silent \
-    --header "Authorization: Bearer $(GetApiKey)" \
-    --header "Content-Type: application/json" \
-    --request POST \
-    --data @- \
+  local parentId="${1:-}"
+  local title="${2:-}"
+  local note="${3:-}"
+
+  if [[ -z "$parentId" || -z "$title" ]]; then
+    echo "ERROR: create requires <parent_id> <title> [note]" >&2
+    exit 1
+  fi
+
+  local payload="$(
+    jq -n \
+      --arg parentId "$parentId" \
+      --arg title "$title" \
+      --arg note "$note" \
+      '{parent_id: $parentId, name: $title, note: $note, position: "bottom"}'
+  )"
+
+  ApiRequest \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d "$payload" \
     "${WORKFLOWY_BASE_URL}/api/v1/nodes"
 }
 
-# Environment
+function ListNodes() {
+  local parentId="${1:-}"
 
-function GetParentNode() {
-  echo "${WORKFLOWY_SAVE_LOCATION:?WORKFLOWY_SAVE_LOCATION environment variable is required}"
+  if [[ -z "$parentId" ]]; then
+    echo "ERROR: list requires <parent_id>" >&2
+    exit 1
+  fi
+
+  ApiRequest "${WORKFLOWY_BASE_URL}/api/v1/nodes?parent_id=${parentId}"
+}
+
+function CompleteNode() {
+  local nodeId="${1:-}"
+
+  if [[ -z "$nodeId" ]]; then
+    echo "ERROR: complete requires <node_id>" >&2
+    exit 1
+  fi
+
+  ApiRequest \
+    -X POST \
+    "${WORKFLOWY_BASE_URL}/api/v1/nodes/${nodeId}/complete"
+}
+
+function ApiRequest() {
+  local apiKey="$(GetApiKey)"
+
+  curl -s -H "Authorization: Bearer ${apiKey}" "$@"
 }
 
 function GetApiKey() {
