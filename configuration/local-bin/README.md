@@ -334,6 +334,12 @@ Example: `./workflowy-ingestion log "node-id" failed "Network timeout"`
 
 Example: `./workflowy-ingestion complete "node-id"`
 
+### ingest
+
+Process pending Workflowy ingestion items and take appropriate actions based on their content.
+
+Example: `./ingest`
+
 ### add-bookmark
 
 Add a bookmark to an nb notebook with optional comment and tags.

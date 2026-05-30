@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+# NAME
+#   ingest - Process pending Workflowy ingestion items
+#
+# SYNOPSIS
+#   ingest
+#
+# DESCRIPTION
+#   Processes pending ingestion items from Workflowy queue.
+#
+#   Currently only supports bookmark ingestion.
+#
+# BOOKMARKS
+#   For each pending item:
+#   - Items with #bookmark tag are processed as bookmarks
+#   - Must contain exactly one URL in name or notes
+#   - Title is extracted from remaining text
+#   - Successful items are logged and marked complete
+#   - Failed items are logged but left incomplete
+#
+# DEPENDENCIES
+#   workflowy-ingestion - Manage Workflowy ingestion queue
+#   add-bookmark - Add bookmarks via nb
+#   jq - JSON parsing
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local pendingJson=$(workflowy-ingestion list)
+
+  local count=$(jq '.nodes | length' <<< "$pendingJson")
+
+  if [[ "$count" -eq "0" ]]; then
+    echo "No pending items to process"
+    return 0
+  fi
+
+  echo "Processing $count pending item(s)..."
+
+  echo "$pendingJson" | jq -c '.nodes[]' | while read -r nodeJson; do
+    local nodeId=$(GetId <<< "$nodeJson")
+    ProcessNode "$nodeId" "$nodeJson"
+  done
+}
+
+function ProcessNode() {
+  local nodeId="$1"
+  local nodeJson="$2"
+
+  local name=$(GetName <<< "$nodeJson")
+  local note=$(GetNote <<< "$nodeJson")
+  local fullText="${name} ${note}"
+
+  if echo "$fullText" | grep -q '#bookmark'; then
+    echo "$nodeId: Processing as bookmark"
+    ProcessBookmark "$nodeId" "$nodeJson"
+  else
+    echo "$nodeId: Unsupported item type"
+    workflowy-ingestion log "$nodeId" failed "Unsupported item type" >/dev/null
+  fi
+}
+
+function ProcessBookmark() {
+  local nodeId="$1"
+  local nodeJson="$2"
+
+  # Combine name and note for processing
+  local name=$(GetName <<< "$nodeJson")
+  local note=$(GetNote <<< "$nodeJson")
+
+  # Extract URLs from HTML anchor tags in both name and note: <a href="URL">...</a>
+  local hrefsFromName=$(echo "$name" | grep -Eo ' href="[^"]+"' | sed -E 's/ href="(.*)"/\1/')
+  local hrefsFromNote=$(echo "$note" | grep -Eo ' href="[^"]+"' | sed -E 's/ href="(.*)"/\1/')
+
+  # Strip HTML tags to get plain text
+  local cleanName=$(echo "$name" | sed -E 's/<[^>]+>//g')
+  local cleanNote=$(echo "$note" | sed -E 's/<[^>]+>//g')
+
+  # Extract plain URLs from cleaned text
+  local plainUrlsFromName=$(echo "$cleanName" | sed -E 's/[[:space:]]/\n/g' | grep -oE 'https?://[^[:space:]"]+')
+  local plainUrlsFromNote=$(echo "$cleanNote" | sed -E 's/[[:space:]]/\n/g' | grep -oE 'https?://[^[:space:]"]+')
+
+  # Combine all sources and deduplicate
+  local urls=$(
+    echo -e "${hrefsFromName}\n${hrefsFromNote}\n${plainUrlsFromName}\n${plainUrlsFromNote}" \
+      | grep -v '^$' \
+      | sort -u \
+      || true
+  )
+  local urlsCount=$(echo "$urls" | grep -c .)
+
+  if [[ "$urlsCount" -ne 1 ]]; then
+    workflowy-ingestion log "$nodeId" failed "Expected exactly one URL, found $urlsCount" >/dev/null
+    return 0
+  fi
+
+  local url=$(echo "$urls" | head -1)
+
+  # Extract title: use already cleaned text, remove URL and #bookmark
+  local fullText="${cleanName} ${cleanNote}"
+  local title=$(
+    echo "$fullText" \
+      | sed -E 's|https?://[^[:space:]]+||g' \
+      | sed 's/#bookmark//g' \
+      | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+  )
+
+  if add-bookmark --comment "$title" "$url" 2>&1; then
+    workflowy-ingestion log "$nodeId" succeeded "Added bookmark: $url" >/dev/null
+    workflowy-ingestion complete "$nodeId" >/dev/null
+    echo "$nodeId: ✓ Added bookmark: $url"
+  else
+    workflowy-ingestion log "$nodeId" failed "Failed to add bookmark: $url" >/dev/null
+    echo "$nodeId: ✗ Failed to add bookmark: $url"
+  fi
+}
+
+function GetId() {
+  jq -r '.id'
+}
+
+function GetName() {
+  jq -r '.name // ""'
+}
+
+function GetNote() {
+  jq -r '.note // ""'
+}
+
+Main "$@"
