@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NAME
+#   workflowy - Add a bullet to Workflowy from the command line
+#
 # USAGE
 #   workflowy <FILE>
 #   echo IDEA | workflowy
@@ -8,54 +11,73 @@
 #   curl - For the HTTP
 #   jq - To parse the response JSON
 #
-# ENVIRONMENT VARIABLEs
-#   XDG_DATA_HOME - Path to user data files
-#   WORKFLOWY_API_KEY_FILE - (Optional) Path to file containing the API key
-#     (defaults to $XDG_DATA_HOME/workflowy-api-key)
-#   WORKFLOWY_SAVE_LOCATION - (Optional) Parent for added bullet
+# ENVIRONMENT VARIABLES
+#   WORKFLOWY_BASE_URL       - Override default workflowy.com URL (optional)
+#   WORKFLOWY_API_KEY        - API key (checked first) (required unless WORKFLOWY_API_KEY_FILE is provided)
+#   WORKFLOWY_API_KEY_FILE   - Path to file containing the API key (required unless WORKFLOWY_API_KEY is provided)
+#   WORKFLOWY_SAVE_LOCATION  - Parent node ID for added bullet (required)
 
 set -o nounset
 set -o errexit
 set -o pipefail
 # set -o xtrace
 
-WORKFLOWY_API_URL="https://workflowy.com/api/bullets/create/"
+WORKFLOWY_BASE_URL="${WORKFLOWY_BASE_URL:-https://workflowy.com}"
 WORKFLOWY_API_KEY_FILE="${WORKFLOWY_API_KEY_FILE:-${XDG_DATA_HOME}/.workflowy-api-key}"
 
-function Main() {
-  if [[ ! -s "$WORKFLOWY_API_KEY_FILE" ]]; then
-    echo "ERROR: Could not find Workflowy API key in \"$WORKFLOWY_API_KEY_FILE\"" > /dev/stderr
-    exit 1
-  fi
+# Application
 
-  EscapeNewLines "$@" | BuildJson | PostToApi "$WORKFLOWY_API_KEY_FILE" | ExtractInfo
+function Main() {
+  EscapeNewLines "$@" | BuildJson "$(GetParentNode)" | CreateNode
 }
 
 function EscapeNewLines() {
   cat "$@" | sed 's/$/\\n/g' | tr -d '\n'
 }
 
+# API
+
 function BuildJson() {
   cat <<-EOF
 	{
-	  "new_bullet_title": "$(cat)",
-	  "new_bullet_note": "",
-	  "save_location_url": "${WORKFLOWY_SAVE_LOCATION:-}"
+	  "name": "$(cat)",
+	  "note": "",
+	  "parent_id": "${WORKFLOWY_SAVE_LOCATION}"
 	}
 	EOF
 }
 
-function PostToApi() {
-  local apiKeyFile="$1"
-  curl "${WORKFLOWY_API_URL}" \
-    -H @<(printf "Authorization: Bearer "; cat "$apiKeyFile") \
-    -X POST \
-    --json @- \
-    --silent
+function CreateNode() {
+  curl \
+    --silent \
+    --header "Authorization: Bearer $(GetApiKey)" \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --data @- \
+    "${WORKFLOWY_BASE_URL}/api/v1/nodes"
 }
 
-function ExtractInfo() {
-  jq '[.new_bullet_id, .new_bullet_url, .new_bullet_title] | @tsv' -r
+# Environment
+
+function GetParentNode() {
+  echo "${WORKFLOWY_SAVE_LOCATION:?WORKFLOWY_SAVE_LOCATION environment variable is required}"
+}
+
+function GetApiKey() {
+  # Check env var first
+  if [[ -n "${WORKFLOWY_API_KEY:-}" ]]; then
+    echo "$WORKFLOWY_API_KEY"
+    return
+  fi
+
+  # Fall back to file
+  if [[ -s "$WORKFLOWY_API_KEY_FILE" ]]; then
+    cat "$WORKFLOWY_API_KEY_FILE"
+    return
+  fi
+
+  echo "ERROR: No API key found. Set WORKFLOWY_API_KEY or provide key in $WORKFLOWY_API_KEY_FILE" >&2
+  exit 1
 }
 
 Main "$@"
