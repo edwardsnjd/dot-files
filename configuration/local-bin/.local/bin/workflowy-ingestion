@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+# NAME
+#   workflowy-ingestion - Manage pending ingestion items in Workflowy
+#
+# SYNOPSIS
+#   workflowy-ingestion list
+#   workflowy-ingestion log <node_id> (failed|succeeded) "<message>"
+#   workflowy-ingestion complete <node_id>
+#
+# DESCRIPTION
+#   Opinionated workflow for managing an ingestion queue in Workflowy.
+#   Uses `workflowy` CLI for all API operations.
+#
+#   list       - List pending ingestion items (children where completedAt == null)
+#   log        - Log ingestion attempt as child node with formatted message
+#   complete   - Mark node as complete in Workflowy
+#
+# EXAMPLES
+#   # List all pending items
+#   workflowy-ingestion list
+#
+#   # Log a successful ingestion
+#   workflowy-ingestion log abc-123 succeeded "Processed 5 items"
+#
+#   # Log a failure
+#   workflowy-ingestion log abc-123 failed "Connection timeout"
+#
+#   # Mark item complete
+#   workflowy-ingestion complete abc-123
+#
+# DEPENDENCIES
+#   workflowy - Generic Workflowy CLI (must be in PATH)
+#   jq - For filtering JSON responses
+#
+# ENVIRONMENT
+#   WORKFLOWY_INGESTION_NODE_ID - Required. Parent node ID for the ingestion queue
+#   (other env vars inherited by `workflowy` CLI: WORKFLOWY_API_KEY, etc.)
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+function Main() {
+  local command="${1:-list}"
+
+  case "$command" in
+    list)
+      ListPendingNodes
+      ;;
+    log)
+      if [[ $# -lt 4 ]]; then
+        echo "Usage: workflowy-ingestion log <node_id> (failed|succeeded) \"<message>\"" >&2
+        exit 1
+      fi
+      LogAttempt "$2" "$3" "$4"
+      ;;
+    complete)
+      if [[ $# -lt 2 ]]; then
+        echo "Usage: workflowy-ingestion complete <node_id>" >&2
+        exit 1
+      fi
+      CompleteNode "$2"
+      ;;
+    *)
+      echo "Usage: workflowy-ingestion (list|log|complete)" >&2
+      exit 1
+      ;;
+  esac
+}
+
+function ListPendingNodes() {
+  local nodeId="${WORKFLOWY_INGESTION_NODE_ID:?Error: WORKFLOWY_INGESTION_NODE_ID environment variable is required}"
+
+  workflowy list "${nodeId}" \
+    | jq '{nodes: [.nodes[] | select(.completedAt == null)]}'
+}
+
+function LogAttempt() {
+  local nodeId="$1"
+  local status="$2"
+  local message="$3"
+
+  local formatted_message="[INGEST] $(date +"%F %T")"
+  case "$status" in
+    failed) formatted_message="$formatted_message Failed" ;;
+    succeeded) formatted_message="$formatted_message Success" ;;
+  esac
+  formatted_message="$formatted_message ${message}"
+
+  workflowy create "$nodeId" "$formatted_message"
+}
+
+function CompleteNode() {
+  local nodeId="$1"
+
+  workflowy complete "$nodeId"
+}
+
+Main "$@"
