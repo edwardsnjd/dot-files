@@ -84,6 +84,12 @@ List git commits with customizable arguments.
 
 Example: `./git-commits --author="Nick"`
 
+### git-code-age
+
+Output the author timestamp for every line in every file at a given commit.
+
+Example: `./git-code-age HEAD`
+
 ### git-contributor
 
 Show detailed git contributor information.
@@ -310,9 +316,29 @@ Example: `./weather-forecast "London"`
 
 ### workflowy
 
-CLI integration to add to Workflowy via its API.
+Generic CLI wrapper for Workflowy API operations (list, create, complete).
 
-Example: `echo 'Remember the milk' | ./workflowy`
+Example: `./workflowy create "parent-id" "Task title" "Optional note"`
+
+Example: `./workflowy list "parent-id"`
+
+Example: `./workflowy complete "node-id"`
+
+### workflowy-ingestion
+
+Manage pending ingestion items in Workflowy via API.
+
+Example: `./workflowy-ingestion list`
+
+Example: `./workflowy-ingestion log "node-id" failed "Network timeout"`
+
+Example: `./workflowy-ingestion complete "node-id"`
+
+### add-todo
+
+Add a task to Workflowy by reading text from stdin or file.
+
+Example: `echo "Buy milk" | ./add-todo`
 
 ### docker-ical-to-json
 
