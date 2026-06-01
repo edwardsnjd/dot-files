@@ -24,6 +24,27 @@ function readline-complete() {
   READLINE_POINT=$(( ${#prefix} + ${#result} ))
 }
 
+# Insert stdout of a command at the current readline cursor.
+# Usage: readline-insert <cmd> [args...]
+# <cmd> is the name of command to use to produce output.
+function readline-insert() {
+  local cmd="$@"
+
+  # Read the line
+  local start="${READLINE_LINE:0:$READLINE_POINT}"
+  local end="${READLINE_LINE:$READLINE_POINT}"
+
+  # Find the output
+  local result="$($cmd)"
+
+  # Nothing to do if nothing selected
+  if [[ -z "$result" ]]; then return; fi
+
+  # Insert at current cursor location.
+  READLINE_LINE="${start}${result}${end}"
+  READLINE_POINT=$(( READLINE_POINT + ${#result} ))
+}
+
 # Select a file using fzf (fzf-file-widget minus the READLINE handling)
 function fzf-file() {
   __fzf_select__ --query "$@"
@@ -56,6 +77,16 @@ bind -m vi-insert -x      '"\C-x\C-p": readline-complete tmux-word'
 
 # CTRL-j - List current directory
 bind -m emacs-standard -x '"\C-j": clear && pwd && l'
+
+# CTRL-x CTRL-d - Enter date
+bind -m emacs-standard -x '"\C-x\C-d": readline-insert datetime'
+bind -m vi-command -x     '"\C-x\C-d": readline-insert datetime'
+bind -m vi-insert -x      '"\C-x\C-d": readline-insert datetime'
+
+# F7 (check via `cat`) - Enter date
+bind -m emacs-standard -x '"\e[18~": readline-insert datetime'
+bind -m vi-command -x     '"\e[18~": readline-insert datetime'
+bind -m vi-insert -x      '"\e[18~": readline-insert datetime'
 
 # Space - History expansion
 bind -m emacs-standard 'Space: magic-space'
