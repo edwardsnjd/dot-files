@@ -79,9 +79,19 @@ bind -m vi-insert -x      '"\C-x\C-p": readline-complete tmux-word'
 bind -m emacs-standard -x '"\C-j": clear && pwd && l'
 
 # CTRL-x CTRL-d - Enter date
-bind -m emacs-standard -x '"\C-x\C-d": readline-insert datetime'
-bind -m vi-command -x     '"\C-x\C-d": readline-insert datetime'
-bind -m vi-insert -x      '"\C-x\C-d": readline-insert datetime'
+bind -m emacs-standard -x '"\C-x\C-d": readline-insert datetime localdate'
+bind -m vi-command -x     '"\C-x\C-d": readline-insert datetime localdate'
+bind -m vi-insert -x      '"\C-x\C-d": readline-insert datetime localdate'
+
+# F7 (check via `cat`) - Enter date
+bind -m emacs-standard -x '"\e[18~": readline-insert datetime localdate'
+bind -m vi-command -x     '"\e[18~": readline-insert datetime localdate'
+bind -m vi-insert -x      '"\e[18~": readline-insert datetime localdate'
+
+# CTRL-x CTRL-t - Enter time
+bind -m emacs-standard -x '"\C-x\C-t": readline-insert datetime localtime'
+bind -m vi-command -x     '"\C-x\C-t": readline-insert datetime localtime'
+bind -m vi-insert -x      '"\C-x\C-t": readline-insert datetime localtime'
 
 # F7 (check via `cat`) - Enter date
 bind -m emacs-standard -x '"\e[18~": readline-insert datetime'
