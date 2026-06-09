@@ -42,7 +42,6 @@
        "ripgrep"
        "rlwrap"
        "stow"
-       "syncthing"
        "tmux"
        "tree"
        "universal-ctags"
