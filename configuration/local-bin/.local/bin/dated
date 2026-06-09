@@ -13,7 +13,7 @@
 set -o nounset
 set -o errexit
 set -o pipefail
-set -o xtrace
+#set -o xtrace
 
 function Main() {
   local cmd="interactive"
