@@ -5,10 +5,8 @@
 ;; See the "Replicating Guix" section in the manual.
 
 (specifications->manifest
- (list "aerc"
-       "ansible"
+ (list "ansible"
        "bat"
-       "chafa"
        "curl"
        "datamash"
        "du-dust"
@@ -44,6 +42,7 @@
        "ripgrep"
        "rlwrap"
        "stow"
+       "syncthing"
        "tmux"
        "tree"
        "universal-ctags"
