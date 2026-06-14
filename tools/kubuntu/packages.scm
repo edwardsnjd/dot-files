@@ -5,8 +5,10 @@
 ;; See the "Replicating Guix" section in the manual.
 
 (specifications->manifest
- (list "ansible"
+ (list "aerc"
+       "ansible"
        "bat"
+       "chafa"
        "curl"
        "datamash"
        "du-dust"
