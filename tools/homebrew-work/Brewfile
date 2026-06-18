@@ -1,170 +1,330 @@
-tap "1password/tap"
-tap "anomalyco/tap"
-tap "buildkite/buildkite"
-tap "docker/tap"
-tap "jetbrains/utils"
-tap "ngrok/ngrok"
-tap "saulpw/vd"
+tap "1password/tap", trusted: true
+tap "anomalyco/tap", trusted: true
+tap "buildkite/buildkite", trusted: true
+tap "docker/tap", trusted: true
+tap "jetbrains/utils", trusted: true
+tap "ngrok/ngrok", trusted: true
+tap "visidata/vd"
+# Asciicast to GIF converter
 brew "agg"
+# Record and share terminal sessions
 brew "asciinema"
+# Automatic configure script builder
 brew "autoconf"
+# Tool for generating GNU Standards-compliant Makefiles
 brew "automake"
+# Official Amazon AWS command-line interface
 brew "awscli"
+# Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Programmable completion for Bash 3.2
 brew "bash-completion"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# GNU File, Shell, and Text utilities
 brew "coreutils"
+# Bash Automated Testing System
 brew "bats-core"
+# Open source, extensible AI agent that goes beyond code suggestions
 brew "block-goose-cli"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
+# Vector graphics library with cross-device output support
 brew "cairo"
+# OpenType text shaping engine
 brew "harfbuzz"
+# Versatile and fast Unicode/ASCII/ANSI graphics renderer
 brew "chafa"
+# Statistics utility to count lines of code
 brew "cloc"
+# Development kit for the Java programming language
 brew "openjdk"
+# Readline wrapper: adds readline support to tools that lack it
 brew "rlwrap"
+# Dynamic, general-purpose programming language
 brew "clojure"
+# Container runtimes on MacOS (and Linux) with minimal setup
 brew "colima", restart_service: :changed
+# Create and run Linux containers using lightweight virtual machines
 brew "container"
+# Securely send things from one computer to another
 brew "croc"
+# Reimplementation of ctags(1)
 brew "ctags"
+# Tool to perform numerical, textual & statistical operations
 brew "datamash"
+# OFFIS DICOM toolkit command-line utilities
 brew "dcmtk"
+# Reference implementation for the Development Containers specification
 brew "devcontainer"
+# Pack, ship and run any application as a lightweight container
 brew "docker", link: false
+# Docker CLI plugin for extended build capabilities with BuildKit
 brew "docker-buildx"
+# Isolated development environments using Docker
 brew "docker-compose"
+# More intuitive version of du in rust
 brew "dust"
+# GNU Emacs text editor
 brew "emacs", restart_service: :changed
+# Run arbitrary commands when files change
 brew "entr"
+# Perl lib for reading and writing EXIF metadata
 brew "exiftool"
+# Program that can automate interactive applications
 brew "expect"
+# Modern, maintained replacement for ls
 brew "eza"
+# Simple, fast and user-friendly alternative to find
 brew "fd"
+# Command-driven, interactive function plotting
 brew "gnuplot"
+# Tool to plot realtime and stored data from the command-line
 brew "feedgnuplot"
+# Lightweight sandbox for commands with network and filesystem restrictions
 brew "fence"
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
+# User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GNU awk utility
 brew "gawk"
+# GitHub command-line tool
 brew "gh"
+# Distributed revision control system
 brew "git"
+# Distributed code review system for Git repos
 brew "git-appraise"
+# Enable transparent encryption/decryption of files in a git repo
 brew "git-crypt"
+# Syntax-highlighting pager for git and diff output
 brew "git-delta"
+# Tcl/Tk UI for the git revision control system
 brew "git-gui"
+# Git extension for versioning large files
 brew "git-lfs"
+# Render markdown on the CLI
 brew "glow"
+# GNU implementation of the programming language APL
 brew "gnu-apl"
+# Prolog compiler with constraint solving
 brew "gnu-prolog"
+# GNU implementation of the famous stream editor
 brew "gnu-sed"
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Open source programming language to build simple/reliable/efficient software
 brew "go"
+# ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
+# Image processing tools collection
 brew "graphicsmagick"
+# Image manipulation
 brew "netpbm"
+# Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
+# Make JSON greppable
 brew "gron"
+# Post-modern modal text editor
 brew "helix"
+# Command-line hex viewer
 brew "hexyl"
+# HTTP load generator, ApacheBench (ab) replacement
 brew "hey"
+# Improved top (interactive process viewer)
 brew "htop"
+# Quickly and easily send REST, SOAP, GraphQL and gRPC requests
 brew "httpyac"
+# Command-line benchmarking tool
 brew "hyperfine"
+# Tools and libraries to manipulate images in select formats
 brew "imagemagick"
+# Serializes the output of command-line tools to structured JSON output
 brew "jc"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# JSON enhanced with usability features
 brew "json5"
+# Statically typed programming language for the JVM
 brew "kotlin"
+# Anti-bikeshedding Kotlin linter with built-in formatter
 brew "ktlint"
+# Simple terminal UI for git commands
 brew "lazygit"
+# Pager program similar to more
 brew "less"
+# Terminal file manager
 brew "lf"
+# Postgres C API library
 brew "libpq"
+# Library for reading RAW files from digital photo cameras
 brew "libraw"
+# Access large language models from the command-line
 brew "llm"
+# Collection of tools that nobody wrote when UNIX was young
 brew "moreutils"
+# Remote terminal application
 brew "mosh"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Command-line and local web note-taking, bookmarking, and archiving
 brew "nb"
+# Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Modern shell for the GitHub era
 brew "nushell"
+# Manage multiple Node.js versions
 brew "nvm"
+# Interactive GPU process monitor
 brew "nvtop"
+# Terminal client for Ollama
 brew "oterm"
+# Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Password manager
 brew "pass"
+# Terminal-based presentations using Pandoc
 brew "patat"
+# AI agent toolkit
 brew "pi-coding-agent"
+# Package compiler and linker metadata toolkit
 brew "pkgconf"
+# Draw UML diagrams
 brew "plantuml"
+# Terminal slideshow tool
 brew "presenterm"
+# Show ps output as a tree
 brew "pstree"
+# Monitor data's progress through a pipe
 brew "pv"
+# Static type checker for Python
 brew "pyright"
+# Python Language Server for the Language Server Protocol
 brew "python-lsp-server"
+# Interpreted, interactive, object-oriented programming language
 brew "python@3.10"
+# Experimental Rust compiler front-end for IDEs
 brew "rust-analyzer"
+# Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
+# Autoformat shell script source code
 brew "shfmt"
+# Unit testing framework for Bourne-based shell scripts
 brew "shunit2"
+# Prints a steam locomotive if you type sl instead of ls
 brew "sl"
+# Terminal based presentation tool
 brew "slides"
+# SOcket CAT: netcat on steroids
 brew "socat"
+# Ruby language server
 brew "solargraph"
+# Command-line interface for https://speedtest.net bandwidth tests
 brew "speedtest-cli"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Command-line utility for Structurizr
 brew "structurizr-cli"
+# Open source continuous file synchronization application
 brew "syncthing", restart_service: :changed
+# Official documentation format of the GNU project
 brew "texinfo"
+# Granddaddy of HTML tools, with support for modern standards
 brew "tidy-html5"
+# Terminal image and video viewer
 brew "timg"
+# Terminal multiplexer
 brew "tmux"
+# Color-based alternative to figlet (uses libcaca)
 brew "toilet"
+# Program that allows you to count code, quickly
 brew "tokei"
+# Tool for writing command-line pipes with instant live preview
 brew "up"
+# Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# Vi 'workalike' with many additional features
 brew "vim"
+# Terminal spreadsheet multitool for discovering and arranging data
+brew "visidata"
+# Executes a program periodically, showing output fullscreen
 brew "watch"
+# Convert HTML to PDF
 brew "weasyprint"
+# JavaScript package manager
 brew "yarn"
+# General-purpose lossless data-compression library
 brew "zlib"
+# The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
+# Work with Buildkite from the command-line
 brew "buildkite/buildkite/bk@3"
-brew "saulpw/vd/visidata"
+# Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line interface for 1Password
 cask "1password-cli"
+# Web browser focusing on privacy
 cask "brave-browser"
+# Automated testing of webapps for Google Chrome
 cask "chromedriver"
 cask "font-jetbrains-mono"
+# Kext-less implementation of FUSE
 cask "fuse-t"
+# Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Java IDE by JetBrains
 cask "intellij-idea"
+# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# Password manager app
 cask "keepassxc"
+# GPU-based terminal emulator
 cask "kitty"
+# File system integration
 cask "macfuse"
+# Provides updates to various Microsoft products
 cask "microsoft-auto-update"
+# Multi-platform web browser
 cask "microsoft-edge"
+# Email client
 cask "microsoft-outlook"
+# Meet, chat, call, and collaborate in just one place
 cask "microsoft-teams"
+# Intercept, modify, replay, save HTTP/S traffic
 cask "mitmproxy"
+# Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
+# Get up and running with large language models locally
 cask "ollama-app"
+# Remote pair programming
 cask "pop-app"
+# VPN client focusing on security
 cask "protonvpn"
+# Build, run, and govern agents across the software development lifecycle
 cask "docker/tap/sbx"
+# Plugin for AWS CLI to start and end sessions that connect to managed instances
 cask "session-manager-plugin"
+# Team communication and collaboration software
 cask "slack"
+# Free and open-source OpenVPN client
 cask "tunnelblick"
+# Virtual machines UI using QEMU
 cask "utm"
+# Disk encryption software focusing on security based on TrueCrypt
 cask "veracrypt-fuse-t"
+# Open-source code editor
 cask "visual-studio-code"
+# Network protocol analyzer
 cask "wireshark-app"
+# View output from scripts in the menu bar
 cask "xbar"
+# Open-source version of the X.Org X Window System
 cask "xquartz"
+# Mesh VPN client
 cask "zerotier-one"
+# Video communication and virtual meeting platform
 cask "zoom"
 vscode "github.vscode-pull-request-github"
 vscode "ms-vscode-remote.remote-containers"
