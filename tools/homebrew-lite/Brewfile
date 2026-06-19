@@ -1,95 +1,180 @@
-tap "anomalyco/tap"
-tap "cryfs/tap"
-tap "github/gh"
-tap "saulpw/vd"
-tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear"
-tap "xwmx/taps"
+tap "anomalyco/tap", trusted: true
+tap "cryfs/tap", trusted: true
+tap "github/gh", trusted: true
+tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear", trusted: true
+tap "visidata/vd", trusted: true
+tap "xwmx/taps", trusted: true
+# Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# GNU File, Shell, and Text utilities
 brew "coreutils"
+# Reimplementation of ctags(1)
 brew "ctags"
+# Tool to perform numerical, textual & statistical operations
 brew "datamash"
+# More intuitive version of du in rust
 brew "dust"
+# Run arbitrary commands when files change
 brew "entr"
+# Perl lib for reading and writing EXIF metadata
 brew "exiftool"
+# Modern, maintained replacement for ls
 brew "eza"
+# Simple, fast and user-friendly alternative to find
 brew "fd"
+# Tool to plot realtime and stored data from the command-line
 brew "feedgnuplot"
+# Lightweight sandbox for commands with network and filesystem restrictions
 brew "fence"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GNU awk utility
 brew "gawk"
+# GitHub command-line tool
 brew "gh"
+# Interpreter for PostScript and PDF
 brew "ghostscript"
+# Distributed revision control system
 brew "git"
+# Enable transparent encryption/decryption of files in a git repo
 brew "git-crypt"
+# Syntax-highlighting pager for git and diff output
 brew "git-delta"
+# Git extension for versioning large files
 brew "git-lfs"
+# Render markdown on the CLI
 brew "glow"
+# Prolog compiler with constraint solving
 brew "gnu-prolog"
+# GNU implementation of the famous stream editor
 brew "gnu-sed"
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
+# GNU Ubiquitous Intelligent Language for Extensions
 brew "guile"
+# Post-modern modal text editor
 brew "helix"
+# Command-line hex viewer
 brew "hexyl"
+# Easy plain text accounting with command-line, terminal and web UIs
 brew "hledger"
+# Improved top (interactive process viewer)
 brew "htop"
+# Command-line benchmarking tool
 brew "hyperfine"
+# Tools and libraries to manipulate images in select formats
 brew "imagemagick"
+# Serializes the output of command-line tools to structured JSON output
 brew "jc"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# JSON enhanced with usability features
 brew "json5"
+# Cloud-based, distributed POSIX file system built on top of Redis and S3
 brew "juicefs"
+# Pager program similar to more
 brew "less"
+# Terminal file manager
 brew "lf"
+# Collection of tools that nobody wrote when UNIX was young
 brew "moreutils"
+# Remote terminal application
 brew "mosh"
+# RSS/Atom feed reader for text terminals
 brew "newsboat"
+# Port scanning utility for large networks
 brew "nmap"
+# Modern shell for the GitHub era
 brew "nushell"
+# Interactive GPU process monitor
 brew "nvtop"
+# Terminal client for Ollama
 brew "oterm"
+# Swiss-army knife of markup format conversion
 brew "pandoc"
+# Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Password manager
 brew "pass"
+# CLI for Playwright: record/generate code, inspect selectors, take screenshots
 brew "playwright-cli"
+# Tool for managing OCI containers and pods
 brew "podman"
+# Alternative to docker-compose using podman
 brew "podman-compose"
+# Show ps output as a tree
 brew "pstree"
+# Monitor data's progress through a pipe
 brew "pv"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Readline wrapper: adds readline support to tools that lack it
 brew "rlwrap"
+# Rust toolchain installer
 brew "rustup"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Open source continuous file synchronization application
 brew "syncthing", restart_service: :changed
+# Terminal image and video viewer
 brew "timg"
+# Terminal multiplexer
 brew "tmux"
+# Color-based alternative to figlet (uses libcaca)
 brew "toilet"
+# Program that allows you to count code, quickly
 brew "tokei"
+# Command-line tool for sharing terminal over the web
 brew "ttyd"
+# Markup-based typesetting system
 brew "typst"
+# Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# Vi 'workalike' with many additional features
 brew "vim"
+# Terminal spreadsheet multitool for discovering and arranging data
+brew "visidata"
+# Pager/text based browser
 brew "w3m"
+# Executes a program periodically, showing output fullscreen
 brew "watch"
+# The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
-brew "saulpw/vd/visidata"
+# Command line interface for the built-in speech recognition and transcription capabilities in macOS.
 brew "sveinbjornt/hear/hear"
 brew "xwmx/taps/nb"
+# Run Stable Diffusion locally
 cask "diffusionbee"
+# Developer platform
 cask "dotnet-sdk"
 cask "font-jetbrains-mono"
+# Kext-less implementation of FUSE
 cask "fuse-t"
+# Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Web browser
 cask "google-chrome"
+# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# Password manager app
 cask "keepassxc"
+# Intercept, modify, replay, save HTTP/S traffic
 cask "mitmproxy"
+# Remote desktop software
 cask "nomachine-enterprise-client"
+# Programmable solid 3D CAD modeller
 cask "openscad"
+# G-code generator for 3D printers (RepRap, Makerbot, Ultimaker etc.)
 cask "prusaslicer"
+# Instant messaging application focusing on security
 cask "signal"
+# Mesh VPN client
 cask "zerotier-one"
-npm "@earendil-works/pi-coding-agent"
+npm "@mariozechner/pi-coding-agent"
 npm "readability-cli"
