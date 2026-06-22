@@ -2,9 +2,9 @@ tap "1password/tap", trusted: true
 tap "anomalyco/tap", trusted: true
 tap "buildkite/buildkite", trusted: true
 tap "docker/tap", trusted: true
-tap "jetbrains/utils", trusted: true
+tap "jetbrains/utils", "https://github.com/JetBrains/homebrew-utils", trusted: true
 tap "ngrok/ngrok", trusted: true
-tap "visidata/vd"
+tap "visidata/vd", "https://github.com/visidata/homebrew-vd.git", trusted: true
 # Asciicast to GIF converter
 brew "agg"
 # Record and share terminal sessions
