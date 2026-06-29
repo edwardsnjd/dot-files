@@ -33,7 +33,7 @@ Find() {
     '
       [ ..
       | objects
-      | select(.id and (.nm + " " + .no | contains($search)))
+      | select(.id and (.id + " " + .nm + " " + .no | contains($search)))
       | del(.ch)
       ]
     '
