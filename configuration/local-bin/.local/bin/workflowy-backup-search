@@ -1,0 +1,61 @@
+#! /usr/bin/env bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+# <backup> :: <node>[]
+# <node> :: {
+#   "id": <string>,
+#   "nm": <string>,
+#   "ct": <int>,
+#   "metadata": <object> | undefined,
+#   "no": <string>,
+#   "lm": <int>,
+#   "ch": <node>[] | undefined,
+# }
+
+# My Workflowy.com account was started in 2014 but can override
+WORKFLOWY_PROJECT_START=${WORKFLOWY_PROJECT_START:-1404339152}
+
+Main() {
+  local query="${1:?Missing a query}"
+  Find "$query" | Format "$WORKFLOWY_PROJECT_START"
+}
+
+Find() {
+  local search="$1"
+  shift
+
+  jq \
+    --arg search "$search" \
+    '
+      [ ..
+      | objects
+      | select(.id and (.nm + " " + .no | contains($search)))
+      | del(.ch)
+      ]
+    '
+}
+
+Format() {
+  local start="$1"
+  shift
+
+  jq \
+    --arg start "$start" \
+    '
+      def startTs: $start | tonumber;
+      def fixdate: (. + startTs) | todate;
+      def fixnode:
+        .ctdt = (.ct | fixdate) |
+        .lmdt = (.lm | fixdate) |
+        .url = "https://beta.workflowy.com/#/" + .id |
+        if .ch then .ch |= map(fixnode) else . end;
+
+      map(fixnode)
+    '
+}
+
+Main "$@"
