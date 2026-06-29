@@ -2,7 +2,7 @@ tap "anomalyco/tap", trusted: true
 tap "cryfs/tap", trusted: true
 tap "github/gh", trusted: true
 tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear", trusted: true
-tap "visidata/vd", trusted: true
+tap "visidata/vd", "https://github.com/visidata/homebrew-vd.git", trusted: true
 tap "xwmx/taps", trusted: true
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
@@ -149,7 +149,7 @@ brew "w3m"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
 # The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
+brew "anomalyco/tap/opencode", trusted: true
 # Command line interface for the built-in speech recognition and transcription capabilities in macOS.
 brew "sveinbjornt/hear/hear"
 brew "xwmx/taps/nb"
@@ -159,6 +159,8 @@ cask "basictex"
 cask "diffusionbee"
 # Developer platform
 cask "dotnet-sdk"
+# Web browser
+cask "firefox"
 cask "font-jetbrains-mono"
 # Kext-less implementation of FUSE
 cask "fuse-t"
