@@ -4,7 +4,13 @@
 #   pi-profile - Manage profiles for pi coding agent
 #
 # SYNOPSIS
-#   pi-profile [--help|-h] [--list|--ls] [--interactive] [--add <profile_name>] [<profile_name>]
+#   pi-profile [PROFILE_NAME]
+#   pi-profile [--help|-h] [--list|--ls] [--interactive] [--add PROFILE_NAME]
+#
+# DEPENDENCIES
+#   fzf - interactively pick profile
+#   column - format output in columns
+#   pi - the pi coding agent command
 
 set -o nounset
 set -o errexit
@@ -57,7 +63,14 @@ function Add() {
   mkdir -p "$profileDir"
   ln -s "${PI_CODING_AGENT_DIR}/models.json" "${profileDir}/"
   ln -s "${PI_CODING_AGENT_DIR}/auth.json" "${profileDir}/"
-  echo "Created profile '$name' at $profileDir"
+  cat <<-EOF
+	Created profile '$name' at $profileDir.
+	
+	You should now edit the profile to customize it, for example:
+	- APPEND_SYSTEM.md - describe any specific behaviour for this profile
+	- settings.json - set the model or thinking level
+	
+	EOF
   ls -al "$profileDir"
 }
 
@@ -65,6 +78,7 @@ function Interactive() {
   local profile=$(
     List \
       | sed -E "s|.*|&\t$PI_PROFILES_DIR/&|" \
+      | column -t -s $'\t' \
       | fzf --accept-nth=1 --prompt="Select a profile: "
   )
   if [ -n "$profile" ]; then
@@ -90,7 +104,7 @@ function Start() {
 
 function List() {
   if [ -d "$PI_PROFILES_DIR" ]; then
-    find $PI_PROFILES_DIR -type d -maxdepth 1 -mindepth 1 -exec basename {} \;
+    find "${PI_PROFILES_DIR}/" -type d -maxdepth 1 -mindepth 1 -exec basename {} \;
   fi
 }
 
