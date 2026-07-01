@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# safeagent - prepare sandboxed environment for agent
+
+export GIT_AUTHOR_NAME="agent"
+export GIT_AUTHOR_EMAIL="agent@local"
+
+fence -- "$@"
