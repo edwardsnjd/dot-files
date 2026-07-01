@@ -26,6 +26,17 @@ function! <SID>Vim_lsp_settings_vscode_json_language_server_capabilities() abort
   return l:capabilities
 endfunction
 
+" Use the utils to find nearest parnet matching the matches or git, or
+" fallback t
+function! <SID>NearestParentWithOrPwd(matches) abort
+  let l:markers = ['.git', '.git/'] + a:matches
+  let l:root = lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), l:markers)
+  if empty(l:root)
+        let l:root = getcwd()
+  endif
+  return lsp#utils#path_to_uri(l:root)
+endfunction
+
 if executable('pylsp')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'pylsp',
@@ -110,14 +121,14 @@ if executable('typescript-language-server')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'typescript-language-server',
         \   'cmd': { server_info->['typescript-language-server', '--stdio']},
-        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git/..')) },
+        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \ })
 elseif executable('lsp-typescript')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-typescript',
         \   'cmd': { server_info->['lsp-typescript'] },
-        \   'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git/..')) },
+        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \   'before_init': function('<SID>NullifyProcess'),
         \ })
@@ -157,7 +168,7 @@ if executable('kotlin-lsp')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'kotlin-lsp',
         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-lsp --stdio']},
-        \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git')) },
+        \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \ 'initialization_options': {
         \ },
         \ 'whitelist': ['kotlin']
@@ -192,7 +203,7 @@ if executable('ccls')
    au User lsp_setup call lsp#register_server({
       \ 'name': 'ccls',
       \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git'))},
+      \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
       \ 'initialization_options': {},
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
@@ -210,7 +221,7 @@ if executable('fsautocomplete')
    au User lsp_setup call lsp#register_server({
       \ 'name': 'fsautocomplete',
       \ 'cmd': {server_info->['fsautocomplete']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.git'))},
+      \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
       \ 'whitelist': ['fsharp'],
       \ 'initialization_options': {
       \   'AutomaticWorkspaceInit': 'true'
