@@ -40,11 +40,18 @@ function Main() {
 }
 
 function Fetch() {
-  curl --silent --location --fail --show-error "$@"
+  curl \
+    --silent --location --fail --show-error \
+    --header "Accept: text/html" \
+    "$@"
 }
 
 function FetchContentType() {
-  curl --silent --location --fail --show-error --head "$@" \
+  curl \
+    --silent --location --fail --show-error \
+    --header "Accept: text/html" \
+    --head \
+    "$@" \
     | grep -i '^Content-Type:' \
     | awk '{print $2}' \
     | tr -d '\r'
@@ -54,7 +61,7 @@ function Process() {
   local contentType="$(FetchContentType "$@")"
 
   case "$contentType" in
-    text/html*) pandoc -f html -t gfm-raw_html ;;
+    text/html*|application/xhtml*) pandoc -f html -t gfm-raw_html ;;
     application/json*) jq . ;;
     *) cat ;;
   esac
