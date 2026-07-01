@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# NAME
+#   web-fetch - Opinionated web fetcher
+#
+# SYNOPSIS
+#   web-fetch [--raw] <url>
+#
+# OUTPUT
+#   The contents of the URL made more presentable (unless --raw is specified):
+#     - html -> markdown
+#     - json -> pretty-printed json
+#     - everything else -> raw
+#
+# DEPENDENCIES
+#  - curl - to fetch the URL
+#  - jq - to pretty-print JSON
+#  - pandoc - to convert HTML to markdown
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+function Main() {
+  local raw=false
+  local otherArgs=()
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -r|--raw) raw=true && shift ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${otherArgs[@]}"
+
+  Fetch "$@" \
+    | if [ "$raw" = "true" ]; then cat; else Process "$@"; fi
+}
+
+function Fetch() {
+  curl --silent --location --fail --show-error "$@"
+}
+
+function FetchContentType() {
+  curl --silent --location --fail --show-error --head "$@" \
+    | grep -i '^Content-Type:' \
+    | awk '{print $2}' \
+    | tr -d '\r'
+}
+
+function Process() {
+  local contentType="$(FetchContentType "$@")"
+
+  case "$contentType" in
+    text/html*) pandoc -f html -t gfm-raw_html ;;
+    application/json*) jq . ;;
+    *) cat ;;
+  esac
+}
+
+Main "$@"
