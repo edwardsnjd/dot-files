@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# NAME
+#   pi-profile - Manage profiles for pi coding agent
+#
+# SYNOPSIS
+#   pi-profile [--help|-h] [--list|--ls] [--interactive] [--add <profile_name>] [<profile_name>]
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+PI_CODING_AGENT_DIR="${PI_CODING_AGENT_DIR:-~/.pi/agent}"
+PI_PROFILES_DIR="${PI_PROFILES_DIR:-${PI_CODING_AGENT_DIR}/profiles}"
+
+function Main() {
+  local cmd="smart"
+  local otherArgs=()
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --help|-h) echo "Usage: pi-profile --interactive|--list|--add" > /dev/stderr && exit 0 ;;
+      --list|--ls) cmd="list" && shift ;;
+      --interactive) cmd="interactive" && shift ;;
+      --add) cmd="add" && shift ;;
+      *) otherArgs+=("$1") && shift ;;
+    esac
+  done
+
+  set -- "${otherArgs[@]}" # restore positional parameters
+
+  case "$cmd" in
+    list) List "$@" ;;
+    interactive) Interactive "$@" ;;
+    add) Add "$@" ;;
+    smart)
+      if [ $# -eq 0 ]; then
+        Interactive "$@"
+      else
+        Start "$@"
+      fi
+      ;;
+    *) echo "Unknown command: $cmd" > /dev/stderr && exit 1 ;;
+  esac
+}
+
+function Add() {
+  local name="${1:?Please provide a profile name}"
+
+  local profileDir="${PI_PROFILES_DIR}/${name}"
+  if [ -d "$profileDir" ]; then
+    echo "Profile '$name' already exists at $profileDir" > /dev/stderr
+    exit 1
+  fi
+
+  mkdir -p "$profileDir"
+  ln -s "${PI_CODING_AGENT_DIR}/models.json" "${profileDir}/"
+  ln -s "${PI_CODING_AGENT_DIR}/auth.json" "${profileDir}/"
+  echo "Created profile '$name' at $profileDir"
+  ls -al "$profileDir"
+}
+
+function Interactive() {
+  local profile=$(
+    List \
+      | sed -E "s|.*|&\t$PI_PROFILES_DIR/&|" \
+      | fzf --accept-nth=1 --prompt="Select a profile: "
+  )
+  if [ -n "$profile" ]; then
+    Start "$profile"
+  else
+    echo "No profile selected" > /dev/stderr
+  fi
+}
+
+function Start() {
+  local profile="${1:?Please provide a profile name}"
+  shift
+
+  local profileDir="${PI_PROFILES_DIR}/${profile}"
+  if [ ! -d "$profileDir" ]; then
+    echo "Profile '$profile' does not exist at $profileDir" > /dev/stderr
+    exit 1
+  fi
+
+  echo "# Starting pi with profile '$profile' at $profileDir" > /dev/stderr
+  PI_CODING_AGENT_DIR="$profileDir" pi "$@"
+}
+
+function List() {
+  if [ -d "$PI_PROFILES_DIR" ]; then
+    find $PI_PROFILES_DIR -type d -maxdepth 1 -mindepth 1 -exec basename {} \;
+  fi
+}
+
+Main "$@"
