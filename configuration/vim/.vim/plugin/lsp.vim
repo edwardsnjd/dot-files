@@ -51,7 +51,21 @@ elseif executable('lsp-python')
         \ })
 endif
 
-if executable('lsp-csharp')
+if executable('csharp-ls')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'csharp-ls',
+        \   'cmd': { server_info->['csharp-ls'] },
+        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['*.csproj', '*.sln']) },
+        \   'allowlist': ['cs'],
+        \ })
+elseif executable('roslyn-language-server')
+  autocmd User lsp_setup call lsp#register_server({
+        \   'name': 'roslyn-language-server',
+        \   'cmd': { server_info->['roslyn-language-server', '--stdio'] },
+        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['*.csproj', '*.sln']) },
+        \   'allowlist': ['cs'],
+        \ })
+elseif executable('lsp-csharp')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-csharp',
         \   'cmd': { server_info->['lsp-csharp'] },
