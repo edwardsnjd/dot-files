@@ -11,8 +11,8 @@ set -o errexit
 set -o pipefail
 #set -o xtrace
 
-PI_CODING_AGENT_DIR="${PI_CODING_AGENT_DIR:-~/.pi/agent}"
-PI_PROFILES_DIR="${PI_PROFILES_DIR:-${PI_CODING_AGENT_DIR}/profiles}"
+PI_CODING_AGENT_DIR=${PI_CODING_AGENT_DIR:-~/.pi/agent}
+PI_PROFILES_DIR=${PI_PROFILES_DIR:-~/.pi/profiles}
 
 function Main() {
   local cmd="smart"
