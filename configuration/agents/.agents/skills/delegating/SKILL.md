@@ -1,6 +1,6 @@
 ---
 name: delegating
-description: Delegate a task to a new subagent so you can focus on coordination
+description: Delegate a task to a subagent so you can focus on coordination
 ---
 Spawn yourself as a sub-agent via bash to perform a task: $@
 
@@ -18,7 +18,9 @@ Spawn yourself as a sub-agent via bash to perform a task: $@
 
 1. Identify a tiny task that can be completed quickly
 2. Write prompt with Goal, Files, Scope
-3. Run `pi --print` with appropriate arguments (if the user specifies a model, use `--provider` and `--model` accordingly)
+3. Run `pi --print` with appropriate arguments:
+  - If the user specifies a model, use `--provider` and `--model` accordingly
+  - Add a large, pessimistic `timeout` since the subagent might take a long time (e.g. 5 minutes or longer)
 4. Check response for errors
 5. On failure: retry once with simpler scope, or stop and give up
 
