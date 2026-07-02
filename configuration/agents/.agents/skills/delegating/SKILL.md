@@ -1,5 +1,5 @@
 ---
-name: subagent
+name: delegating
 description: Delegate a task to a new subagent so you can focus on coordination
 ---
 Spawn yourself as a sub-agent via bash to perform a task: $@
@@ -14,6 +14,14 @@ Spawn yourself as a sub-agent via bash to perform a task: $@
 - You can pass all required context explicitly
 - You have a constrained, specific objective
 
+## How to delegate
+
+1. Identify a tiny task that can be completed quickly
+2. Write prompt with Goal, Files, Scope
+3. Run `pi --print` with appropriate arguments (if the user specifies a model, use `--provider` and `--model` accordingly)
+4. Check response for errors
+5. On failure: retry once with simpler scope, or stop and give up
+
 ## Critical: Zero context
 
 Subagents see **nothing** from your session. You must pass:
@@ -23,23 +31,16 @@ Subagents see **nothing** from your session. You must pass:
 
 ## Anti-patterns
 
-- ❌ Pass file contents in prompt — Use @file references instead
-- ❌ Delegate the delegation — Coordinate yourself instead
-- ❌ Batch processing - Use iterative workflow instead
+- ❌ Don't delegate a task too large for a single agent to quickly complete - Break it into smaller tasks
+- ❌ Don't pass file contents in prompt — Use @file references instead
+- ❌ Don't ask for a batch of work - Iterate over tasks individually
+- ❌ Don't delegate the delegation — Coordinate yourself instead
 
 ## Size limits
 
 Keep prompts under **~1KB**:
 - 1 specific task, not "process all items"
 - File paths, not file contents
-
-## How to delegate
-
-1. Break into tiny tasks (one at a time)
-2. Write prompt with Goal, Files, Scope
-3. Run `pi --print` with appropriate arguments (if the user specifies a model, use `--provider` and `--model` accordingly)
-4. Check response for errors
-5. On failure: retry once with simpler scope, or stop and give up
 
 ## Examples
 

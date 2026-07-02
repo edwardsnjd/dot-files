@@ -1,6 +1,6 @@
 ---
 name: call-graph
-description: Builds a Graphviz .dot call-dependency graph from source files, grouped by declarations (file/interface/class/object) with visibility-aware styling and a legend.
+description: Use this skill to build a call-dependency graph from source files, grouped by declarations (file/interface/class/object) with visibility-aware styling and a legend
 ---
 
 # Call Graph Skill
@@ -10,6 +10,7 @@ Generate a **function call dependency graph** as Graphviz `.dot` for one or more
 ## When to use
 
 - User asks for call dependencies, call paths, or function relationship visualization.
+- User wants to understand call chains
 - User wants architecture visibility by declaration scope (file/interface/class/object).
 - User wants overload-aware and visibility-aware diagrams.
 
