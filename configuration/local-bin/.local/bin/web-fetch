@@ -4,7 +4,7 @@
 #   web-fetch - Opinionated web fetcher
 #
 # SYNOPSIS
-#   web-fetch [--raw] <url>
+#   web-fetch [--raw|--help] <url>
 #
 # OUTPUT
 #   The contents of the URL made more presentable (unless --raw is specified):
@@ -29,6 +29,7 @@ function Main() {
   while [[ $# -gt 0 ]]; do
     case $1 in
       -r|--raw) raw=true && shift ;;
+      -h|--help) Help && exit ;;
       *) otherArgs+=("$1") && shift ;;
     esac
   done
@@ -37,6 +38,10 @@ function Main() {
 
   Fetch "$@" \
     | if [ "$raw" = "true" ]; then cat; else Process "$@"; fi
+}
+
+function Help() {
+  echo "Usage: web-fetch [--raw] [--help] URL" > /dev/stderr
 }
 
 function Fetch() {

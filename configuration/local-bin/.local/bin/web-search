@@ -4,8 +4,8 @@
 #   web-search - Simple CLI access to web search
 #
 # SYNOPSIS
-#   web-search < QUERY
-#   web-search QUERY...
+#   web-search [--help] < QUERY
+#   web-search [--help] QUERY...
 #
 # DEPENDENCIES
 #   curl - Make the request
@@ -19,6 +19,15 @@ set -o pipefail
 #set -o xtrace
 
 Main() {
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -h|--help) Help && exit ;;
+      *) args+=("$1") && shift ;;
+    esac
+  done
+  set -- "${args[@]}"
+
   local key="${PERPLEXITY_API_KEY:?PERPLEXITY_API_KEY environment variable required}"
 
   ProduceAllInput "$*" \
@@ -31,6 +40,10 @@ Main() {
     --header "Content-Type: application/json" \
     --data @- \
   | FormatAsMarkdown
+}
+
+function Help() {
+  echo "Usage: web-search [--help] QUERY" > /dev/stderr
 }
 
 ProduceAllInput() {
