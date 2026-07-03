@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# NAME
+#   command-proxy - network proxy for dotnet commands
+#
+# SYNOPSIS
+#   command-proxy serve CMD [ARGS...]
+#   command-proxy send ARGS
+#
+# OUTPUT
+#   Listens on port 9000
+#
+# DEPENDENCIES
+#   socat - fork incoming connections to the command
+#   nc - send data to a network connection
+#   date - print the current date and time
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+PORT="${PORT:-9000}"
+
+Main() {
+  local cmd="${1:?Supply command: serve|send|handle}"
+  shift
+
+  case "$cmd" in
+    serve) Serve "$@" ;;
+    send) Send "$@" ;;
+    handle) Handle "$@" ;;
+    *) echo "Usage: $0 [serve|send|handle]" >&2; exit 1 ;;
+  esac
+}
+
+Serve() {
+  local handler="$0 handle $@"
+  exec socat TCP-LISTEN:"$PORT",reuseaddr,fork SYSTEM:"$handler"
+}
+
+Send() {
+  echo "$@" | exec nc localhost "$PORT"
+}
+
+Handle() {
+  IFS= read -r line || exit 0
+  echo "$(date -Iseconds): $@" $line >&2
+  exec "$@" $line 2>&1
+}
+
+Main "$@"
