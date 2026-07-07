@@ -11,6 +11,21 @@ let g:lsp_auto_enable = 0
 " Log LSP messages
 " let g:lsp_log_file = expand('~/vim-lsp.log')
 
+" Optionally tweak the initialisation params to null the process id to allow
+" for LSP servers running in a different process iff the discovered binary of
+" the given name is a descendent of the current PWD.
+"
+" This is useful because I use little `binstub` wrappers to run commands
+" inside an associated docker container.
+function! <SID>NullifyProcessIfDescendant(cmd_name, init_params) abort
+  let l:cmd_path = fnamemodify(a:cmd_name, ':p')
+  let l:current_pwd = getcwd()
+
+  return l:cmd_path =~ '^' . escape(l:current_pwd, '\')
+        \ ? <SID>NullifyProcess(a:init_params)
+        \ : a:init_params
+endfunction
+
 " Tweak the initialisation params to null the process id
 " to allow for LSP servers running in a different process
 " namespace to this client
@@ -42,6 +57,7 @@ if executable('pylsp')
         \   'name': 'pylsp',
         \   'cmd': ['pylsp'],
         \   'allowlist': ['python'],
+        \   'before_init': function('<SID>NullifyProcessIfDescendant', ['pylsp']),
         \ })
 elseif executable('lsp-python')
   autocmd User lsp_setup call lsp#register_server({
@@ -57,6 +73,7 @@ if executable('csharp-ls')
         \   'cmd': ['csharp-ls'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['*.csproj', '*.sln']) },
         \   'allowlist': ['cs'],
+        \   'before_init': function('<SID>NullifyProcessIfDescendant', ['csharp-ls']),
         \ })
 elseif executable('roslyn-language-server')
   autocmd User lsp_setup call lsp#register_server({
@@ -64,6 +81,7 @@ elseif executable('roslyn-language-server')
         \   'cmd': ['roslyn-language-server', '--stdio'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['*.csproj', '*.sln']) },
         \   'allowlist': ['cs'],
+        \   'before_init': function('<SID>NullifyProcessIfDescendant', ['roslyn-language-server']),
         \ })
 elseif executable('lsp-csharp')
   autocmd User lsp_setup call lsp#register_server({
@@ -90,6 +108,7 @@ elseif executable('vscode-json-languageserver')
         \     'provideFormatter': v:true
         \   },
         \   'capabilities': <SID>Vim_lsp_settings_vscode_json_language_server_capabilities(),
+        \   'before_init': function('<SID>NullifyProcessIfDescendant', ['vscode-json-languageserver']),
         \ })
 endif
 
@@ -110,6 +129,7 @@ if executable('solargraph')
         \     'folding': 'true',
         \     'highlights': 'true',
         \   },
+        \   'before_init': function('<SID>NullifyProcessIfDescendant', ['solargraph']),
         \ })
 elseif executable('lsp-ruby')
   autocmd User lsp_setup call lsp#register_server({
@@ -128,6 +148,7 @@ elseif executable('lsp-ruby')
         \     'folding': 'true',
         \     'highlights': 'true',
         \   },
+        \   'before_init': function('<SID>NullifyProcess'),
         \ })
 endif
 
@@ -137,6 +158,7 @@ if executable('typescript-language-server')
         \   'cmd': ['typescript-language-server', '--stdio'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
+        \   'before_init': function('<SID>NullifyProcessIfDescendant', ['typescript-language-server']),
         \ })
 elseif executable('lsp-typescript')
   autocmd User lsp_setup call lsp#register_server({
@@ -186,7 +208,7 @@ if executable('kotlin-lsp')
         \ 'initialization_options': {
         \ },
         \ 'whitelist': ['kotlin'],
-        \ 'before_init': function('<SID>NullifyProcess'),
+        \ 'before_init': function('<SID>NullifyProcessIfDescendant', ['kotlin-lsp']),
         \ })
 elseif executable('kotlin-language-server')
     autocmd User lsp_setup call lsp#register_server({
@@ -195,7 +217,7 @@ elseif executable('kotlin-language-server')
         \ 'initialization_options': {
         \ },
         \ 'whitelist': ['kotlin'],
-        \ 'before_init': function('<SID>NullifyProcess'),
+        \ 'before_init': function('<SID>NullifyProcessIfDescendant', ['kotlin-language-server']),
         \ })
 endif
 
@@ -242,6 +264,6 @@ if executable('fsautocomplete')
       \ 'initialization_options': {
       \   'AutomaticWorkspaceInit': 'true'
       \ },
-      \ 'before_init': function('<SID>NullifyProcess'),
+      \ 'before_init': function('<SID>NullifyProcessIfDescendant', ['fsautocomplete']),
       \ })
 endif
