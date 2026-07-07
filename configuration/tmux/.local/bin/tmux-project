@@ -35,7 +35,8 @@ function Main() {
   local project="$(SelectProject "$baseDir" "$@")"
 
   if [[ -n "${project}" ]]; then
-    tmux-ensure "$project" "$baseDir/$project"
+    # NOTE: Resolve symlinks to use canonical path
+    tmux-ensure "$project" "$(readlink -f "$baseDir/$project")"
     tmux-join "$project"
   fi
 }
