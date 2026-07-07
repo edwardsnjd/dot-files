@@ -40,13 +40,13 @@ endfunction
 if executable('pylsp')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'pylsp',
-        \   'cmd': { server_info->['pylsp'] },
+        \   'cmd': ['pylsp'],
         \   'allowlist': ['python'],
         \ })
 elseif executable('lsp-python')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-python',
-        \   'cmd': { server_info->['lsp-python'] },
+        \   'cmd': ['lsp-python'],
         \   'allowlist': ['python'],
         \ })
 endif
@@ -54,21 +54,21 @@ endif
 if executable('csharp-ls')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'csharp-ls',
-        \   'cmd': { server_info->['csharp-ls'] },
+        \   'cmd': ['csharp-ls'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['*.csproj', '*.sln']) },
         \   'allowlist': ['cs'],
         \ })
 elseif executable('roslyn-language-server')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'roslyn-language-server',
-        \   'cmd': { server_info->['roslyn-language-server', '--stdio'] },
+        \   'cmd': ['roslyn-language-server', '--stdio'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['*.csproj', '*.sln']) },
         \   'allowlist': ['cs'],
         \ })
 elseif executable('lsp-csharp')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-csharp',
-        \   'cmd': { server_info->['lsp-csharp'] },
+        \   'cmd': ['lsp-csharp'],
         \   'allowlist': ['cs'],
         \   'before_init': function('<SID>NullifyProcess'),
         \ })
@@ -77,14 +77,14 @@ endif
 if executable('lsp-json')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-json',
-        \   'cmd': { server_info->['lsp-json'] },
+        \   'cmd': ['lsp-json'],
         \   'allowlist': ['json'],
         \   'before_init': function('<SID>NullifyProcess'),
         \ })
 elseif executable('vscode-json-languageserver')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'vscode-json-languageserver',
-        \   'cmd': { server_info->['vscode-json-languageserver', '--stdio'] },
+        \   'cmd': ['vscode-json-languageserver', '--stdio'],
         \   'allowlist': ['json', 'jsonc'],
         \   'initialization_options': {
         \     'provideFormatter': v:true
@@ -96,7 +96,7 @@ endif
 if executable('solargraph')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'solargraph',
-        \   'cmd': { server_info->['solargraph', 'stdio'] },
+        \   'cmd': ['solargraph', 'stdio'],
         \   'allowlist': ['ruby'],
         \   'initialization_options': {
         \     'completion': 'true',
@@ -114,7 +114,7 @@ if executable('solargraph')
 elseif executable('lsp-ruby')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-ruby',
-        \   'cmd': { server_info->['lsp-ruby'] },
+        \   'cmd': ['lsp-ruby'],
         \   'allowlist': ['ruby'],
         \   'initialization_options': {
         \     'completion': 'true',
@@ -134,14 +134,14 @@ endif
 if executable('typescript-language-server')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'typescript-language-server',
-        \   'cmd': { server_info->['typescript-language-server', '--stdio']},
+        \   'cmd': ['typescript-language-server', '--stdio'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \ })
 elseif executable('lsp-typescript')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-typescript',
-        \   'cmd': { server_info->['lsp-typescript'] },
+        \   'cmd': ['lsp-typescript'],
         \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \   'before_init': function('<SID>NullifyProcess'),
@@ -151,7 +151,7 @@ endif
 if executable('rust-analyzer')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'rust-analyzer',
-        \   'cmd': { server_info->['rust-analyzer'] },
+        \   'cmd': ['rust-analyzer'],
         \   'whitelist': ['rust'],
         \   'initialization_options': {
         \     'cargo': {
@@ -165,7 +165,7 @@ if executable('rust-analyzer')
 elseif executable('lsp-rust')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-rust',
-        \   'cmd': { server_info->['lsp-rust'] },
+        \   'cmd': ['lsp-rust'],
         \   'whitelist': ['rust'],
         \   'initialization_options': {
         \     'cargo': {
@@ -181,42 +181,44 @@ endif
 if executable('kotlin-lsp')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'kotlin-lsp',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-lsp --stdio']},
+        \ 'cmd': [&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-lsp --stdio'],
         \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
         \ 'initialization_options': {
         \ },
-        \ 'whitelist': ['kotlin']
+        \ 'whitelist': ['kotlin'],
+        \ 'before_init': function('<SID>NullifyProcess'),
         \ })
 elseif executable('kotlin-language-server')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'kotlin-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-language-server']},
+        \ 'cmd': [&shell, &shellcmdflag, 'JDK_JAVA_OPTIONS="-Xmx16g" kotlin-language-server'],
         \ 'initialization_options': {
         \ },
-        \ 'whitelist': ['kotlin']
+        \ 'whitelist': ['kotlin'],
+        \ 'before_init': function('<SID>NullifyProcess'),
         \ })
 endif
 
 if executable('elm-language-server')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'elm-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'elm-language-server']},
-        \ 'whitelist': ['elm']
+        \ 'cmd': [&shell, &shellcmdflag, 'elm-language-server'],
+        \ 'whitelist': ['elm'],
         \ })
 endif
 
 if executable('uiua')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'uiua-lsp',
-        \ 'cmd': {server_info->['uiua', 'lsp']},
-        \ 'whitelist': ['uiua']
+        \ 'cmd': ['uiua', 'lsp'],
+        \ 'whitelist': ['uiua'],
         \ })
 endif
 
 if executable('ccls')
    au User lsp_setup call lsp#register_server({
       \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
+      \ 'cmd': ['ccls'],
       \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
       \ 'initialization_options': {},
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
@@ -226,7 +228,7 @@ endif
 if executable('openscad-lsp')
    au User lsp_setup call lsp#register_server({
       \ 'name': 'openscad-lsp',
-      \ 'cmd': {server_info->['openscad-lsp', '--stdio']},
+      \ 'cmd': ['openscad-lsp', '--stdio'],
       \ 'whitelist': ['openscad'],
       \ })
 endif
@@ -234,7 +236,7 @@ endif
 if executable('fsautocomplete')
    au User lsp_setup call lsp#register_server({
       \ 'name': 'fsautocomplete',
-      \ 'cmd': {server_info->['fsautocomplete']},
+      \ 'cmd': ['fsautocomplete'],
       \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
       \ 'whitelist': ['fsharp'],
       \ 'initialization_options': {
