@@ -22,7 +22,7 @@ SharedTmux() {
 
   if [ $remote -eq 0 ]; then
     tmux-ensure "$SESSION_NAME"
-    tmux-join "$SESSION_NAME"
+    exec tmux-join "$SESSION_NAME"
   else
     local server="${TMUX_SHARED_SERVER:?Missing TMUX_SHARED_SERVER environment variable}"
     ssh "$server" tmux-shared --local

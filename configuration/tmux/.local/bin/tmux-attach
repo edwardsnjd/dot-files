@@ -9,7 +9,7 @@ set -o nounset
 set -o errexit
 
 function Main() {
-  tmux-join "$(ChooseSession "$@")"
+  exec tmux-join "$(ChooseSession "$@")"
 }
 
 function ChooseSession() {

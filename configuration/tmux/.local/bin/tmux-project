@@ -37,7 +37,7 @@ function Main() {
   if [[ -n "${project}" ]]; then
     # NOTE: Resolve symlinks to use canonical path
     tmux-ensure "$project" "$(readlink -f "$baseDir/$project")"
-    tmux-join "$project"
+    exec tmux-join "$project"
   fi
 }
 
