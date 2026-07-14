@@ -14,9 +14,11 @@ function JoinSession() {
 
   if [[ -n "${session}" ]]
   then
-    [[ -z "${TMUX:-}" ]] \
-      && tmux attach-session -t "${session}" \
-      || tmux switch-client -t "${session}"
+    if [[ -z "${TMUX:-}" ]]; then
+      exec tmux attach-session -t "${session}"
+    else
+      exec tmux switch-client -t "${session}"
+    fi
   fi
 }
 
