@@ -49,3 +49,10 @@
 	rebase = true
 [notes]
 	rewriteRef = refs/notes/commits
+[delta]
+	line-numbers = true
+	navigate = true
+	# Force less so navigate works
+	pager = less
+	dark = true
+	syntax-theme = night-owlish
