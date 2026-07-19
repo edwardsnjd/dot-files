@@ -1,6 +1,7 @@
 tap "anomalyco/tap", trusted: true
 tap "cryfs/tap", trusted: true
 tap "github/gh", trusted: true
+tap "netbirdio/tap", trusted: true
 tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear", trusted: true
 tap "visidata/vd", "https://github.com/visidata/homebrew-vd.git", trusted: true
 tap "xwmx/taps", trusted: true
@@ -122,6 +123,8 @@ brew "ripgrep"
 brew "rlwrap"
 # Rust toolchain installer
 brew "rustup"
+# SOcket CAT: netcat on steroids
+brew "socat"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
 # Open source continuous file synchronization application
