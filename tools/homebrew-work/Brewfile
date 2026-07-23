@@ -21,8 +21,6 @@ brew "bash"
 brew "bash-completion"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# GNU File, Shell, and Text utilities
-brew "coreutils"
 # Bash Automated Testing System
 brew "bats-core"
 # Open source, extensible AI agent that goes beyond code suggestions
@@ -47,6 +45,8 @@ brew "clojure"
 brew "colima", restart_service: :changed
 # Create and run Linux containers using lightweight virtual machines
 brew "container"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
 # Securely send things from one computer to another
 brew "croc"
 # Reimplementation of ctags(1)
