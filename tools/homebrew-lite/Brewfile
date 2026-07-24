@@ -2,6 +2,7 @@ tap "anomalyco/tap", trusted: true
 tap "cryfs/tap", trusted: true
 tap "github/gh", trusted: true
 tap "netbirdio/tap", trusted: true
+tap "superradcompany/tap"
 tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear", trusted: true
 tap "xwmx/taps", trusted: true
 # Bourne-Again SHell, a UNIX command interpreter
@@ -152,6 +153,8 @@ brew "w3m"
 brew "watch"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode", trusted: true
+# Spins up lightweight VMs in milliseconds from SDKs
+brew "superradcompany/tap/microsandbox", trusted: true
 # Command line interface for the built-in speech recognition and transcription capabilities in macOS.
 brew "sveinbjornt/hear/hear"
 brew "xwmx/taps/nb"
