@@ -156,7 +156,7 @@ if executable('typescript-language-server')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'typescript-language-server',
         \   'cmd': ['typescript-language-server', '--stdio'],
-        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
+        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['tsconfig.json']) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \   'before_init': function('<SID>NullifyProcessIfDescendant', ['typescript-language-server']),
         \ })
@@ -164,7 +164,7 @@ elseif executable('lsp-typescript')
   autocmd User lsp_setup call lsp#register_server({
         \   'name': 'lsp-typescript',
         \   'cmd': ['lsp-typescript'],
-        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
+        \   'root_uri': { server_info-><SID>NearestParentWithOrPwd(['tsconfig.json']) },
         \   'allowlist': ['javascript', 'javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact'],
         \   'before_init': function('<SID>NullifyProcess'),
         \ })
