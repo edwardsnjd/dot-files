@@ -395,8 +395,6 @@ function! <SID>QuickfixWindowNumber()
 endfunction
 
 " - Git gutter
-" Disable by default and toggle via mapping
-let g:gitgutter_enabled = 0
 noremap <leader>gt :GitGutterBufferToggle<CR>
 
 " - Copilot
