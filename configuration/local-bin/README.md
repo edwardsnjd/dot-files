@@ -340,6 +340,12 @@ Process pending Workflowy ingestion items and take appropriate actions based on 
 
 Example: `./ingest`
 
+### workflowy-backup-search
+
+Search Workflowy backups for a query and format results.
+
+Example: `./workflowy-backup-search "project"`
+
 ### add-bookmark
 
 Add a bookmark to an nb notebook with optional comment and tags.
@@ -738,6 +744,12 @@ Opinionated `dot` wrapper for converting between .dot and .png.
 
 Example: `./dot-helper png < foo.dot > foo.png`
 
+### command-proxy
+
+Network proxy for dotnet commands, listening on port 9000.
+
+Example: `./command-proxy serve mydotnetcmd arg1 arg2`
+
 ---
 
 ## File & Directory Explorers
@@ -902,6 +914,12 @@ Perform web searches using the Perplexity API.
 
 Example: `PERPLEXITY_API_KEY=sk-... web-search "what is the capital of France"`
 
+### web-fetch
+
+Opinionated web fetcher that retrieves a URL and outputs markdown, pretty JSON, or raw content.
+
+Example: `./web-fetch https://example.com`
+
 ---
 
 ## Miscellaneous
@@ -965,3 +983,10 @@ Example: `./sad "I am sad"`
 Add padding/margins to presentation slides.
 
 Example: `./pad-slides raw_slides.pdf`
+
+### safeagent
+
+Prepare a sandboxed environment for an agent, setting git author info.
+
+Example: `./safeagent myscript.sh`
+
