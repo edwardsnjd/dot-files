@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+# Stop and remove all sandboxes for this PWD
+
+# See scripts/create for labelling
+msb stop --label "msb.pwd=$PWD"
+msb remove --label "msb.pwd=$PWD"

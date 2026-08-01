@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+# List all sandboxes for this PWD
+
+# See scripts/create for labelling
+msb ps --label "msb.pwd=$PWD"
