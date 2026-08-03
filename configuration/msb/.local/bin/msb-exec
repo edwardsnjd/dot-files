@@ -2,23 +2,10 @@
 
 # Execute a command in the first sandbox for this PWD
 
-function main() {
-  local firstId="$(sandboxIds | head -1)"
-  if [[ -n "$firstId" ]]; then
-    sandboxExec "$firstId" "$@"
-  else
-    echo "No sandbox found for this PWD" >&2
-  fi
-}
+firstId="$(msb ps --label "msb.pwd=$PWD" --quiet | head -1)"
 
-function sandboxIds() {
-  msb ps --label "msb.pwd=$PWD" --quiet
-}
-
-function sandboxExec() {
-  local id="$1"
-  shift
-  msb exec "$id" -- "$@"
-}
-
-main "$@"
+if [[ -n "$firstId" ]]; then
+  exec msb exec "$firstId" -- "$@"
+else
+  echo "No sandbox found for this PWD" >&2
+fi

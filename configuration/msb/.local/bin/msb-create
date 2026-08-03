@@ -9,16 +9,13 @@ SANDBOX_IMAGE="${SANDBOX_IMAGE:-localhost/msb-agent:latest}"
 PROJECT="${PROJECT:-$(basename $(pwd))}"
 SANDBOX_NAME="${PROJECT}-${RANDOM}"
 
-# Support symlinked agents config
-AGENTS_DIR="$(realpath $HOME/.agents)"
-
 function createSandbox() {
   msb create \
     --name "${SANDBOX_NAME}" \
     --secret "PERPLEXITY_API_KEY@api.perplexity.ai" \
     --secret "OPENROUTER_API_KEY@openrouter.ai" \
     --secret "INCEPTION_API_KEY@api.inceptionlabs.ai" \
-    --mount-dir "${AGENTS_DIR}:/root/.agents:ro" \
+    --mount-dir "$(realpath $HOME/.agents):/root/.agents:ro" \
     --mount-dir "$PWD:$PWD" \
     --workdir "$PWD" \
     --label "msb.pwd=$PWD" \
