@@ -568,9 +568,21 @@ Example: `./annotate main.go notes.txt side`
 
 ### list-keys
 
-List SSH and GPG keys on the system.
+List key bindings from selected applications.
 
 Example: `./list-keys`
+
+### list-fzf-keys
+
+List all configured fzf keybindings.
+
+Example: `./list-fzf-keys`
+
+### list-readline-keys
+
+List all readline keybindings.
+
+Example: `./list-readline-keys`
 
 ### npm-run
 
