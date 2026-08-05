@@ -5,15 +5,19 @@
 
 DOCKER="${DOCKER:-docker}"
 
+DIVIDER="┄"
+
+DIM=$(tput bold; tput setaf 0)
+BRIGHT="$(tput dim; tput setaf 5)"
+RESET="$(tput sgr0)"
+
 function heading() {
-  centre --filler "┄"
+  centre --filler "$DIVIDER" \
+    | sed -E "s/^(.*) (.*) (.*)$/${DIM}\\1${RESET} ${BRIGHT}\\2${RESET} ${DIM}\\3${RESET}/"
 }
 
 echo "pwd" | heading
 pwd
-
-echo "git" | heading
-git st
 
 echo "$DOCKER" | heading
 $DOCKER compose config --quiet 2> /dev/null \
@@ -23,7 +27,11 @@ $DOCKER compose config --quiet 2> /dev/null \
 echo "msb" | heading
 msb-list
 
+echo "git" | heading
+git st
+
 echo "ls" | heading
 gls --color=auto -AFl --group-directories-first
 
-echo "▽" | heading
+echo "§" | heading
+echo
