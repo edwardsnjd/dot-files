@@ -382,9 +382,9 @@ Example: `echo "Hello World" | ./centre`
 
 ### convert-text
 
-Text conversion and manipulation utility.
+Convert text to/from different formats.
 
-Example: `./convert-text --to-upper "hello"`
+Example: `./convert-text --format base64"`
 
 ### count
 
