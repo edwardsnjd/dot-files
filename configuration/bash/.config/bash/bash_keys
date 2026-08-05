@@ -93,11 +93,6 @@ bind -m emacs-standard -x '"\C-x\C-t": readline-insert datetime localtime'
 bind -m vi-command -x     '"\C-x\C-t": readline-insert datetime localtime'
 bind -m vi-insert -x      '"\C-x\C-t": readline-insert datetime localtime'
 
-# F7 (check via `cat`) - Enter date
-bind -m emacs-standard -x '"\e[18~": readline-insert datetime'
-bind -m vi-command -x     '"\e[18~": readline-insert datetime'
-bind -m vi-insert -x      '"\e[18~": readline-insert datetime'
-
 # Space - History expansion
 bind -m emacs-standard 'Space: magic-space'
 bind -m vi-command     'Space: magic-space'
