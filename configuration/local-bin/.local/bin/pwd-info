@@ -3,11 +3,27 @@
 # NAME
 #   pwd-info - print info about pwd
 
-echo "pwd" | centre --filler "─"
+DOCKER="${DOCKER:-docker}"
+
+function heading() {
+  centre --filler "┄"
+}
+
+echo "pwd" | heading
 pwd
-echo "git" | centre --filler "─"
+
+echo "git" | heading
 git st
-echo "msb" | centre --filler "─"
+
+echo "$DOCKER" | heading
+$DOCKER compose config --quiet 2> /dev/null \
+  && $DOCKER compose ps \
+  || echo "No compose file found."
+
+echo "msb" | heading
 msb-list
-echo "ls" | centre --filler "─"
+
+echo "ls" | heading
 gls --color=auto -AFl --group-directories-first
+
+echo "▽" | heading
