@@ -990,3 +990,8 @@ Prepare a sandboxed environment for an agent, setting git author info.
 
 Example: `./safeagent myscript.sh`
 
+### pwd-info
+
+Print info about the current directory.
+
+Example: `./pwd-info`
