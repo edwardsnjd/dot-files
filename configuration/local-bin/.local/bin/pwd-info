@@ -3,11 +3,11 @@
 # NAME
 #   pwd-info - print info about pwd
 
-echo "pwd" | centre --filler "-"
+echo "pwd" | centre --filler "─"
 pwd
-echo "git" | centre --filler "-"
+echo "git" | centre --filler "─"
 git st
-echo "msb" | centre --filler "-"
+echo "msb" | centre --filler "─"
 msb-list
-echo "ls" | centre --filler "-"
+echo "ls" | centre --filler "─"
 gls --color=auto -AFl --group-directories-first
