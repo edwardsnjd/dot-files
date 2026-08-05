@@ -5,4 +5,11 @@
 export GIT_AUTHOR_NAME="agent"
 export GIT_AUTHOR_EMAIL="agent@local"
 
-fence -- "$@"
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  fence \
+    --expose-host-path-rw "$(git rev-parse --git-dir)" \
+    -- "$@"
+else
+  fence \
+    -- "$@"
+fi
