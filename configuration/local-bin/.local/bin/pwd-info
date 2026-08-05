@@ -31,8 +31,12 @@ command -v msb-list >/dev/null 2>&1 && {
   msb-list
 }
 
-echo "git" | heading
-git st
+command -v git >/dev/null 2>&1 && {
+  echo "git" | heading
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
+    && git st \
+    || echo "Not a git repo."
+}
 
 echo "§" | heading
 echo
