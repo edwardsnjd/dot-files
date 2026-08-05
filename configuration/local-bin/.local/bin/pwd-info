@@ -19,19 +19,20 @@ function heading() {
 echo "pwd" | heading
 pwd
 
-echo "$DOCKER" | heading
-$DOCKER compose config --quiet 2> /dev/null \
-  && $DOCKER compose ps \
-  || echo "No compose file found."
+command -v $DOCKER >/dev/null 2>&1 && {
+  echo "$DOCKER" | heading
+  $DOCKER compose config --quiet 2> /dev/null \
+    && $DOCKER compose ps \
+    || echo "No compose file found."
+}
 
-echo "msb" | heading
-msb-list
+command -v msb-list >/dev/null 2>&1 && {
+  echo "msb" | heading
+  msb-list
+}
 
 echo "git" | heading
 git st
-
-echo "ls" | heading
-gls --color=auto -AFl --group-directories-first
 
 echo "§" | heading
 echo
