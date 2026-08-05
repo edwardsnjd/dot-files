@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# NAME
+#   list-fzf-keys - list all configured fzf keybindings
+#
+# OUTPUT
+#   TSV with columns:
+#     app	mode	key(s)	command(s)
+
+# List default key bindings for fzf
+function ListFzfKeys() {
+  echo "/AVAILABLE ACTION/+4,/ACTION COMPOSITION/-3 p" \
+    | ex <( MANWIDTH=200 man -P cat fzf | col -b ) \
+    | sed -E '
+      # Strip leading spaces
+      s/^ +//
+      # Separate first field
+      s/^([^ ]+) +/\1	/
+      # Handle second field notes
+      s/^([^	]+)	\((.+)\)$/\1	<none>	\2/
+      # Handle second field keys
+      s/^([^	]+)	([^	]+)$/\1	\2	/
+      # Handle single fields
+      s/^([^	]+)$/\1	<none>	/
+      # Handle 3 fields
+      s/^([^	]+)	([^	]+) +\((.+)\)\t$/\1	\2	\3/
+    ' \
+    | awk -F $'\t' '{
+      split($2, keys, " +")
+      for (i in keys) {
+        printf("fzf	root	%s	%s\n", keys[i], $1)
+      }
+    }' \
+    | sed -E 's/ \(\)$//' \
+    | sed -E 's/ctrl-/C-/g; s/alt-/M-/g'
+}
+
+ListFzfKeys "$@"

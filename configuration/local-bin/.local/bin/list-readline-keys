@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# NAME
+#   list-readline-keys - list all configured bash readline keys
+#
+# USAGE
+#   source list-readline-keys
+#
+#   NOTE: This will only return your keybindings if run in an interactive
+#   shell session.  Running `bind` from a non-interactive script will not have
+#   loaded your interactive bash configuration, which might include `readline`
+#   keybindings.
+#
+# OUTPUT
+#   TSV with columns:
+#     app	mode	key(s)	command(s)
+
+function ListReadlineKeys() {
+  local selfInsertHex=$(printf ": self-insert" | xxd -c0 -p)
+  local quoteHex=$(printf '"' | xxd -c0 -p)
+  local newlineHex=$(printf "\n" | xxd -c0 -p)
+
+  # HACK: Detour via hex representation so we can remove mappings for
+  # non-textual lines, since they break all the normal line based tools.
+  {
+    bind -X \
+      | sed -E 's/^"(.*)": (.*)$/readline\troot\t\1\t\2/'
+    bind -p \
+      | tail +2 \
+      | xxd -c0 -p | sed -E "s/${quoteHex}.{2,8}${quoteHex}${selfInsertHex}${newlineHex}//g" | xxd -r -p \
+      | grep -v "^#" \
+      | sed -E 's/^"(.*)": (.*)$/readline\troot\t\1\t(readline)\2/'
+  } | awk -F $'\t' -v OFS=$'\t' '{
+      gsub(/ /, "Space", $3)
+      gsub(/\\C/, "C", $3)
+      gsub(/\\e/, "M-", $3)
+      print
+    }'
+}
+
+ListReadlineKeys "$@"
