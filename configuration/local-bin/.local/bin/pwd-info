@@ -34,7 +34,17 @@ command -v msb-list >/dev/null 2>&1 && {
 command -v git >/dev/null 2>&1 && {
   echo "git" | heading
   git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
-    && { git st ; git lgm ; } \
+    && {
+      git st
+      mainBranch=$(
+        if git show-ref --verify --quiet refs/heads/master; then
+          echo "master"
+        else
+          echo "main"
+        fi
+      )
+      git lg ${mainBranch}..
+    } \
     || echo "Not a git repo."
 }
 
