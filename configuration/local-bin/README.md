@@ -168,6 +168,14 @@ Interactively browse and manage notes for a commit's tree.
 
 Example: `./git-browse-objects`
 
+### git-churn
+
+Show churn for specific directories or time ranges in a git repository.
+
+Example: `./git-churn app lib`
+
+Example: `./git-churn --since='1 month ago'`
+
 ### git-notes-manager
 
 Interactively browse and manage git notes for the repo.

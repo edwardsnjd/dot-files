@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+
+# Written by Corey Haines
+# Scriptified by Gary Bernhardt
+#
+# Show churn for specific directories:
+#   $ git churn app lib
+#
+# Show churn for a time range:
+#   $ git churn --since='1 month ago'
+
+set -e
+
+git log --all --find-renames --find-copies --name-only --format='format:' "$@" \
+  | sort \
+  | grep -v '^$' \
+  | uniq -c \
+  | sort \
+  | awk '
+      BEGIN { print "count\tfile" }
+      { print $1 "\t" $2 }
+    ' \
+  | sort -g
