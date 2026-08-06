@@ -22,7 +22,7 @@ pwd
 command -v $DOCKER >/dev/null 2>&1 && {
   echo "$DOCKER" | heading
   $DOCKER compose config --quiet 2> /dev/null \
-    && $DOCKER compose ps \
+    && $DOCKER compose ps --format 'table {{.Name}}\t{{.Image}}\t{{.Service}}\t{{.RunningFor}}\t{{.Status}}' \
     || echo "No compose file found."
 }
 
@@ -34,7 +34,7 @@ command -v msb-list >/dev/null 2>&1 && {
 command -v git >/dev/null 2>&1 && {
   echo "git" | heading
   git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
-    && git st \
+    && { git st ; git lgm ; } \
     || echo "Not a git repo."
 }
 
