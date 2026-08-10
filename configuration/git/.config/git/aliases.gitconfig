@@ -66,6 +66,9 @@
 	bl = blame --color-lines --color-by-age
 	bli = bl --ignore-revs-file=".git-blame-ignore-revs"
 
+	# Toggle staging of a path
+	add-toggle = "!toggle() { git diff --cached --name-only -- \"${1}\" | grep -q . && git restore --staged -- \"${1}\" || git add -- \"${1}\"; }; toggle"
+
 	# Configure fetch for bare repos
 	config-fetch = config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 
