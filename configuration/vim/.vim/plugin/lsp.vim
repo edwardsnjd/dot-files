@@ -267,3 +267,13 @@ if executable('fsautocomplete')
       \ 'before_init': function('<SID>NullifyProcessIfDescendant', ['fsautocomplete']),
       \ })
 endif
+
+if executable('likec4')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'likec4',
+      \ 'cmd': ['likec4', 'lsp', '--stdio'],
+      \ 'root_uri': { server_info-><SID>NearestParentWithOrPwd([]) },
+      \ 'whitelist': ['c4', 'likec4'],
+      \ 'before_init': function('<SID>NullifyProcessIfDescendant', ['likec4']),
+      \ })
+endif
