@@ -4,6 +4,7 @@ tap "buildkite/buildkite", trusted: true
 tap "docker/tap", trusted: true
 tap "jetbrains/utils", "https://github.com/JetBrains/homebrew-utils", trusted: true
 tap "ngrok/ngrok", trusted: true
+tap "superradcompany/tap"
 tap "visidata/vd", "https://github.com/visidata/homebrew-vd.git", trusted: true
 # Asciicast to GIF converter
 brew "agg"
@@ -263,6 +264,8 @@ brew "zlib"
 brew "anomalyco/tap/opencode"
 # Work with Buildkite from the command-line
 brew "buildkite/buildkite/bk@3"
+# Spins up lightweight VMs in milliseconds from SDKs
+brew "superradcompany/tap/microsandbox", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
