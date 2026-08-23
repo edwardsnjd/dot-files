@@ -46,17 +46,23 @@ function Main() {
 function CenterTitle() {
   local width="$1"
   local filler="$2"
-  local spacePreserver="␣"
-  local paddingPreserver="∞"
 
-  sed -E "s/ /${spacePreserver}/g" \
-    | sed -E "s/.*/${paddingPreserver}&${paddingPreserver}/" \
-    | fmt -c -w "$width" \
-    | sed -E 's/^( *)(.*)/\1\2\1/' \
-    | tr " " "$filler" \
-    | sed -E "s/${paddingPreserver}/ /g" \
-    | sed -E "s/${spacePreserver}/ /g" \
-    | sed -E "s/^(.{0,$width}).*/\1/"
+  local title="$(cat)"
+  local title_len="${#title}"
+
+  local available=$(( width - title_len - 2 ))
+  (( available < 0 )) && available=0
+
+  local left=$(( available / 2 ))
+  local right=$(( available - left ))
+
+  printf -v fill_left '%*s' $left ''
+  printf -v fill_right '%*s' $right ''
+
+  fill_left=${fill_left// /$filler}
+  fill_right=${fill_right// /$filler}
+
+  printf '%s %s %s\n' "$fill_left" "$title" "$fill_right"
 }
 
 function Usage() {
