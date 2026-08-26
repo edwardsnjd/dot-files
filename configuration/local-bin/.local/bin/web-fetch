@@ -36,12 +36,27 @@ function Main() {
 
   set -- "${otherArgs[@]}"
 
+  local st=0
+  Test "$@" >/dev/null 2>&1 || st=$?
+  if [ $st -eq 56 -a ${FENCE_SANDBOX:-0} -eq 1  ]; then
+    PrintSandboxError >&2
+    return $st
+  fi
+
   Fetch "$@" \
     | if [ "$raw" = "true" ]; then cat; else Process "$@"; fi
 }
 
 function Help() {
   echo "Usage: web-fetch [--raw] [--help] URL" > /dev/stderr
+}
+
+function Test() {
+  curl \
+    --silent --location --show-error \
+    --header "Accept: text/html" \
+    --head \
+    "$@"
 }
 
 function Fetch() {
@@ -70,6 +85,18 @@ function Process() {
     application/json*) jq . ;;
     *) cat ;;
   esac
+}
+
+function PrintSandboxError() {
+cat <<-EOF
+	ERROR: Network access to that domain is not allowed.
+	
+	Only these domains allowed:
+	$(
+	  fence config show 2>/dev/null \
+	   | jq --raw-output '.network.allowedDomains | sort | .[]'
+	)
+EOF
 }
 
 Main "$@"
