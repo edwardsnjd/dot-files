@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
-MODEL="${MODEL:-llama3:8b}"
+MODEL="${MODEL:-qwen3.5-coding}"
 
-ollama run --nowordwrap --think=false "$MODEL" <<EOF
+llm-run --no-think -R -m "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 You are a helpful AI research assistant.  Summarise the following meeting notes/transcript.

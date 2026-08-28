@@ -14,12 +14,18 @@
 #    Interactively prompt for user instructions to process the input.
 #
 # DEPENDENCIES
-#   - ollama: Command-line interface for interacting with LLMs.
+#   - llm: Command-line interface for interacting with LLMs.
+#   - llm-run: Wrapper to run llm without model thinking.
+#
+# ENVIRONMENT
+#   - $MODEL: Environment variable for model (default: qwen3.5-coding).
 
 set -o nounset
 set -o errexit
 set -o pipefail
 #set -o xtrace
+
+MODEL="${MODEL:-qwen3.5-coding}"
 
 Main() {
   local userPrompt=$(GetUserPrompt "$@")
@@ -29,7 +35,7 @@ Main() {
     exit 1
   fi
 
-  BuildPrompt "$userPrompt" "$(cat)" | ollama run --nowordwrap --think=false $MODEL
+  BuildPrompt "$userPrompt" "$(cat)" | llm-run --no-think -R -m "$MODEL"
 }
 
 function GetUserPrompt() {

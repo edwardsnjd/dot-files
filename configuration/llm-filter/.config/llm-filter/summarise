@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
-MODEL="${MODEL:-llama3:8b}"
+MODEL="${MODEL:-qwen3.5-coding}"
 
 # Prompt adapted from: https://github.com/danielmiessler/fabric/blob/main/patterns/summarize_micro/system.md
 
-ollama run --nowordwrap --think=false "$MODEL" <<EOF
+llm-run --no-think -R -m "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 You are an expert content summarizer. You take content in and output a Markdown formatted summary using the format below.

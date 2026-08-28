@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
-MODEL="${MODEL:-llama3:8b}"
+MODEL="${MODEL:-qwen3.5-coding}"
 
-ollama run --nowordwrap --think=false "$MODEL" <<EOF
+llm-run --no-think -R -m "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 Turn this meeting transcript into a 3-bullet executive summary, highlighting key decisions made, followed by clearly assigned action items with owners and deadlines where mentioned.
