@@ -10,21 +10,22 @@
 #   CODE - inline code with special marker `<@CURSOR@>`
 #
 # DEPENDENCIES
-#   - ollama: Command-line interface for interacting with LLMs.
-#   - $COMPLETION_MODEL: Environment variable for model (default: codellama:7b-code)
-#   - $MODEL: Environment variable for model (default: codellama:7b-code)
+#   - llm: Command-line interface for interacting with LLMs.
+#   - llm-run: Wrapper to run llm without model thinking.
+#   - $COMPLETION_MODEL: Environment variable for model (default: qwen3.5-code)
+#   - $MODEL: Environment variable for model (default: qwen3.5-code)
 
 set -o nounset
 set -o errexit
 set -o pipefail
 #set -o xtrace
 
-DEFAULT_MODEL="codellama:7b-code"
-SELECTED_MODEL="${COMPLETION_MODEL:-${MODEL:-DEFAULT_MODEL}}"
+DEFAULT_MODEL="qwen3.5-code"
+SELECTED_MODEL="${COMPLETION_MODEL:-${MODEL:-$DEFAULT_MODEL}}"
 
 Main() {
   BuildPrompt $SELECTED_MODEL \
-    | ollama run --nowordwrap $SELECTED_MODEL --think=false \
+    | llm-run --no-think -R -m "$SELECTED_MODEL" \
     | sed -E 's/<EOT>//' \
     | sed -E '/^```/d'
 }
