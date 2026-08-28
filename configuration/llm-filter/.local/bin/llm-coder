@@ -49,17 +49,25 @@ function BuildPrompt() {
   cat <<-EOF
 		You are a helpful programming assistant. Please follow the user's instructions carefully.
 		
+		Unless directly instructed otherwise, reply with raw unadorned code, not markdown.
+		
 		User Instructions:
 		
+		<instructions>
 		$1
+		</instructions>
 		
 		Input:
 		
+		<input>
 		$2
+		</input>
 		
 		Again, the user instructions:
 		
+		<instructions>
 		$1
+		</instructions>
 	EOF
 }
 
