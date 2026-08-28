@@ -1,3 +1,48 @@
 #!/usr/bin/env bash
 
-cat /usr/share/dict/words | fzf --query "${1:-}"
+# NAME
+#   words - Pick words from a dictionary file, interactively or as a plain list
+#
+# SYNOPSIS
+#   words [--interactive | --list] [--file <file>] [<query>]
+#
+# OPTIONS
+#   -i, --interactive    Interactive fzf picker (default)
+#   -l, --list           Print the words plainly
+#   -f, --file <file>    Source word list (default: /usr/share/dict/words)
+#
+# DEPENDENCIES
+#   fzf - for interactive mode
+#
+# EXAMPLE
+#   words --list
+#   words --interactive method
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+DICTIONARY_FILE="${DICTIONARY_FILE:-/usr/share/dict/words}"
+
+function Main() {
+  local cmd="interactive"
+  local file="$DICTIONARY_FILE"
+
+  local query=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -i|--interactive) cmd="interactive" && shift ;;
+      -l|--list) cmd="list" && shift ;;
+      -f|--file) file="${2:?Must supply path for --file}" && shift 2 ;;
+      -*) echo "Unknown option $1" >&2 && exit 1 ;;
+      *) query="$1" && shift ;;
+    esac
+  done
+
+  case "$cmd" in
+    list) cat "$file" ;;
+    interactive) fzf < "$file" --query "$query" ;;
+  esac
+}
+
+Main "$@"

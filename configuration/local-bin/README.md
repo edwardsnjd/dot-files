@@ -853,9 +853,11 @@ Example: `./text-browser`
 
 ### words
 
-Search system dictionary using fzf.
+Pick words from a word list: interactive fzf picker or plain list.
 
-Example: `./words "query"`
+Example: `./words --interactive "method"`
+
+Example: `./words --list --file /usr/share/dict/words`
 
 ---
 
