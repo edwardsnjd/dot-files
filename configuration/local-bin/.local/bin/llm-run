@@ -38,7 +38,7 @@ Main() {
   local model="$(GetModel "${otherArgs[@]}")"
   if [[ $noThink -eq 1 ]]; then
     if [[ "$model" == openrouter/* ]]; then
-      thinkArg=(--hide-reasoning)
+      thinkArg=(--hide-reasoning --option reasoning_effort none)
     else
       thinkArg=(--option think false)
     fi
