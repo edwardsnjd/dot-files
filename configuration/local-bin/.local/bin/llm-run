@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+# NAME
+#   llm-run - Run a prompt through the llm CLI without model thinking.
+#
+# SYNOPSIS
+#   llm-run [--no-think] [LLM ARGUMENTS...] < INPUT
+#
+# DESCRIPTION
+#   Lightweight wrapper over the llm CLI. Adds the "no thinking" flag,
+#   translated for the model's provider:
+#     - openrouter/<...> model ids: -R (hide reasoning)
+#     - any other (ollama) model id: -o think false
+#   Also adds -n so responses are not logged to the llm database.
+#
+# DEPENDENCIES
+#   - llm: Command-line interface for interacting with LLMs.
+#
+# ENVIRONMENT
+#   - The model is selected with -m/--model as usual for llm.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local noThink=0
+  local otherArgs=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --no-think) noThink=1; shift ;;
+      *) otherArgs+=("$1"); shift ;;
+    esac
+  done
+
+  local thinkArg=()
+  local model="$(GetModel "${otherArgs[@]}")"
+  if [[ $noThink -eq 1 ]]; then
+    if [[ "$model" == openrouter/* ]]; then
+      thinkArg=(--hide-reasoning)
+    else
+      thinkArg=(--option think false)
+    fi
+  fi
+
+  exec llm --no-log "${thinkArg[@]}" "${otherArgs[@]}"
+}
+
+function GetModel() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -m|--model) echo "$2" && return ;;
+      -m=*|--model=*) echo "${1#*=}" && return ;;
+      *) shift ;;
+    esac
+  done
+}
+
+Main "$@"

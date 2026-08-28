@@ -625,6 +625,12 @@ Terminal chat interface for OpenAI API with markdown rendering.
 
 Example: `./openai-chat`
 
+### llm-run
+
+Run a prompt through the llm CLI without model thinking; translates the no-think flag per provider (ollama vs openrouter).
+
+Example: `./llm-run --no-think -m qwen3.5-code`
+
 ### pcap-streams
 
 Browse and extract TCP streams from pcap files.
