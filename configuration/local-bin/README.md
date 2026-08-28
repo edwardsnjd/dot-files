@@ -857,7 +857,11 @@ Pick words from a word list: interactive fzf picker or plain list.
 
 Example: `./words --interactive "method"`
 
-Example: `./words --list --file /usr/share/dict/words`
+Example: `./words --list`
+
+Override the word list with `DICTIONARY_FILE` (default `/usr/share/dict/words`).
+
+Example: `DICTIONARY_FILE=mydict.txt ./words --list`
 
 ---
 
