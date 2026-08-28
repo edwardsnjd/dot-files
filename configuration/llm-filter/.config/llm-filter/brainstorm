@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-qwen3.5-coding}"
 
-llm-run --no-think -R -m "$MODEL" <<EOF
+llm-run --no-think -m "$MODEL" <<EOF
 Act like a personal brainstorming coach.
 
 Ask me probing questions to help clarify my half-baked idea about the input.

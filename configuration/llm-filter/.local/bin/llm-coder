@@ -35,7 +35,7 @@ Main() {
     exit 1
   fi
 
-  BuildPrompt "$userPrompt" "$(cat)" | llm-run --no-think -R -m "$MODEL"
+  BuildPrompt "$userPrompt" "$(cat)" | llm-run --no-think --model "$MODEL"
 }
 
 function GetUserPrompt() {

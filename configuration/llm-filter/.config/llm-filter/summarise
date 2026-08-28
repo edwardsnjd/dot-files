@@ -4,7 +4,7 @@ MODEL="${MODEL:-qwen3.5-coding}"
 
 # Prompt adapted from: https://github.com/danielmiessler/fabric/blob/main/patterns/summarize_micro/system.md
 
-llm-run --no-think -R -m "$MODEL" <<EOF
+llm-run --no-think -m "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 You are an expert content summarizer. You take content in and output a Markdown formatted summary using the format below.

@@ -25,7 +25,7 @@ SELECTED_MODEL="${COMPLETION_MODEL:-${MODEL:-$DEFAULT_MODEL}}"
 
 Main() {
   BuildPrompt $SELECTED_MODEL \
-    | llm-run --no-think -R -m "$SELECTED_MODEL" \
+    | llm-run --no-think -m "$SELECTED_MODEL" \
     | sed -E 's/<EOT>//' \
     | sed -E '/^```/d'
 }

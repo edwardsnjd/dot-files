@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-qwen3.5-coding}"
 
-llm-run --no-think -R -m "$MODEL" <<EOF
+llm-run --no-think -m "$MODEL" <<EOF
 Output two SVG images of the subject that I'll specify in a moment. The goal is to generate some colouring in for children.
 
 The two images should be two versions of the same image:

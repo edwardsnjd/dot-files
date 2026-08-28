@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-qwen3.5-coding}"
 
-llm-run --no-think -R -m "$MODEL" <<EOF
+llm-run --no-think -m "$MODEL" <<EOF
 # INSTRUCTONS
 
 You are an AI sentiment analyzer. You take content in and output a terse statement about its sentiment.

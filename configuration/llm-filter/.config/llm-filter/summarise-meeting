@@ -2,7 +2,7 @@
 
 MODEL="${MODEL:-qwen3.5-coding}"
 
-llm-run --no-think -R -m "$MODEL" <<EOF
+llm-run --no-think -m "$MODEL" <<EOF
 # IDENTITY and PURPOSE
 
 You are a helpful AI research assistant.  Summarise the following meeting notes/transcript.
