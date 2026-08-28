@@ -20,7 +20,7 @@ Collection of utility scripts for shell, git, Docker, productivity, etc. that I 
 
 ### browse-tags
 
-Interactive git tag browser.
+Interactive fzf browser over a ctags `tags` file.
 
 Example: `./browse-tags`
 
@@ -92,7 +92,7 @@ Example: `./git-code-age HEAD`
 
 ### git-contributor
 
-Show detailed git contributor information.
+Interactively select the name and email of a git contributor, optionally pre-filtered by a query.
 
 Example: `./git-contributor "Nicholas Edwards"`
 
@@ -104,13 +104,13 @@ Example: `./git-contributors`
 
 ### git-count-commits
 
-Count the total number of commits in a repo.
+Count commits grouped by date (default YYYY-MM) as a date-tab-count TSV, accepting git log args.
 
 Example: `./git-count-commits`
 
 ### git-count-contributors
 
-Count the unique contributors to a repo.
+Count git contributors per date (default YYYY-MM) as a date-tab-contributor-tab-count TSV, accepting git log args.
 
 Example: `./git-count-contributors`
 
@@ -118,19 +118,20 @@ Example: `./git-count-contributors`
 
 Visual diff tool for images in a git repository.
 
-Example: `./git-diff-img image.png`
+Example: `git config --global diff.driver git-diff-img`
+Example: `git diff old.png new.png`
 
 ### git-exec
 
-Execute commands across a git repository.
+Run an arbitrary command on a specific revision of a repository.
 
-Example: `./git-exec "ls -la"`
+Example: `./git-exec HEAD~3 wc -l README.md`
 
 ### git-function-versions
 
 Browse historical versions of a code function.
 
-Example: `./git-function-versions MyFunctionName`
+Example: `./git-function-versions src/file.c MyFunctionName`
 
 ### git-function-versions2
 
@@ -158,13 +159,13 @@ Example: `./git-interesting-files`
 
 ### git-lines
 
-Statistics on lines added/removed in git.
+Reformat git blame into one TSV line per modified line for further processing.
 
 Example: `./git-lines`
 
 ### git-browse-objects
 
-Interactively browse and manage notes for a commit's tree.
+Interactively browse a commit's tree objects via fzf, with a notes preview and an annotate action.
 
 Example: `./git-browse-objects`
 
@@ -226,15 +227,15 @@ Example: `./git-sha-on 2023-01-01`
 
 ### git-worktree-switch
 
-Quickly switch between git worktrees.
+Interactively switch to a git worktree via fzf (must be sourced so it can change the current shell's directory).
 
-Example: `./git-worktree-switch`
+Example: `source git-worktree-switch`
 
 ### tags-context
 
-Show context around git tags.
+Show the enclosing class/function context for a source-code line (via ctags).
 
-Example: `./tags-context v1.2.0`
+Example: `./tags-context path/to/file.c 42`
 
 ### git-file-commits
 
@@ -248,9 +249,9 @@ Example: `./git-file-commits <path> [<tformat>]`
 
 ### gh-prs
 
-List GitHub Pull Requests for the current repo.
+List GitHub Pull Requests for a given repo, optionally filtered by author.
 
-Example: `./gh-prs`
+Example: `./gh-prs owner/repo [author]`
 
 ### gh-prs-to-tsv
 
@@ -270,9 +271,9 @@ Example: `./gh-search-prs "refactor"`
 
 ### emojify-cal
 
-Add emojis to calendar output.
+Emojify the current-date highlight of `cal`/`ncal` output.
 
-Example: `cal | ./emojify-cal`
+Example: `./emojify-cal cal`
 
 ### hundredblocks-time
 
@@ -320,7 +321,7 @@ Example: `./timezones`
 
 Display local weather forecast via wttr.in.
 
-Example: `./weather-forecast "London"`
+Example: `./weather-forecast "/London"`
 
 ### workflowy
 
@@ -378,9 +379,9 @@ Example: `./docker-ical-to-json < cal.ics > cal.json`
 
 ### body
 
-Print the body of a file or stream.
+Print the header (first line) and run a command on the rest (the body).
 
-Example: `cat file.txt | ./body`
+Example: `ps | ./body grep somepattern`
 
 ### centre
 
@@ -392,7 +393,7 @@ Example: `echo "Hello World" | ./centre`
 
 Convert text to/from different formats.
 
-Example: `./convert-text --format base64"`
+Example: `./convert-text --format base64`
 
 ### count
 
@@ -408,9 +409,11 @@ Example: `cat list.txt | ./count-uniq`
 
 ### dated
 
-Date manipulation and formatting.
+List files grouped by the date encoded in their filename.
 
-Example: `./dated "yesterday"`
+Example: `./dated --list .`
+
+Example: `./dated --interactive --all .`
 
 ### daterange
 
@@ -420,9 +423,9 @@ Example: `./daterange 2023-01-01 2023-01-07`
 
 ### timerange
 
-Generate sequences of times or ranges.
+Print hourly datetimes for N days from today (default 1).
 
-Example: `./timerange 09:00 17:00`
+Example: `./timerange 3`
 
 ### datetime
 
@@ -446,13 +449,13 @@ Example: `./define "serendipity"`
 
 Format dictionary service output.
 
-Example: `./define "apple" | ./dict-format`
+Example: `curl "dict://dict.org/define:apple:*" | ./dict-format`
 
 ### highlight-text
 
-Highlight specific text patterns in a file.
+Render a bat preview of a file, optionally highlighting a given line number.
 
-Example: `./highlight-text "TODO" main.py`
+Example: `./highlight-text main.py 42`
 
 ### loripsum
 
@@ -462,15 +465,15 @@ Example: `./loripsum 3`
 
 ### merge-columns
 
-Merge multiple columns of text into one.
+Merge a source column as a prefix of a target column (reads stdin).
 
-Example: `./merge-columns col1.txt col2.txt`
+Example: `seq 6 | paste - - - | ./merge-columns 3 1 ":"`
 
 ### partition
 
 Partition input data into multiple files.
 
-Example: `cat large_file.txt | ./partition 100`
+Example: `cat log.txt | ./partition '---'`
 
 ### ruler
 
@@ -492,9 +495,9 @@ Example: `./thesaurus "happy"`
 
 ### tidy-table
 
-Format messy text into a clean, tidy table.
+Fix the column layout of a markdown (pipe-delimited) table.
 
-Example: `cat data.csv | ./tidy-table`
+Example: `cat table.md | ./tidy-table`
 
 ### truncate
 
@@ -520,7 +523,7 @@ Example: `./bash-fix-timing history.log`
 
 ### cheapwatch
 
-Simple file watcher for command execution.
+Repeatedly clear the screen and re-run a command every 5 seconds.
 
 Example: `./cheapwatch "ls" .`
 
@@ -544,9 +547,9 @@ Example: `./docker-mmdc -i chart.mmd -o chart.png`
 
 ### dockerenv
 
-Manage Docker environment variables.
+Start, use, and destroy a companion docker container for the current directory as a dev environment.
 
-Example: `./dockerenv`
+Example: `./dockerenv up ruby:alpine`
 
 ### gradlew
 
@@ -562,13 +565,13 @@ Example: `./gradlew-run`
 
 ### inflate
 
-Utility to inflate (decompress) git objects.
+Utility to decompress zlib-compressed data (e.g. git objects).
 
 Example: `./inflate .git/objects/ab/cdef...`
 
 ### annotate
 
-Display source files with inline annotations.
+Display source files with annotations.
 
 Example: `./annotate main.go notes.txt`
 
@@ -582,7 +585,7 @@ Example: `./list-keys`
 
 ### list-fzf-keys
 
-List all configured fzf keybindings.
+List the default fzf keybindings extracted from the fzf man page.
 
 Example: `./list-fzf-keys`
 
@@ -614,13 +617,13 @@ Example: `./nostr-subscribe wss://relay.damus.io`
 
 Terminal chat interface for Ollama (LLM) with bat.
 
-Example: `./ollama-chat "Explain quantum physics"`
+Example: `./ollama-chat`
 
 ### openai-chat
 
 Terminal chat interface for OpenAI API with markdown rendering.
 
-Example: `./openai-chat "Explain recursion"`
+Example: `./openai-chat`
 
 ### pcap-streams
 
@@ -648,9 +651,9 @@ Example: `./transform notes.md`
 
 ### vim-session
 
-Helper for managing and loading Vim sessions.
+Interactively start a saved Vim session (optionally filtered by a query).
 
-Example: `./vim-session load my_session`
+Example: `./vim-session my_session`
 
 ### vimgolf
 
@@ -666,9 +669,9 @@ Example: `./wraprun "ls -R /"`
 
 ### wtc
 
-Watch and repeat command execution (wrapper).
+Repeat a command every N seconds, wrapping each run with success/failure messages.
 
-Example: `./wtc "go test ./..."`
+Example: `./wtc 5 "go test ./..."`
 
 ---
 
@@ -676,9 +679,11 @@ Example: `./wtc "go test ./..."`
 
 ### as-session
 
-Manage terminal sessions.
+Create or attach a tmux session for a directory (fzf picker when given no argument).
 
-Example: `./as-session new-session`
+Example: `./as-session ~/repos`
+
+Example: `./as-session`
 
 ### bell
 
@@ -700,15 +705,15 @@ Example: `./faketty ls`
 
 ### imap-session
 
-Manage and inspect IMAP email sessions.
+Open an interactive IMAP session over TLS (STARTTLS).
 
-Example: `./imap-session`
+Example: `./imap-session localhost 1143`
 
 ### keepass
 
 Command-line integration for KeePass databases.
 
-Example: `./keepass get "Github"`
+Example: `./keepass passwords.kdbx`
 
 ### launch
 
@@ -720,7 +725,7 @@ Example: `./launch`
 
 Real-time plotting of ping results in terminal.
 
-Example: `./ping-plot google.com`
+Example: `./ping-stream google.com | ./ping-plot`
 
 ### ping-stream
 
@@ -756,7 +761,7 @@ Example: `./ssh-hosts-status`
 
 CLI utility for managing WiFi connections.
 
-Example: `./wifi status`
+Example: `./wifi list`
 
 ### dot-helper
 
@@ -782,7 +787,7 @@ Example: `./directory-browser`
 
 ### explore-bash-history
 
-Interactive explorer for bash history files.
+Merge split bash history files into one date-annotated dataset.
 
 Example: `./explore-bash-history`
 
@@ -800,7 +805,7 @@ Example: `./fs-browser`
 
 ### lines-of-code
 
-Detailed report of lines of code with visual bars.
+Report lines of code per path and language as a TSV (use --pretty for a table, --type/--files to filter).
 
 Example: `./lines-of-code .`
 
@@ -876,9 +881,9 @@ Example: `./color-test`
 
 ### img-to-pdf
 
-Convert image files to PDF documents.
+Convert a single image to a PDF with OCR'd text.
 
-Example: `./img-to-pdf page1.jpg page2.jpg`
+Example: `./img-to-pdf page1.jpg`
 
 ### img-to-text
 
@@ -896,19 +901,19 @@ Example: `./pdf-to-text document.pdf`
 
 Generate terminal-based pie and bar charts.
 
-Example: `echo "30 70" | ./pie-bar`
+Example: `./pie-bar 30 70`
 
 ### pie-column
 
 Generate column charts for terminal output.
 
-Example: `echo "10 20 30" | ./pie-column`
+Example: `printf '1\n3\n5\n' | ./pie-column --headers 0 1`
 
 ### pie-footer
 
-Generate footer charts for terminal data.
+Add a pie-bar footer with an inline key to a table.
 
-Example: `./pie-footer`
+Example: `lines-of-code configuration/snippets | grep -v Total | ./pie-footer --headers 1 2 3`
 
 ### preview-gfm
 
@@ -918,7 +923,7 @@ Example: `./preview-gfm README.md`
 
 ### preview-markdown
 
-General markdown previewer for the terminal.
+Render markdown to a standalone HTML file and open it in a browser.
 
 Example: `./preview-markdown document.md`
 
@@ -954,25 +959,25 @@ Example: `./abn 51824753556`
 
 Build presentation slides from source.
 
-Example: `./build-slides slides.md`
+Example: `./build-slides --target outDir < slides.md`
 
 ### cheat-sheet
 
-Quick reference and cheat sheet tool.
+Interactive fzf browser for cheat.sh reference sheets (pick a topic and optional subtopic).
 
-Example: `./cheat-sheet bash`
+Example: `./cheat-sheet`
 
 ### slow-cat
 
 Cat file output slowly (useful for demonstrations).
 
-Example: `./slow-cat script.sh`
+Example: `cat script.sh | ./slow-cat 2`
 
 ### demand-cat
 
-Concatenate files on demand.
+Output lines from a file, pausing for user input (Enter) after each line.
 
-Example: `./demand-cat file1 file2`
+Example: `./demand-cat 3<input.txt`
 
 ### foreach
 
@@ -990,7 +995,7 @@ Example: `ls | ./foreach-par echo`
 
 A small utility to spread some joy.
 
-Example: `./happy`
+Example: `./happy "I am happy"`
 
 ### sad
 
@@ -1002,7 +1007,7 @@ Example: `./sad "I am sad"`
 
 Add padding/margins to presentation slides.
 
-Example: `./pad-slides raw_slides.pdf`
+Example: `./pad-slides < slides.md`
 
 ### safeagent
 
