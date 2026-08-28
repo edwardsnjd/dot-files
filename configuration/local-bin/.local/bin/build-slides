@@ -6,6 +6,14 @@
 # USAGE
 #   build-slides --target "outDir" < slides.md
 #
+# INPUT
+#   Markdown on stdin, with slides separated by lines starting with "#".
+#
+# OUTPUT
+#   Slide files in the target directory, named slide_00, slide_01, etc.
+#   formatted with heading text filtered through toilet and centered,
+#   and body text unmodified.
+#
 # DEPENDENCIES
 #   - csplit, awk, sed
 #   - toilet
