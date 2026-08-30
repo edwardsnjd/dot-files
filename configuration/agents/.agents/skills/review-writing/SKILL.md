@@ -20,7 +20,9 @@ This skill is based on the *Anatomy of a Great Essay* framework by **Writer Scie
 
 Good writing should obviously have no mistakes but just as importantly it should draw the reader in, to benefit them for the investment of their time reading it.  Assume that the reader doesn't *have* to read this.  Assume that the writing should help the reader understand why they should care.
 
-The summary below is a quick reference.
+It's crucial to know who your readers are, and what they care about.  This skill does not help with that. It does, however, aim to improve the writing so that there aren't any blockers to the text communicating your intended world.
+
+The summary below is a quick reference to the framework.
 
 ## Framework summary — 7 levels
 
