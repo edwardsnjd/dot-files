@@ -1,18 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/Use-Tusk/fence/main/docs/schema/fence.schema.json",
-  "extends": "./fence.json",
+  "extends": "./fence.jsonc",
   "network": {
     "allowedDomains": [
-      // Workflowy
-      "workflowy.com",
-    ],
+      // Podman socket
+      "127.0.0.1",
+    ]
   },
   "filesystem": {
     "allowRead": [
-      "~/sync/nick-info/nb/",
-    ],
-    "allowWrite": [
-      "~/sync/nick-info/nb/",
+      // Podman identity
+      "~/.local/share/containers/podman/machine/machine",
+      "~/.ssh/known_hosts",
     ],
   }
 }
