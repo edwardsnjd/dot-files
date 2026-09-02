@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+DOCKER="${DOCKER:-docker}"
+
 function DockerIcalToJson {
-  docker run \
+  $DOCKER run \
     --rm \
     --volume "$PWD:/data" \
     --interactive \

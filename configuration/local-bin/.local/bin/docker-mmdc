@@ -8,8 +8,10 @@ set -o errexit
 set -o pipefail
 #set -o xtrace
 
+DOCKER="${DOCKER:-docker}"
+
 function DockerMmdc() {
-  docker run \
+  $DOCKER run \
     --rm \
     -ti \
     -v "$PWD":/data \

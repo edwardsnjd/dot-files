@@ -1,4 +1,6 @@
 #!/bin/bash
 
+DOCKER="${DOCKER:-docker}"
+
 # NB. Requires VIMGOLF_KEY environment variable
-docker run --rm -it -e "key=${VIMGOLF_KEY}" kramos/vimgolf "$@"
+$DOCKER run --rm -it -e "key=${VIMGOLF_KEY}" kramos/vimgolf "$@"

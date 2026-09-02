@@ -130,6 +130,8 @@ set -o errexit
 set -o pipefail
 #set -o xtrace
 
+DOCKER="${DOCKER:-docker}"
+
 # Constants
 
 # Used on containers to indicate they are managed by this script
@@ -166,7 +168,7 @@ function up() {
   shift
   local name="$(containername)"
   [ -z "$image" ] && echo "Image required, see help" >/dev/stderr && exit 1
-  docker run \
+  $DOCKER run \
      --interactive \
      --tty \
      --detach \
@@ -180,7 +182,7 @@ function up() {
 }
 
 function list() {
-  docker container ls \
+  $DOCKER container ls \
      --filter="label=${FLAG_LABEL}" \
      --format="$(listformat)" \
      "$@"
@@ -202,7 +204,7 @@ function shell() {
       execArgs="--tty"
   fi
 
-  docker exec \
+  $DOCKER exec \
      $execArgs \
      --interactive \
      --workdir "${PWD}" \
@@ -218,7 +220,7 @@ function dwn() {
     exit 1
   }
 
-  docker rm \
+  $DOCKER rm \
      --force \
      "$@" \
      "${id}"
@@ -232,7 +234,7 @@ function containername() {
 # Return info about the active container
 # {length of rel path} {rel path} {ID}
 function activeinfo() {
-  docker ps \
+  $DOCKER ps \
     --filter="label=${FLAG_LABEL}" \
     --format="{{.Label \"${MOUNT_LABEL}\"}}\t{{.ID}}" \
   | awk -v pwd="$PWD" -v OFS=$'\t' \

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+DOCKER="${DOCKER:-docker}"
+
 function DockerAsciiCast2Gif {
-  docker run \
+  $DOCKER run \
     --rm \
     --volume "$PWD:/data" \
     asciinema/asciicast2gif \

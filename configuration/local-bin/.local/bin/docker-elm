@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+DOCKER="${DOCKER:-docker}"
+
 function DockerElm {
-  docker run \
+  $DOCKER run \
     --interactive \
     --tty \
     --rm \
