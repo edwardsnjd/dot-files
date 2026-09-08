@@ -19,6 +19,7 @@
 #     createdAt
 #     mergedAt
 #     closedAt
+#     reviewedAt
 #     state
 #     comments
 #     reviews
@@ -39,7 +40,7 @@ function Main() {
   local repoQuery="repo:${repo}"
   local authorQuery="$([ -n "$author" ] && printf "author:$author")"
 
-  echo "repo	number	author	title	body	createdAt	mergedAt	closedAt	state	comments	reviews	commits	changedFiles	additions	deletions"
+  echo "repo	number	author	title	body	createdAt	mergedAt	closedAt	reviewedAt	state	comments	reviews	commits	changedFiles	additions	deletions"
 
   gh api graphql \
     --paginate \
@@ -52,7 +53,7 @@ function Main() {
         .author.login,
         .title,
         (.body | length),
-        .createdAt, .mergedAt, .closedAt,
+        .createdAt, .mergedAt, .closedAt, .latestReviewDate.nodes[0].submittedAt,
         .state,
         .comments.totalCount,
         .reviews.totalCount,
@@ -92,6 +93,9 @@ function QueryGQL() {
 	        changedFiles
 	        additions
 	        deletions
+	        latestReviewDate: reviews(last: 1) {
+	          nodes { submittedAt }
+	        }
 	      }
 	    }
 	  }
