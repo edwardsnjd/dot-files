@@ -5,6 +5,7 @@ tap "docker/tap", trusted: true
 tap "jetbrains/utils", "https://github.com/JetBrains/homebrew-utils", trusted: true
 tap "ngrok/ngrok", trusted: true
 tap "superradcompany/tap"
+tap "tool3/tap", trusted: { formulae: ["chartscii"] }
 tap "visidata/vd", "https://github.com/visidata/homebrew-vd.git", trusted: true
 # Asciicast to GIF converter
 brew "agg"
@@ -336,4 +337,5 @@ vscode "ms-vscode-remote.remote-containers"
 vscode "ms-vsliveshare.vsliveshare"
 npm "@earendil-works/pi-coding-agent"
 npm "@github/copilot"
+npm "chartscii-cli"
 npm "mcp"
