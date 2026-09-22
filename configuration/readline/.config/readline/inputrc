@@ -13,13 +13,17 @@ set vi-ins-mode-string "(I) "
 # Reduce time waiting for key sequence (see jk below)
 set keyseq-timeout 300
 
+"\ev": vi-editing-mode
+
 # vi normal mode mappings
 set keymap vi-command
+"\ee": emacs-editing-mode
 "\C-l": clear-screen
 "\C-x\C-r": re-read-init-file
 
 # vi insert mode mappings
 set keymap vi-insert
+"\ee": emacs-editing-mode
 "\C-l": clear-screen
 "\C-x\C-r": re-read-init-file
 "jk": vi-movement-mode
