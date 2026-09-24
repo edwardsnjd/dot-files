@@ -311,7 +311,7 @@ cask "pop-app"
 # VPN client focusing on security
 cask "protonvpn"
 # Build, run, and govern agents across the software development lifecycle
-cask "docker/tap/sbx"
+cask "docker/tap/sbx", trusted: true
 # Plugin for AWS CLI to start and end sessions that connect to managed instances
 cask "session-manager-plugin"
 # Team communication and collaboration software
