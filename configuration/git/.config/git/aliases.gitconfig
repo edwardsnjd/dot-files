@@ -48,6 +48,7 @@
 
 	# Opinionated pull
 	pp = "!git pull && git remote prune origin && git submodule update"
+	pr = pull --rebase
 
 	# Add a patch at a time
 	patch = add --patch
