@@ -333,6 +333,12 @@ Example: `./workflowy list "parent-id"`
 
 Example: `./workflowy complete "node-id"`
 
+### workflowy-browser
+
+A CLI browser for interactively viewing and navigating items within Workflowy.
+
+Example: `./workflowy-browser`
+
 ### workflowy-ingestion
 
 Manage pending ingestion items in Workflowy via API.

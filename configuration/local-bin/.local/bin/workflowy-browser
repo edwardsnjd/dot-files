@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# NAME
+#   workflowy-browser - Interactive CLI browser for Workflowy
+#
+# SYNOPSIS
+#   workflowy-browser [ID]
+#
+# PARAMETERS
+#   ID - optionally specify the node to view
+#
+# DESCRIPTION
+#   Interactive command-line interface for browsing Workflowy.
+#
+# DEPENDENCIES
+#   workflowy - CLI wrapper
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+function Main() {
+  local node="${1:-None}"
+
+  local zoom="$0 {1}"
+  local preview="{ echo {2}; echo; echo {3}; } | glow"
+  local view="$preview | less -R -+F +g"
+
+  workflowy list "$node" \
+  | jq \
+    '.nodes[] | select(.completed == false) | [.id, .name, .note] | @tsv' \
+    --raw-output \
+  | fzf \
+    --delimiter='\t' \
+    --with-nth="{2}" \
+    --reverse \
+    --bind "ctrl-/:change-preview-window(bottom|hidden|default)" \
+    --bind="enter:execute($zoom)" \
+    --bind="ctrl-o:execute($view)" \
+    --preview="$preview"
+}
+
+Main "$@"
