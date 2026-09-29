@@ -266,7 +266,7 @@ brew "zlib"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
 # Work with Buildkite from the command-line
-brew "buildkite/buildkite/bk@3"
+brew "buildkite/buildkite/bk@3", trusted: true
 # Spins up lightweight VMs in milliseconds from SDKs
 brew "superradcompany/tap/microsandbox", trusted: true
 # Password manager that keeps all passwords secure behind one password
