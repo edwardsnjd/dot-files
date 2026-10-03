@@ -1030,8 +1030,12 @@ Example: `./pad-slides < slides.md`
 ### safeagent
 
 Prepare a sandboxed environment for an agent, setting git author info.
+Select a fence config profile via `-p`/`--profile`.
+Profiles are defined in `~/.config/fence/fence-<name>.jsonc`.
 
 Example: `./safeagent myscript.sh`
+Example: `./safeagent -p nb myscript.sh`
+Example: `./safeagent --profile web-research curl https://example.com`
 
 ### pwd-info
 
