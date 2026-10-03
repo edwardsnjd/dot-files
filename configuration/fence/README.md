@@ -10,6 +10,7 @@ This directory contains Fence profiles for various tools:
 | `fence.jsonc` | Base profile — code-strict template, core sandbox for coding tools (Copilot, pi agent, git, LLM) |
 | `fence-podman.jsonc` | Podman — extends base, allows localhost for Podman socket |
 | `fence-nb.jsonc` | Note-taking — extends base, allows Workflowy and notes directory read/write |
+| `fence-web-research.jsonc` | Web research — extends base, allows all outbound connections for web-search and web-fetch |
 
 **Key resources:**
 - Fence project: <https://github.com/fencesandbox/fence>

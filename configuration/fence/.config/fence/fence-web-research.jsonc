@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Use-Tusk/fence/main/docs/schema/fence.schema.json",
+  "extends": "./fence.jsonc",
+  "network": {
+    // Allow all outbound connections for web research
+    // TODO: consider tightening deniedDomains to block tracking/analytics/malware endpoints
+    "allowedDomains": [
+      "*",
+    ],
+  }
+}
