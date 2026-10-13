@@ -13,14 +13,14 @@ RESET="$(tput sgr0)"
 
 function heading() {
   centre --filler "$DIVIDER" \
-    | sed -E "s/^(.*) (.*) (.*)$/${DIM}\\1${RESET} ${BRIGHT}\\2${RESET} ${DIM}\\3${RESET}/"
+    | sed -E "s/^([^ ]*) (.*) ([^ ]*)$/${DIM}\\1${RESET} ${BRIGHT}\\2${RESET} ${DIM}\\3${RESET}/"
 }
 
 echo "pwd" | heading
 pwd
 
 command -v $DOCKER >/dev/null 2>&1 && {
-  echo "$DOCKER" | heading
+  echo "$DOCKER compose" | heading
   $DOCKER compose config --quiet 2> /dev/null \
     && $DOCKER compose ps --format 'table {{.Name}}\t{{.Image}}\t{{.Service}}\t{{.RunningFor}}\t{{.Status}}' \
     || echo "No compose file found."
