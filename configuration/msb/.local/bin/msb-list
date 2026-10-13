@@ -3,4 +3,4 @@
 # List all sandboxes for this PWD
 
 # See scripts/create for labelling
-exec msb ps --label "msb.pwd=$PWD"
+exec msb ps --all --label "msb.pwd=$PWD"
