@@ -9,6 +9,7 @@ DIVIDER="┄"
 
 DIM=$(tput bold; tput setaf 0)
 BRIGHT="$(tput dim; tput setaf 5)"
+HEADER="$(tput bold; tput setaf 6)"
 RESET="$(tput sgr0)"
 
 function heading() {
@@ -33,13 +34,25 @@ command -v msb-list >/dev/null 2>&1 && {
 
 command -v sbx >/dev/null 2>&1 && {
   echo "sbx" | heading
-  sbx ls --json \
-    | jq --raw-output --exit-status "
-      .sandboxes[]
-      | select(.workspaces[]? == \"$PWD\")
-      | [.name, .agent, .created_at, .status]
-      | @tsv" \
-    || echo "No sandboxes found."
+  sandboxes=$(
+    sbx ls --json \
+      | jq --raw-output "
+        .sandboxes[]
+        | select(.workspaces[]? == \"$PWD\")
+        | [.name, .agent, .created_at, .status]
+        | @tsv
+      "
+  )
+  if [ -n "$sandboxes" ]; then
+    {
+      echo "NAME	AGENT	CREATED AT	STATUS"
+      echo "$sandboxes"
+    } \
+      | column -t -s $'\t' \
+      | sed -E "1 s/([^\t]+)/${HEADER}\1${RESET}/g"
+  else
+    echo "No sandboxes found."
+  fi
 }
 
 command -v git >/dev/null 2>&1 && {
