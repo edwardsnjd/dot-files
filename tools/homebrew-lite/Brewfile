@@ -1,5 +1,6 @@
 tap "anomalyco/tap", trusted: true
 tap "cryfs/tap", trusted: true
+tap "docker/tap", trusted: true
 tap "github/gh", trusted: true
 tap "netbirdio/tap", trusted: true
 tap "superradcompany/tap"
@@ -11,6 +12,8 @@ brew "bash"
 brew "bat"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
+# Apjanke's fork of the classic cowsay project
+brew "cowsay"
 # Reimplementation of ctags(1)
 brew "ctags"
 # Tool to perform numerical, textual & statistical operations
@@ -196,6 +199,8 @@ cask "openscad"
 cask "protonvpn"
 # G-code generator for 3D printers (RepRap, Makerbot, Ultimaker etc.)
 cask "prusaslicer"
+# Build, run, and govern agents across the software development lifecycle
+cask "docker/tap/sbx", trusted: true
 # Instant messaging application focusing on security
 cask "signal"
 # Mesh VPN client
