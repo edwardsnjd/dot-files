@@ -31,6 +31,17 @@ command -v msb-list >/dev/null 2>&1 && {
   msb-list
 }
 
+command -v sbx >/dev/null 2>&1 && {
+  echo "sbx" | heading
+  sbx ls --json \
+    | jq --raw-output --exit-status "
+      .sandboxes[]
+      | select(.workspaces[]? == \"$PWD\")
+      | [.name, .agent, .created_at, .status]
+      | @tsv" \
+    || echo "No sandboxes found."
+}
+
 command -v git >/dev/null 2>&1 && {
   echo "git" | heading
   git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
