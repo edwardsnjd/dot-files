@@ -37,7 +37,7 @@ command -v sbx >/dev/null 2>&1 && {
   sandboxes=$(
     sbx ls --json \
       | jq --raw-output "
-        .sandboxes[]
+        .[]
         | select(.workspaces[]? == \"$PWD\")
         | [.name, .agent, .created_at, .status]
         | @tsv
