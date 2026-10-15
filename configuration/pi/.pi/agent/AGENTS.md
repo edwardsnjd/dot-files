@@ -9,6 +9,7 @@
 - Follow the coding conventions and style of existing code.
 - If you need to challenge the design or style, clearly state that and look for somewhere to record that decision.
 - Code comments are usually unnecessary, look to improve design and naming to express the intent.
+- For instructions apply ASD-STE100: short direct sentences, active voice, bullet point or single line per instruction.
 
 # Exploring current directory
 
