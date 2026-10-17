@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+# NAME
+#   decide - send state and questions to an LLM for a decision
+#
+# SYNOPSIS
+#   echo "state" | decide 3< questions.json
+#
+# DESCRIPTION
+#   Reads the decision state from stdin and the questions JSON from file
+#   descriptor 3.  Sends both to a system one model endpoint and prints the
+#   response on stdout.
+#
+# ENVIRONMENT
+#   DECISION_MODEL - Model to use (default: d1)
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+DEFAULT_DECISION_MODEL="d1"
+DECISION_MODEL="${DECISION_MODEL:-$DEFAULT_DECISION_MODEL}"
+
+SYSTEMONE_ENDPOINT="http://localhost:11434/v1/systemone"
+
+Main() {
+  if ! [ -e /dev/fd/3 ] 2>/dev/null; then
+    echo "Error: questions JSON must be provided on fd 3." >&2
+    exit 1
+  fi
+
+  BuildPayload | curl --silent "$SYSTEMONE_ENDPOINT" -d @-
+}
+
+BuildPayload() {
+  jq \
+    --compact-output \
+    --null-input \
+    --arg model "$DECISION_MODEL" \
+    --arg state "$(cat)" \
+    --argjson questions "$(cat <&3)" \
+    '{ model: $model, state: $state, questions: $questions }'
+}
+
+Main "$@"
