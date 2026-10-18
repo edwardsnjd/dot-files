@@ -1042,3 +1042,13 @@ Example: `./safeagent --profile web-research curl https://example.com`
 Print info about the current directory.
 
 Example: `./pwd-info`
+
+### decide
+
+Send state and questions to an LLM for a decision via a system one model endpoint.
+
+Reads the decision state from stdin and a JSON array of questions from file descriptor 3.
+
+Environment variable: `DECISION_MODEL` (default: `d1`).
+
+Example: `echo "state" | decide 3< questions.json`
