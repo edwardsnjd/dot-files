@@ -1,0 +1,126 @@
+#! /usr/bin/env bash
+
+echo "gemma4:12b-mlx"
+ollama run --think=false gemma4:12b-mlx "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4:12b-mlx"
+
+echo "ornith:latest"
+ollama run --think=false ornith:latest "say hi" > /dev/null
+ollama ps
+ollama stop "ornith:latest"
+
+echo "ornith:9b"
+ollama run --think=false ornith:9b "say hi" > /dev/null
+ollama ps
+ollama stop "ornith:9b"
+
+echo "qwen3.5:9b-mlx"
+ollama run --think=false qwen3.5:9b-mlx "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3.5:9b-mlx"
+
+echo "gemma4:e4b-mlx"
+ollama run --think=false gemma4:e4b-mlx "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4:e4b-mlx"
+
+echo "gemma4:latest"
+ollama run --think=false gemma4:latest "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4:latest"
+
+echo "gemma4:12b"
+ollama run --think=false gemma4:12b "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4:12b"
+
+echo "nemotron-3-nano:4b"
+ollama run --think=false nemotron-3-nano:4b "say hi" > /dev/null
+ollama ps
+ollama stop "nemotron-3-nano:4b"
+
+echo "gemma4-e4b-code:latest"
+ollama run --think=false gemma4-e4b-code:latest "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4-e4b-code:latest"
+
+echo "gemma4-e4b-coding:latest"
+ollama run --think=false gemma4-e4b-coding:latest "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4-e4b-coding:latest"
+
+echo "gemma4:e4b"
+ollama run --think=false gemma4:e4b "say hi" > /dev/null
+ollama ps
+ollama stop "gemma4:e4b"
+
+echo "qwen3.5-code:latest"
+ollama run --think=false qwen3.5-code:latest "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3.5-code:latest"
+
+echo "qwen3.5-reasoning:latest"
+ollama run --think=false qwen3.5-reasoning:latest "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3.5-reasoning:latest"
+
+echo "qwen3.5-coding:latest"
+ollama run --think=false qwen3.5-coding:latest "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3.5-coding:latest"
+
+echo "qwen3.5-action:latest"
+ollama run --think=false qwen3.5-action:latest "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3.5-action:latest"
+
+echo "qwen3.5:9b"
+ollama run --think=false qwen3.5:9b "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3.5:9b"
+
+echo "ministral-3:8b"
+ollama run --think=false ministral-3:8b "say hi" > /dev/null
+ollama ps
+ollama stop "ministral-3:8b"
+
+echo "ministral-3:latest"
+ollama run --think=false ministral-3:latest "say hi" > /dev/null
+ollama ps
+ollama stop "ministral-3:latest"
+
+echo "ministral-3:3b"
+ollama run --think=false ministral-3:3b "say hi" > /dev/null
+ollama ps
+ollama stop "ministral-3:3b"
+
+echo "qwen3:8b"
+ollama run --think=false qwen3:8b "say hi" > /dev/null
+ollama ps
+ollama stop "qwen3:8b"
+
+echo "codellama:7b"
+ollama run --think=false codellama:7b "say hi" > /dev/null
+ollama ps
+ollama stop "codellama:7b"
+
+echo "codellama:7b-code"
+ollama run --think=false codellama:7b-code "say hi" > /dev/null
+ollama ps
+ollama stop "codellama:7b-code"
+
+echo "codellama:13b"
+ollama run --think=false codellama:13b "say hi" > /dev/null
+ollama ps
+ollama stop "codellama:13b"
+
+echo "ministral-3-3b-ctx:latest"
+ollama run --think=false ministral-3-3b-ctx:latest "say hi" > /dev/null
+ollama ps
+ollama stop "ministral-3-3b-ctx:latest"
+
+echo "ministral-3-ctx:latest"
+ollama run --think=false ministral-3-ctx:latest "say hi" > /dev/null
+ollama ps
+ollama stop "ministral-3-ctx:latest"

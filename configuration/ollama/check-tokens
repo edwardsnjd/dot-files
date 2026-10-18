@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+# for model in $(ollama ls | tail +2 | cut -d" " -f1); do
+for model in codellama:7b; do
+  echo "$model" > /dev/stderr
+  fd md | while read f; do
+    echo "- $f" > /dev/stderr
+    ollama run --verbose --think=false "$model" < "$f" "Summarise this in one sentence" \
+      |& grep "rate:" \
+      | sed -E 's/(.*) rate: *([0-9.]+) tokens\/s/\1\t\2/' \
+      | awk -v FS="\t" -v model="$model" '
+        /prompt/  { print model, "input", $2 }
+        !/prompt/ { print model, "output", $2 }
+      '
+  done
+done
