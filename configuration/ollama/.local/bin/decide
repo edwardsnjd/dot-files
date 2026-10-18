@@ -13,6 +13,10 @@
 #
 # ENVIRONMENT
 #   DECISION_MODEL - Model to use (default: d1)
+#
+# DEPENDENCIES
+#   jq - build JSON
+#   curl - make HTTP requests
 
 set -o nounset
 set -o errexit
