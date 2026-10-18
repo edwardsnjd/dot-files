@@ -76,4 +76,5 @@ stow --target="${HOME}" \
   agents \
   pi \
   fence \
-  msb
+  msb \
+  ollama
