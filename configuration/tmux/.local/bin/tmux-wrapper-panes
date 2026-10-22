@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# NAME
+#   tmux-wrapper-panes - Toggle wrapper panes for zenmode
+#
+# SYNOPSIS
+#   tmux-wrapper-panes [add|remove]
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -o xtrace
+
+Main() {
+  local cmd="${1:-add}"
+
+  case $cmd in
+    remove)
+      tmux kill-pane -t '{left-of}'
+      tmux kill-pane -t '{right-of}'
+      ;;
+    *)
+      tmux split-window -l 20% -hbd ''
+      tmux split-window -l 25% -hd ''
+      tmux set-option pane-border-style default
+      ;;
+  esac
+}
+
+Main "$@"
