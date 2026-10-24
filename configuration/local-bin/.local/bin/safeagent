@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-# safeagent - prepare sandboxed environment for agent
+# NAME
+#   safeagent - prepare sandboxed environment for agent
+#
+# SYNOPSIS
+#   safeagent [--profile PROFILE] [FENCE_ARGS...]
+#
+# PROFILES
+#   The name of the profile is used to locate the JSONC file in the
+#   $HOME/.config/fence directory as fence-<profile>.jsonc.
+#   If no profile is specified, the default profile is used.
 
 export GIT_AUTHOR_NAME="agent"
 export GIT_AUTHOR_EMAIL="agent@local"
