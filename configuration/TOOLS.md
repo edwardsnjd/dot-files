@@ -435,6 +435,8 @@ Converts an ICS calendar file into JSON.
 
 Example: `./docker-ical-to-json < cal.ics > cal.json`
 
+---
+
 ## Text & Data Processing
 
 ### body
@@ -577,7 +579,7 @@ Insert a textual marker into a text stream at a target line and column, or appen
 
 Example: `echo "hello" | ./insert-marker --marker "✓"`
 
-See [`local-bin`](local-bin) subsection.
+See [`llm-filter`](llm-filter) subsection.
 
 ### snippet
 
@@ -585,7 +587,7 @@ Select a snippet from a snippet directory and print its contents.
 
 Example: `./snippet "commit message"`
 
-See [`local-bin`](local-bin) subsection.
+See [`snippets`](snippets) subsection.
 
 ---
 
@@ -764,6 +766,8 @@ Reads the decision state from stdin and a JSON array of questions from file desc
 Environment variable: `DECISION_MODEL` (default: `d1`).
 
 Example: `echo "state" | decide 3< questions.json`
+
+See [`ollama`](ollama) subsection.
 
 ### gradlew-test-to-errors
 
