@@ -10,7 +10,7 @@ Use this skill whenever the local-bin scripts have changed, or just to check the
 
 ## What to ensure
 
-Ensure that every main executable script under `configuration/local-bin/.local/bin/` is documented in `configuration/local-bin/README.md`.
+Ensure that every main executable script under `configuration/local-bin/.local/bin/` is documented in `configuration/TOOLS.md`.
 
 ## How to check
 

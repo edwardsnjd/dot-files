@@ -16,7 +16,7 @@ Use this skill whenever there is a script worth capturing for general use.
 ## How to add a script
 
 - Add the script as an extension-less executable file to `configuration/local-bin/.local/bin/`
-- Document the new script in `configuration/local-bin/README.md`
+- Document the new script in `configuration/TOOLS.md`
 - Read CONTRIBUTING.md for guidance on the script structure in various languages
 
 ## Format of README documentation

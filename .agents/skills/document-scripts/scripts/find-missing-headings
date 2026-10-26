@@ -6,5 +6,5 @@ find "$REPO_DIR/configuration/local-bin/.local/bin/" \
 | sed "s|$REPO_DIR/configuration/local-bin/.local/bin/|### |" \
 | grep -E -v '\.mjs$' \
 | while read expectedHeading ; do
-    grep -qE "^${expectedHeading}" "$REPO_DIR/configuration/local-bin/README.md" || echo "MISSING HEADING: ${expectedHeading}"
+    grep -qE "^${expectedHeading}" "$REPO_DIR/configuration/TOOLS.md" || echo "MISSING HEADING: ${expectedHeading}"
   done

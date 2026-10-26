@@ -62,7 +62,7 @@ This repository contains configuration files (dotfiles) and a collection of util
   - `jq`: Use for all JSON processing.
   - `fzf`: Use for interactive selection interfaces.
 - **Index all scripts in README**:
-  - Ensure that every main executable script under `configuration/local-bin/.local/bin/` is documented in `configuration/local-bin/README.md`. There are some libraries in that directory but only the top level executable scripts should be documented.
+  - Ensure that every main executable script under `configuration/local-bin/.local/bin/` is documented in `configuration/TOOLS.md`. There are some libraries in that directory but only the top level executable scripts should be documented.
   - The scripts should be grouped by purpose.  Each group has a second level markdown heading.
   - Each script should have:
     - a third level markdown heading
@@ -101,10 +101,10 @@ This repository contains configuration files (dotfiles) and a collection of util
 
 ## 📂 Repository Layout
 - `configuration/`: The heart of the repo, containing configs for almost every tool (Alacritty, Bash, Git, Tmux, Vim, etc.).
-- `configuration/local-bin/.local/bin/`: This is where utility scripts live. Adding a script here usually requires adding it to the `README.md` in `configuration/local-bin/`.
+- `configuration/local-bin/.local/bin/`: This is where utility scripts live. Adding a script here usually requires adding it to `configuration/TOOLS.md`.
 - `tools/`: Installation scripts for system-wide tool setups.
 
 ## 🤝 Interaction with this Repository
 - **Exploration**: Before creating a new script, search `configuration/local-bin/.local/bin/` to see if a similar utility already exists.
 - **Readability**: Keep scripts focused and modular. If a script grows too large, break it into functions.
-- **Documentation**: Update the central `README.md` at `configuration/local-bin/README.md` whenever adding or renaming scripts.
+- **Documentation**: Update the central `TOOLS.md` at `configuration/TOOLS.md` whenever adding or renaming scripts.
