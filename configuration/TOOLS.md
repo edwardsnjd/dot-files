@@ -1,6 +1,10 @@
-# `.local/bin/` scripts
+# Tools
 
 Collection of utility scripts for shell, git, Docker, productivity, etc. that I tend to include on my `PATH`.
+
+Scripts live in `configuration/{subsection}/.local/bin/` and are deployed via the local bin mechanism onto my `PATH`.
+
+Tool-specific setup and notes live in the tool subsections under `configuration/`, such as [`tmux`](tmux) for tmux scripts.
 
 ## Quick Navigation
 
@@ -13,6 +17,8 @@ Collection of utility scripts for shell, git, Docker, productivity, etc. that I 
 - [File & Directory Explorers](#file--directory-explorers)
 - [Media & Web](#media--web)
 - [Miscellaneous](#miscellaneous)
+
+Unless otherwise specified the scripts are situated under the `configuration/local-bin/` subsection.  Scripts in other sections have it explicitly mentioned.
 
 ---
 
@@ -1364,5 +1370,3 @@ Example: `./safeagent --profile web-research curl https://example.com`
 Print info about the current directory.
 
 Example: `./pwd-info`
-
-
