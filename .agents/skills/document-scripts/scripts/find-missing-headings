@@ -2,9 +2,9 @@
 
 REPO_DIR="$(git rev-parse --show-toplevel)"
 
-find "$REPO_DIR/configuration/local-bin/.local/bin/" \
-| sed "s|$REPO_DIR/configuration/local-bin/.local/bin/|### |" \
-| grep -E -v '\.mjs$' \
-| while read expectedHeading ; do
-    grep -qE "^${expectedHeading}" "$REPO_DIR/configuration/TOOLS.md" || echo "MISSING HEADING: ${expectedHeading}"
-  done
+find "$REPO_DIR/configuration" -type d -name bin -path '*/.local/bin' | while read binDir; do
+    find "$binDir" -type f -not -name '*.mjs' | while read -r scriptPath; do
+        script="$(basename "$scriptPath")"
+        grep -qE "^### ${script}" "$REPO_DIR/configuration/TOOLS.md" || echo "MISSING HEADING: ### ${script}"
+    done
+done

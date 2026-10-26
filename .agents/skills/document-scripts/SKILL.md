@@ -1,26 +1,26 @@
 ---
 name: document-scripts
-description: Ensure the local-bin scripts are documented in README
+description: Ensure that all scripts are documented in configuration/TOOLS.md
 ---
-# Documenting "local-bin" scripts
+# Documenting `.local/bin` scripts
 
 ## When to use this skill
 
-Use this skill whenever the local-bin scripts have changed, or just to check the docs are correct.
+Use this skill whenever scripts have been added or changed, or just to check the docs are correct.
 
 ## What to ensure
 
-Ensure that every main executable script under `configuration/local-bin/.local/bin/` is documented in `configuration/TOOLS.md`.
+Ensure that every main executable script under `configuration/*/.local/bin/` is documented in `configuration/TOOLS.md`.
 
 ## How to check
 
-Check for any missing headings in the README (but use judgement to ignore any libraries).  Use the scripts to avoid reinventing the logic:
+Check for any missing headings in `configuration/TOOLS.md` (but use judgement to ignore any libraries).  Use the scripts to avoid reinventing the logic:
 
 1. Run the validation script from anywhere in the repo: `.agents/skills/document-scripts/scripts/find-missing-headings`
 2. For each missing heading that looks like a script:
     1. Find the corresponding script
     2. Read it
-    3. Add its documentation section to the README (see below for template)
+    3. Add its documentation section to `configuration/TOOLS.md` (see below for template)
 
 Note:
 - Most scripts have no file extension.
@@ -48,4 +48,12 @@ Note:
 {SCRIPT DESCRIPTION}.
 
 Example: `{SCRIPT INVOCATION WITH ARGUMENTS}`
+
+{OPTIONAL SCRIPT SUBSECTION LINK}
+```
+
+If the script is not from the `local-bin` subsection then explicitly link to its subsection:
+
+```
+See [`foo`](foo) subsection.
 ```
