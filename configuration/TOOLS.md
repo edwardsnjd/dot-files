@@ -375,37 +375,37 @@ Add a task to Workflowy by reading text from stdin or file.
 
 Example: `echo "Buy milk" | ./add-todo`
 
-### nb-bookmark
+### nb-bookmark [nb]
 
 Bookmark a URL to the nb bookmarks notebook.
 
 Example: `./nb-bookmark https://example.com`
 
-### nb-browse
+### nb-browse [nb]
 
 Interactive fzf browser for nb notes.
 
 Example: `./nb-browse`
 
-### nb-browse-content
+### nb-browse-content [nb]
 
 Interactively search and browse nb note contents.
 
 Example: `./nb-browse-content "query"`
 
-### nb-journal
+### nb-journal [nb]
 
 Edit the journal entry for today in the nb journal notebook.
 
 Example: `./nb-journal`
 
-### nb-pick-link
+### nb-pick-link [nb]
 
 Pick an nb note as a markdown link via fzf.
 
 Example: `./nb-pick-link "query"`
 
-### nb-search
+### nb-search [nb]
 
 Safe version of `nb search` that falls back to listing all notes.
 
@@ -553,13 +553,13 @@ Automatically underline markdown-style headers.
 
 Example: `cat notes.md | ./underline-headers`
 
-### insert-marker
+### insert-marker [local-bin]
 
 Insert a textual marker into a text stream at a target line and column, or append it to the end of a stream.
 
 Example: `echo "hello" | ./insert-marker --marker "✓"`
 
-### snippet
+### snippet [local-bin]
 
 Select a snippet from a snippet directory and print its contents.
 
@@ -743,73 +743,73 @@ Environment variable: `DECISION_MODEL` (default: `d1`).
 
 Example: `echo "state" | decide 3< questions.json`
 
-### gradlew-test-to-errors
+### gradlew-test-to-errors [vim]
 
 Transform Gradle test failures into editor-friendly compile errors.
 
 Example: `gradlew check | ./gradlew-test-to-errors`
 
-### llm-filter
+### llm-filter [llm-filter]
 
 Select a prompt from a prompt directory and run input through it.
 
 Example: `echo "Summarise this" | ./llm-filter "summarise"`
 
-### llm-completions
+### llm-completions [llm-filter]
 
 Generate code completions via an LLM from a code snippet containing a cursor marker.
 
 Example: `echo 'const add = (a, b) => <@CURSOR@>;' | ./llm-completions`
 
-### llm-coder
+### llm-coder [llm-filter]
 
 Run a coding task against an input file via an LLM coding assistant.
 
 Example: `./llm-coder "Add unit tests" < src/main.go`
 
-### msb-clean
+### msb-clean [msb]
 
 Stop and remove all sandboxes for the current directory.
 
 Example: `./msb-clean`
 
-### msb-create
+### msb-create [msb]
 
 Create a sandbox in the current directory.
 
 Example: `./msb-create`
 
-### msb-exec
+### msb-exec [msb]
 
 Execute a command in the first sandbox for the current directory.
 
 Example: `./msb-exec ls`
 
-### msb-list
+### msb-list [msb]
 
 List all sandboxes for the current directory.
 
 Example: `./msb-list`
 
-### msb-run
+### msb-run [msb]
 
 Run a sandbox in the current directory, cleaning up when it exits.
 
 Example: `./msb-run`
 
-### pi-profile
+### pi-profile [pi]
 
 Manage pi coding agent profiles via list, interactive select, or add.
 
 Example: `./pi-profile --list`
 
-### pi-session-to-dot
+### pi-session-to-dot [pi]
 
 Generate a Graphviz DOT graph from a pi agent session JSONL file.
 
 Example: `pi-session-to-dot session.jsonl | dot -Tsvg > session.svg`
 
-### scheme-imports
+### scheme-imports [vim]
 
 List modules and load targets from Scheme input.
 
@@ -917,85 +917,85 @@ Network proxy for dotnet commands, listening on port 9000.
 
 Example: `./command-proxy serve mydotnetcmd arg1 arg2`
 
-### list-tmux-keys
+### list-tmux-keys [tmux]
 
 List the current tmux keybindings.
 
 Example: `./list-tmux-keys`
 
-### tmux-attach
+### tmux-attach [tmux]
 
 Fuzzy select an available tmux session then attach or switch to it.
 
 Example: `./tmux-attach`
 
-### tmux-convert
+### tmux-convert [tmux]
 
 Convert specially formatted input lines into tmux send-keys commands.
 
 Example: `echo "echo Hello" | ./tmux-convert | xargs tmux send-keys .2`
 
-### tmux-ensure
+### tmux-ensure [tmux]
 
 Ensure the given tmux session exists, creating it if missing.
 
 Example: `./tmux-ensure myproject`
 
-### tmux-join
+### tmux-join [tmux]
 
 Attach or switch to the given tmux session.
 
 Example: `./tmux-join myproject`
 
-### tmux-line
+### tmux-line [tmux]
 
 Interactive fzf browser of all previous lines in the current tmux pane.
 
 Example: `./tmux-line`
 
-### tmux-project
+### tmux-project [tmux]
 
 Easily manage tmux sessions for child directories.
 
 Example: `./tmux-project`
 
-### tmux-resize-windows.sh
+### tmux-resize-windows.sh [tmux]
 
 Resize all windows of the current tmux session.
 
 Example: `./tmux-resize-windows.sh`
 
-### tmux-send
+### tmux-send [tmux]
 
 Send text to a tmux pane via tmux send-keys.
 
 Example: `echo "ls" | ./tmux-send .right`
 
-### tmux-shared
+### tmux-shared [tmux]
 
 Connect to a shared global tmux session over ssh.
 
 Example: `./tmux-shared --local`
 
-### tmux-toggle-scratch
+### tmux-toggle-scratch [tmux]
 
 Toggle a persistent scratch tmux session.
 
 Example: `./tmux-toggle-scratch`
 
-### tmux-upsert
+### tmux-upsert [tmux]
 
 Attach to or create the given tmux session.
 
 Example: `./tmux-upsert myproject`
 
-### tmux-wrapper-panes
+### tmux-wrapper-panes [tmux]
 
 Toggle wrapper panes for tmux zen mode.
 
 Example: `./tmux-wrapper-panes add`
 
-### tmux-word
+### tmux-word [tmux]
 
 Interactive fzf browser of all previous words in the current tmux pane.
 
@@ -1177,31 +1177,31 @@ Opinionated web fetcher that retrieves a URL and outputs markdown, pretty JSON, 
 
 Example: `./web-fetch https://example.com`
 
-### ddg
+### ddg [w3m]
 
 Web search using the w3m text browser.
 
 Example: `./ddg "capital of France"`
 
-### list-w3m-keys
+### list-w3m-keys [w3m]
 
 List the current w3m keybindings.
 
 Example: `./list-w3m-keys`
 
-### newsboat-unread
+### newsboat-unread [newsboat]
 
 List unread RSS items using fzf, opening selections in the w3m browser.
 
 Example: `./newsboat-unread`
 
-### newsboat2nb
+### newsboat2nb [newsboat]
 
 Add a newsboat bookmark to the nb bookmarks notebook.
 
 Example: `./newsboat2nb <url> <title> <desc> <feedname>`
 
-### w3m
+### w3m [w3m]
 
 Stub for the w3m browser that relocates its working directory under the XDG config home.
 
