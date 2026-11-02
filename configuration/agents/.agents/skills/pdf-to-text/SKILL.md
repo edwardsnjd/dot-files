@@ -7,3 +7,5 @@ Use `pdf-to-text < PATH` to extract the text from a PDF file.  Consider preservi
 Not all PDFs will have extractable text.  If that happens then give up and report the PDF unreadable.
 
 This command will output it to `stdout`.
+
+(If that tool isn't available to you then try `pdftotext PDF_FILE -`)
