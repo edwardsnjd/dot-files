@@ -6,6 +6,10 @@ tap "netbirdio/tap", trusted: true
 tap "superradcompany/tap"
 tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear", trusted: true
 tap "xwmx/taps", trusted: true
+# GNU Privacy Guard (OpenPGP)
+brew "gnupg"
+# Email client that runs in your terminal
+brew "aerc"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -54,8 +58,6 @@ brew "glow"
 brew "gnu-prolog"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
-# GNU Privacy Guard (OpenPGP)
-brew "gnupg"
 # Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
 # GNU Ubiquitous Intelligent Language for Extensions
