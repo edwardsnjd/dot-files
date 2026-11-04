@@ -1,6 +1,7 @@
 #! /usr/bin/env bash
 
 # for model in $(ollama ls | tail +2 | cut -d" " -f1); do
+# for model in bonsai-2:27b flint:40b ornith:35b qwen3.8:27b-mlx qwen3.8:27b-dflash2-nvfp4 qwen3.6:35b-a3b-coding-nvfp4 qwen3.5:35b-a3b-coding-nvfp4 ; do
 for model in codellama:7b; do
   echo "$model" > /dev/stderr
 
