@@ -15,4 +15,14 @@ for model in codellama:7b; do
         !/prompt/ { print "small-docs", model, "output", $2 }
       '
   done
+
+  # Single shot summarise concatenated docs
+  fd md --exec-batch cat \
+    | ollama run --verbose --think=false "$model" "Summarise this in one sentence" \
+    |& grep "rate:" \
+    | sed -E 's/(.*) rate: *([0-9.]+) tokens\/s/\1\t\2/' \
+    | awk -v FS="\t" -v model="$model" '
+      /prompt/  { print "large-doc", model, "input", $2 }
+      !/prompt/ { print "large-doc", model, "output", $2 }
+    '
 done
