@@ -100,6 +100,8 @@ brew "mosh"
 brew "newsboat"
 # Port scanning utility for large networks
 brew "nmap"
+# Capability-based sandbox shell for AI agents with OS-enforced isolation
+brew "nono"
 # Modern shell for the GitHub era
 brew "nushell"
 # Interactive GPU process monitor
@@ -162,8 +164,8 @@ brew "visidata"
 brew "w3m"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
-# The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode", trusted: true
+# OpenCode V2 - the AI coding agent for the terminal
+brew "anomalyco/tap/opencode-v2"
 # Spins up lightweight VMs in milliseconds from SDKs
 brew "superradcompany/tap/microsandbox", trusted: true
 # Command line interface for the built-in speech recognition and transcription capabilities in macOS.
