@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# NAME
+#   browse-leisure - browse leisure node in Workflowy
+#
+# USAGE
+#   browse-leisure
+#
+# DESCRIPTION
+#   This is an opinionated wrapper. For direct API access, use `workflowy` CLI.
+#
+# DEPENDENCIES
+#   workflowy - Generic Workflowy CLI (must be in PATH)
+#
+# ENVIRONMENT VARIABLES
+#   WORKFLOWY_LEISURE_NODE_ID - Node ID of the leisure node in Workflowy (required)
+#   (other env vars inherited by `workflowy` CLI: WORKFLOWY_API_KEY, etc.)
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+function Main() {
+  local nodeId="${WORKFLOWY_LEISURE_NODE_ID:?ERROR: WORKFLOWY_LEISURE_NODE_ID environment variable is required}"
+
+  workflowy-browser "$nodeId"
+}
+
+Main "$@"
