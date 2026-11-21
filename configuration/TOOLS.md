@@ -345,6 +345,12 @@ A CLI browser for interactively viewing and navigating items within Workflowy.
 
 Example: `./workflowy-browser`
 
+### browse-leisure
+
+Browse leisure nodes in Workflowy.
+
+Example: `./browse-leisure WORKFLOWY_LEISURE_NODE_ID=<node-id>`
+
 ### workflowy-ingestion
 
 Manage pending ingestion items in Workflowy via API.
