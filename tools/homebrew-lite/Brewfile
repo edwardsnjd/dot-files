@@ -3,6 +3,7 @@ tap "cryfs/tap", trusted: true
 tap "docker/tap", trusted: true
 tap "github/gh", trusted: true
 tap "netbirdio/tap", trusted: true
+tap "okf-memory/tap"
 tap "superradcompany/tap"
 tap "sveinbjornt/hear", "https://github.com/sveinbjornt/hear", trusted: true
 tap "xwmx/taps", trusted: true
@@ -168,6 +169,8 @@ brew "w3m"
 brew "watch"
 # OpenCode V2 - the AI coding agent for the terminal
 brew "anomalyco/tap/opencode-v2"
+# Domain-neutral, Git-native persistent project memory for AI agents (OKF v0.2)
+brew "okf-memory/tap/okf", trusted: true
 # Spins up lightweight VMs in milliseconds from SDKs
 brew "superradcompany/tap/microsandbox", trusted: true
 # Command line interface for the built-in speech recognition and transcription capabilities in macOS.
