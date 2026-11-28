@@ -1,0 +1,110 @@
+#! /usr/bin/env node
+
+/**
+ * Extract the JSON scene embedded in an Excalidraw PNG export.
+ *
+ * Reads a PNG from stdin, extracts the metadata `tEXt` chunk whose keyword
+ * is `application/vnd.excalidraw+json`, and prints the decoded scene JSON to
+ * stdout. The scene is zlib-deflated when its `compressed` flag is set.
+ *
+ * Usage:
+ *   extract_excalidraw_json.ts < file.png > scene.json
+ */
+
+import { readFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
+import { inflateSync } from "node:zlib";
+
+function main(input: string | number): void {
+  const png = readFileSync(input); // a path or file descriptor
+  const json: string = JSON.stringify(extractScene(png), null, 2);
+  console.log(json);
+}
+
+/**
+ * PNG file structure
+ * ----------------
+ * A PNG is a signature followed by chunks. Each chunk is:
+ *   length (4-byte BE) | type (4 ASCII chars) | data (length bytes) | CRC (4 bytes)
+ * A `tEXt` chunk's data is `keyword \0 text`.
+ *
+ * Per the PNG spec the keyword and text are ISO-8859-1 (Latin-1) bytes. They
+ * must be read as Latin-1: reading as UTF-8 would replace any byte >= 0x80
+ * that is not part of a valid sequence with U+FFFD, corrupting the data.
+ */
+const PNG_SIGNATURE = "\x89PNG\r\n\x1a\n";
+const LENGTH_BYTES = 4;
+const TYPE_BYTES = 4;
+const CRC_BYTES = 4;
+const HEADER_BYTES = LENGTH_BYTES + TYPE_BYTES; // length + type
+const TRAILER_BYTES = CRC_BYTES;
+const NUL = 0;
+
+const LATIN1 = "latin1"; // ISO-8859-1: the PNG text-chunk encoding.
+const UTF8 = "utf-8"; // the encoding of the scene JSON payload itself.
+const EXCALIDRAW_KEYWORD = "application/vnd.excalidraw+json";
+const TEXT_CHUNK_TYPE = "tEXt";
+const STDIN = 0;
+
+/** Yield each chunk in the PNG as {type, data}. */
+function* pngChunks(png: Buffer): Generator<{ type: string; data: Buffer }> {
+  if (png.toString(LATIN1, 0, PNG_SIGNATURE.length) !== PNG_SIGNATURE)
+    throw new Error("not a PNG file");
+  let offset = PNG_SIGNATURE.length;
+  while (offset + HEADER_BYTES <= png.length) {
+    const length = png.readUInt32BE(offset);
+    const type = png.toString(LATIN1, offset + LENGTH_BYTES, offset + HEADER_BYTES);
+    const data = png.subarray(offset + HEADER_BYTES, offset + HEADER_BYTES + length);
+    yield { type, data };
+    offset += HEADER_BYTES + TRAILER_BYTES + length;
+  }
+}
+
+/** Split a `tEXt` payload into its keyword and text at the NUL separator. */
+function splitTextPayload(data: Buffer): { keyword: string; text: string } {
+  const nul = data.indexOf(NUL);
+  return {
+    keyword: data.subarray(0, nul).toString(LATIN1),
+    text: data.subarray(nul + 1).toString(LATIN1),
+  };
+}
+
+/** Return the Latin-1 text stored under the Excalidraw keyword. */
+function getExcalidrawMetadata(png: Buffer): string {
+  for (const { type, data } of pngChunks(png)) {
+    if (type !== TEXT_CHUNK_TYPE) continue;
+    const { keyword, text } = splitTextPayload(data);
+    if (keyword === EXCALIDRAW_KEYWORD) return text;
+  }
+  throw new Error("no Excalidraw metadata tEXt chunk found");
+}
+
+/**
+ * Rehydrate the scene bytes. Excalidraw flattens the (possibly zlib-deflated)
+ * scene into the `encoded` field as one code unit per byte. Latin-1 maps each
+ * code unit back to exactly one byte; UTF-8 would expand code units >= 0x80
+ * into multiple bytes and corrupt the scene.
+ */
+function sceneBytesFrom(encoded: string): Buffer {
+  return Buffer.from(encoded, LATIN1);
+}
+
+function extractScene(png: Buffer): unknown {
+  const { encoded, compressed } = JSON.parse(getExcalidrawMetadata(png)) as {
+    encoded: string;
+    compressed?: boolean;
+  };
+  const raw = sceneBytesFrom(encoded);
+  const sceneBytes = compressed ? inflateSync(raw) : raw;
+  // The scene payload itself is plain UTF-8 JSON.
+  return JSON.parse(sceneBytes.toString(UTF8));
+}
+
+// Read the PNG from stdin, then run only when executed directly, so the
+// helpers stay importable as a module.
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  main(STDIN);
+}

@@ -1213,6 +1213,12 @@ Convert PDF documents to plain text.
 
 Example: `./pdf-to-text document.pdf`
 
+### excalidraw-helper
+
+Extract the JSON scene embedded in an Excalidraw PNG export.
+
+Example: `./excalidraw-helper < diagram.png > scene.json`
+
 ### pie-bar
 
 Generate terminal-based pie and bar charts.
